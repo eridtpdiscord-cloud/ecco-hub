@@ -1,0 +1,14 @@
+{
+  "keyless": false,
+  "key_link": "https://lootlink.org/s?xxxx",
+  "keys": {
+    "3743555404": {
+      "expiry": "permanent",
+      "hwid": "any"
+    },
+    "1830044273": {
+      "expiry": "permanent",
+      "hwid": "TEST_HWID_ENFORCED_LOCK"
+    }
+  }
+}
