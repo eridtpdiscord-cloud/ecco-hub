@@ -1,42 +1,42 @@
 -- Compiled secure segment
-local BLCoSVeQ = {
-{231,201,65,102,182,50,17,156,138,204,17,247,164,131,118,123,244,84,212,114,177,198,168,69,84,57,251,226,175,45,151,236,72,139,252,161,85,155,143,150,181,36,105,191,213,215,59,177,73,48,226,45,57,187,87,241,205,176,158,246},{136,111,49,218,106,38,17,35,144,250,160,160,222,176,140,91,22,29,8,152,65,188,77,239,49,7,177,213,59,242,58,127,238,246,230,202,225,157,194,5,128,253,54,195,211,197,237,182,234,88,59,127,207,219,255,20,33,209,103,19},{72,222,218,69,30,35,15,207,120,102,229,232,4,240,166,164,191,78,216,81,47,241,36,139,149,128,112,134,193,39,179,196,145,102,115,239,6,194,122,163,215,63,131,86,116,185,219,70,85,93,143,143,82,219,204,49,128,185,171,87},{67,86,176,77,216,193,210,200,208,83,171,159,151,231,217,147,97,230,9,166,108,153,88,159,120,2,134,246,80,117,199,128,123,121,122,81,14,82,59,238,206,139,105,41,126,57,245,108,211,174,4,41,244,173,242,219}
+local GGRsTGOc = {
+{253,36,27,146,199,232,39,61,126,30,102,18,244,96,239,176,28,218,191,101,14,237,155,246,8,42,154,249,49,12,12,102,130,219,44,80,252,18,176,11,216,10,21,103,220,131,139,196,200,37,187,78,140,153,8,45,41,196,251,223},{244,132,206,126,75,226,219,226,219,252,161,50,58,234,69,199,125,222,114,115,80,161,183,210,115,214,3,62,106,141,82,127,35,203,90,3,18,10,68,185,152,163,158,191,76,54,249,194,65,170,136,18,25,61,146,132,235,89,153,85},{144,225,47,225,27,227,76,147,21,218,115,223,185,160,248,214,24,19,194,130,95,153,20,168,136,117,189,114,22,255,156,213,193,85,91,36,231,85,251,70,158,117,189,111,174,224,48,30,216,72,124,17,156,116,47,183,56,146,210,17},{8,113,180,69,189,95,186,168,0,117,199,209,129,134,21,193,131,45,177,32,7,149,15,34,128,174,220,16,198,75,243,148,144,176,81,231,44,254,214,205,198,93,224,184,59,31,197,70,105,253,59,71,211,171,191,123}
 }
-local XUuLddmD = "rkHZCpXExsarVnZg"
+local TNyAbyHO = "AoePeGufJYWFZzNl"
 
-local function jOwZlYBS(ZlfaotbI_data, ZlfaotbI_key)
-    local ZlfaotbI = {}
-    for ltUwedUD = 0, 255 do ZlfaotbI[ltUwedUD] = ltUwedUD end
-    local RhXOhlKX = 0
-    for ltUwedUD = 0, 255 do
-        local rOExaWmV = ZlfaotbI_key:byte((ltUwedUD % #ZlfaotbI_key) + 1)
-        RhXOhlKX = (RhXOhlKX + ZlfaotbI[ltUwedUD] + rOExaWmV) % 256
-        ZlfaotbI[ltUwedUD], ZlfaotbI[RhXOhlKX] = ZlfaotbI[RhXOhlKX], ZlfaotbI[ltUwedUD]
+local function VLPhHgpj(mDpVfCiT_data, mDpVfCiT_key)
+    local mDpVfCiT = {}
+    for adhkareS = 0, 255 do mDpVfCiT[adhkareS] = adhkareS end
+    local WWChEHfL = 0
+    for adhkareS = 0, 255 do
+        local NtjSGCdw = mDpVfCiT_key:byte((adhkareS % #mDpVfCiT_key) + 1)
+        WWChEHfL = (WWChEHfL + mDpVfCiT[adhkareS] + NtjSGCdw) % 256
+        mDpVfCiT[adhkareS], mDpVfCiT[WWChEHfL] = mDpVfCiT[WWChEHfL], mDpVfCiT[adhkareS]
     end
-    local ltUwedUD = 0
-    local RhXOhlKX = 0
-    local EflzHYxR = {}
-    for _, fdTcnYQc in ipairs(ZlfaotbI_data) do
-        ltUwedUD = (ltUwedUD + 1) % 256
-        RhXOhlKX = (RhXOhlKX + ZlfaotbI[ltUwedUD]) % 256
-        ZlfaotbI[ltUwedUD], ZlfaotbI[RhXOhlKX] = ZlfaotbI[RhXOhlKX], ZlfaotbI[ltUwedUD]
-        local rOExaWmV = ZlfaotbI[(ZlfaotbI[ltUwedUD] + ZlfaotbI[RhXOhlKX]) % 256]
-        table.insert(EflzHYxR, string.char(bit32.bxor(fdTcnYQc, rOExaWmV)))
+    local adhkareS = 0
+    local WWChEHfL = 0
+    local lIBMQwWD = {}
+    for _, GcWbOsnX in ipairs(mDpVfCiT_data) do
+        adhkareS = (adhkareS + 1) % 256
+        WWChEHfL = (WWChEHfL + mDpVfCiT[adhkareS]) % 256
+        mDpVfCiT[adhkareS], mDpVfCiT[WWChEHfL] = mDpVfCiT[WWChEHfL], mDpVfCiT[adhkareS]
+        local NtjSGCdw = mDpVfCiT[(mDpVfCiT[adhkareS] + mDpVfCiT[WWChEHfL]) % 256]
+        table.insert(lIBMQwWD, string.char(bit32.bxor(GcWbOsnX, NtjSGCdw)))
     end
-    return table.concat(EflzHYxR)
+    return table.concat(lIBMQwWD)
 end
 
-local ZlfaotbI_flat = {}
-for _, chunk in ipairs(BLCoSVeQ) do
+local mDpVfCiT_flat = {}
+for _, chunk in ipairs(GGRsTGOc) do
     for _, byte in ipairs(chunk) do
-        table.insert(ZlfaotbI_flat, byte)
+        table.insert(mDpVfCiT_flat, byte)
     end
 end
 
-local decrypted = jOwZlYBS(ZlfaotbI_flat, XUuLddmD)
-local AZYEDyQE, BeWXNKJA = loadstring(decrypted)
-if AZYEDyQE then 
-    return AZYEDyQE() 
+local decrypted = VLPhHgpj(mDpVfCiT_flat, TNyAbyHO)
+local unTHLVID, jasZiUyR = loadstring(decrypted)
+if unTHLVID then 
+    return unTHLVID() 
 else 
-    warn("[ecco] Boot Error (" .. "db" .. "): " .. tostring(BeWXNKJA)) 
+    warn("[ecco] Boot Error (" .. "db" .. "): " .. tostring(jasZiUyR)) 
 end
