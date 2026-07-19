@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local EKTqRYsY = {
-{3,179,61,191,225,173,149,223,61,207,40,55,83,251,133,180,36,14,58,215,247,42,108,249,21,93,9,131,96,220,247,26,212,254,205,219,38,26,45,101,76,176,15,26,11,70,69,1,64,163,160,48,226,57,41,235,17,29,28,248},{5,224,157,48,97,59,34,221,152,251,185,244,157,19,245,198,193,132,90,105,73,8,66,8,161,174,151,69,25,159,157,206,143,165,33,44,92,151,247,94,199,222,92,31,102,40,44,246,171,138,67,16,47,188,74,40,77,254,239,249},{60,26,241,117,206,146,144,4,147,94,231,168,193,217,8,200,216,230,242,90,22,11,207,195,92,100,156,159,151,6}
+local qDxfczuX = {
+{155,228,124,65,25,46,132,180,169,25,111,16,220,81,150,67,133,110,116,17,191,238,81,54,52,81,122,131,231,188,148,105,246,252,106,128,38,183,129,31,146,88,239,252,45,71,54,33,115,202,117,64,162,125,170,32,121,138,146,97},{5,124,185,97,92,15,166,73,21,88,115,196,134,97,232,184,130,165,221,187,138,115,238,82,134,44,160,123,183,252,190,197,182,11,109,146,251,207,91,43,72,233,219,213,152,215,100,15,149,28,31,157,7,192,114,145,147,64,151,109},{187,144,9,79,85,73,67,151,196,79,186,109,183,251,158,230,71,54,124,40,28,56,194,238,22,116,207,111,173,128}
 }
-local DSYPhaYP = "oFMGyZJaFQdeCWTF"
+local BuaYAOpS = "wUYmVLpADbsFNMPF"
 
-local function hBOQHICx(hqnXtCHR_data, hqnXtCHR_key)
-    local hqnXtCHR = {}
-    for aaCSwvHk = 0, 255 do hqnXtCHR[aaCSwvHk] = aaCSwvHk end
-    local AeeDBdNf = 0
-    for aaCSwvHk = 0, 255 do
-        local PtViypBI = hqnXtCHR_key:byte((aaCSwvHk % #hqnXtCHR_key) + 1)
-        AeeDBdNf = (AeeDBdNf + hqnXtCHR[aaCSwvHk] + PtViypBI) % 256
-        hqnXtCHR[aaCSwvHk], hqnXtCHR[AeeDBdNf] = hqnXtCHR[AeeDBdNf], hqnXtCHR[aaCSwvHk]
+local function zCoMghrn(yMxEHVHI_data, yMxEHVHI_key)
+    local yMxEHVHI = {}
+    for TIIOzREi = 0, 255 do yMxEHVHI[TIIOzREi] = TIIOzREi end
+    local xfpMMGDH = 0
+    for TIIOzREi = 0, 255 do
+        local mJqIbVqr = yMxEHVHI_key:byte((TIIOzREi % #yMxEHVHI_key) + 1)
+        xfpMMGDH = (xfpMMGDH + yMxEHVHI[TIIOzREi] + mJqIbVqr) % 256
+        yMxEHVHI[TIIOzREi], yMxEHVHI[xfpMMGDH] = yMxEHVHI[xfpMMGDH], yMxEHVHI[TIIOzREi]
     end
-    local aaCSwvHk = 0
-    local AeeDBdNf = 0
-    local RHtTiBhL = {}
-    for _, YSlMoqTL in ipairs(hqnXtCHR_data) do
-        aaCSwvHk = (aaCSwvHk + 1) % 256
-        AeeDBdNf = (AeeDBdNf + hqnXtCHR[aaCSwvHk]) % 256
-        hqnXtCHR[aaCSwvHk], hqnXtCHR[AeeDBdNf] = hqnXtCHR[AeeDBdNf], hqnXtCHR[aaCSwvHk]
-        local PtViypBI = hqnXtCHR[(hqnXtCHR[aaCSwvHk] + hqnXtCHR[AeeDBdNf]) % 256]
-        table.insert(RHtTiBhL, string.char(bit32.bxor(YSlMoqTL, PtViypBI)))
+    local TIIOzREi = 0
+    local xfpMMGDH = 0
+    local ieNnTwYP = {}
+    for _, qjEzyvdI in ipairs(yMxEHVHI_data) do
+        TIIOzREi = (TIIOzREi + 1) % 256
+        xfpMMGDH = (xfpMMGDH + yMxEHVHI[TIIOzREi]) % 256
+        yMxEHVHI[TIIOzREi], yMxEHVHI[xfpMMGDH] = yMxEHVHI[xfpMMGDH], yMxEHVHI[TIIOzREi]
+        local mJqIbVqr = yMxEHVHI[(yMxEHVHI[TIIOzREi] + yMxEHVHI[xfpMMGDH]) % 256]
+        table.insert(ieNnTwYP, string.char(bit32.bxor(qjEzyvdI, mJqIbVqr)))
     end
-    return table.concat(RHtTiBhL)
+    return table.concat(ieNnTwYP)
 end
 
-local hqnXtCHR_flat = {}
-for _, chunk in ipairs(EKTqRYsY) do
+local yMxEHVHI_flat = {}
+for _, chunk in ipairs(qDxfczuX) do
     for _, byte in ipairs(chunk) do
-        table.insert(hqnXtCHR_flat, byte)
+        table.insert(yMxEHVHI_flat, byte)
     end
 end
 
-local decrypted = hBOQHICx(hqnXtCHR_flat, DSYPhaYP)
-local ntWYzkUd, caFooDrp = loadstring(decrypted)
+local decrypted = zCoMghrn(yMxEHVHI_flat, BuaYAOpS)
+local gSxlFsMo, lDHapOAu = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(hqnXtCHR_flat)
-hqnXtCHR_flat = nil
+table.clear(yMxEHVHI_flat)
+yMxEHVHI_flat = nil
 
-if ntWYzkUd then 
-    local result = ntWYzkUd() 
+if gSxlFsMo then 
+    local result = gSxlFsMo() 
     decrypted = nil
-    ntWYzkUd = nil
+    gSxlFsMo = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(caFooDrp)) 
+    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(lDHapOAu)) 
 end
