@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local KEmUaiPx = {
-{117,6,113,39,133,19,168,231,163,148,67,96,115,204,16,84,6,160,185,129,116,96,132,15,82,94,255,70,148,126,106,163,140,135,30,63,52,113,98,73,127,194,135,125,126,3,51,204,30,126,81,12,66,193,73,104,16,118,207,93},{181,139,178,238,239,27,228,23,253,31,204,173,185,246,5,208,53,133,147,1,153,32,30,2,169,194,156,249,25,38,72,192,134,117,100,3,207,0,225,187,150,80,108,39,170,25,97,18,207,29,145,171,125,33,44,169,160,21,203,205},{221,37,244,188,228,21,139,149,29,223,203,196,114,175,67,6,2,61,97,134,66,246,211,40,142}
+local EUeKHAvz = {
+{99,55,57,224,114,56,154,7,63,188,67,190,15,57,190,106,222,18,5,196,161,8,96,178,72,131,239,187,160,78,34,104,43,65,219,220,124,44,220,253,225,18,124,97,79,108,189,130,0,6,110,35,28,185,163,78,175,125,190,49},{210,45,217,240,175,210,23,83,131,246,111,56,96,134,28,245,76,26,45,10,95,12,115,93,146,72,83,13,102,220,244,110,218,76,111,15,28,37,248,2,196,49,0,61,173,52,72,86,51,100,6,184,45,85,60,127,156,250,246,199},{95,211,22,29,139,10,95,252,195,108,125,236,86,154,223,230,18,93,64,85,76,63,203,67,241}
 }
-local jMwmtnVf = "AlKLjUVgOomISqCZ"
+local uXFmwcnF = "ixaIngDtrFOQzYPU"
 
-local function Izwtxkfb(oNUsCYjU_data, oNUsCYjU_key)
-    local oNUsCYjU = {}
-    for DDPTGKyn = 0, 255 do oNUsCYjU[DDPTGKyn] = DDPTGKyn end
-    local ySsZBqom = 0
-    for DDPTGKyn = 0, 255 do
-        local vwBMYbjg = oNUsCYjU_key:byte((DDPTGKyn % #oNUsCYjU_key) + 1)
-        ySsZBqom = (ySsZBqom + oNUsCYjU[DDPTGKyn] + vwBMYbjg) % 256
-        oNUsCYjU[DDPTGKyn], oNUsCYjU[ySsZBqom] = oNUsCYjU[ySsZBqom], oNUsCYjU[DDPTGKyn]
+local function UxLZZYTN(VzVeUWZP_data, VzVeUWZP_key)
+    local VzVeUWZP = {}
+    for iRORttcP = 0, 255 do VzVeUWZP[iRORttcP] = iRORttcP end
+    local RUdRvaUP = 0
+    for iRORttcP = 0, 255 do
+        local dYbnXFhb = VzVeUWZP_key:byte((iRORttcP % #VzVeUWZP_key) + 1)
+        RUdRvaUP = (RUdRvaUP + VzVeUWZP[iRORttcP] + dYbnXFhb) % 256
+        VzVeUWZP[iRORttcP], VzVeUWZP[RUdRvaUP] = VzVeUWZP[RUdRvaUP], VzVeUWZP[iRORttcP]
     end
-    local DDPTGKyn = 0
-    local ySsZBqom = 0
-    local qqjxhbhy = {}
-    for _, IUkrpmof in ipairs(oNUsCYjU_data) do
-        DDPTGKyn = (DDPTGKyn + 1) % 256
-        ySsZBqom = (ySsZBqom + oNUsCYjU[DDPTGKyn]) % 256
-        oNUsCYjU[DDPTGKyn], oNUsCYjU[ySsZBqom] = oNUsCYjU[ySsZBqom], oNUsCYjU[DDPTGKyn]
-        local vwBMYbjg = oNUsCYjU[(oNUsCYjU[DDPTGKyn] + oNUsCYjU[ySsZBqom]) % 256]
-        table.insert(qqjxhbhy, string.char(bit32.bxor(IUkrpmof, vwBMYbjg)))
+    local iRORttcP = 0
+    local RUdRvaUP = 0
+    local vkDucSuj = {}
+    for _, XzTMUmbD in ipairs(VzVeUWZP_data) do
+        iRORttcP = (iRORttcP + 1) % 256
+        RUdRvaUP = (RUdRvaUP + VzVeUWZP[iRORttcP]) % 256
+        VzVeUWZP[iRORttcP], VzVeUWZP[RUdRvaUP] = VzVeUWZP[RUdRvaUP], VzVeUWZP[iRORttcP]
+        local dYbnXFhb = VzVeUWZP[(VzVeUWZP[iRORttcP] + VzVeUWZP[RUdRvaUP]) % 256]
+        table.insert(vkDucSuj, string.char(bit32.bxor(XzTMUmbD, dYbnXFhb)))
     end
-    return table.concat(qqjxhbhy)
+    return table.concat(vkDucSuj)
 end
 
-local oNUsCYjU_flat = {}
-for _, chunk in ipairs(KEmUaiPx) do
+local VzVeUWZP_flat = {}
+for _, chunk in ipairs(EUeKHAvz) do
     for _, byte in ipairs(chunk) do
-        table.insert(oNUsCYjU_flat, byte)
+        table.insert(VzVeUWZP_flat, byte)
     end
 end
 
-local decrypted = Izwtxkfb(oNUsCYjU_flat, jMwmtnVf)
-local tyAEpIwN, pMbXEeSC = loadstring(decrypted)
+local decrypted = UxLZZYTN(VzVeUWZP_flat, uXFmwcnF)
+local URGeUOfn, TVYrmVbz = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(oNUsCYjU_flat)
-oNUsCYjU_flat = nil
+table.clear(VzVeUWZP_flat)
+VzVeUWZP_flat = nil
 
-if tyAEpIwN then 
-    local result = tyAEpIwN() 
+if URGeUOfn then 
+    local result = URGeUOfn() 
     decrypted = nil
-    tyAEpIwN = nil
+    URGeUOfn = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(pMbXEeSC)) 
+    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(TVYrmVbz)) 
 end
