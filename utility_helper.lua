@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local ilcYyBNo = {
-{198,168,203,10,22,232,62,78,74,101,226,165,16,20,103,62,33,152,41,196,214,201,255,130,225,58,160,50,118,83,166,70,111,214,55,112,108,10,30,104,97,172,148,200,108,80,67,206,98,231,64,247,223,239,11,182,35,225,114,246},{157,226,50,125,75,158,239,173,182,207,103,115,214,121,233,163,129,189,167,189,153,249,186,245,4,85,153,237,4,14,241,58,232,222,176,113,136,149,126,72,232,137,121,88,96,146,114,118,189,207,128,237,7,14,247,111,13,209,100,164},{214,214,67,113,86,239,153,42,50,249,124,158,187,225,130,193,79,239,101,252,237,78,70,251,13,246}
+local YvHFCJon = {
+{193,230,113,223,67,234,149,27,190,75,39,66,19,239,145,21,128,89,40,87,42,32,219,213,193,53,12,87,114,212,64,134,48,235,66,135,251,68,209,18,234,83,43,29,137,227,62,198,219,240,221,38,53,219,79,225,61,45,120,76},{180,153,110,24,195,254,135,255,88,39,46,9,206,213,165,156,193,160,74,204,133,132,9,193,154,29,59,133,34,252,70,78,194,28,48,149,131,236,18,86,156,164,19,230,56,232,226,39,119,147,166,138,143,103,240,253,75,185,127,134},{182,37,228,62,53,240,193,191,88,196,14,60,79,236,10,35,37,151,158,161,181,189,72,21,250,99}
 }
-local juteEtjR = "JshgqxLxbNcmRzQs"
+local meKwHtiE = "cvIJXkCevfKNNgnS"
 
-local function mAOnDqmE(ChxNERZu_data, ChxNERZu_key)
-    local ChxNERZu = {}
-    for shCAJajc = 0, 255 do ChxNERZu[shCAJajc] = shCAJajc end
-    local FimeMQTN = 0
-    for shCAJajc = 0, 255 do
-        local ANHyZtrM = ChxNERZu_key:byte((shCAJajc % #ChxNERZu_key) + 1)
-        FimeMQTN = (FimeMQTN + ChxNERZu[shCAJajc] + ANHyZtrM) % 256
-        ChxNERZu[shCAJajc], ChxNERZu[FimeMQTN] = ChxNERZu[FimeMQTN], ChxNERZu[shCAJajc]
+local function teKsYagK(ExiqYAmI_data, ExiqYAmI_key)
+    local ExiqYAmI = {}
+    for fhaWBVJm = 0, 255 do ExiqYAmI[fhaWBVJm] = fhaWBVJm end
+    local QscAbUbx = 0
+    for fhaWBVJm = 0, 255 do
+        local BnUScwbb = ExiqYAmI_key:byte((fhaWBVJm % #ExiqYAmI_key) + 1)
+        QscAbUbx = (QscAbUbx + ExiqYAmI[fhaWBVJm] + BnUScwbb) % 256
+        ExiqYAmI[fhaWBVJm], ExiqYAmI[QscAbUbx] = ExiqYAmI[QscAbUbx], ExiqYAmI[fhaWBVJm]
     end
-    local shCAJajc = 0
-    local FimeMQTN = 0
-    local GEAAsngC = {}
-    for _, akaIUvvR in ipairs(ChxNERZu_data) do
-        shCAJajc = (shCAJajc + 1) % 256
-        FimeMQTN = (FimeMQTN + ChxNERZu[shCAJajc]) % 256
-        ChxNERZu[shCAJajc], ChxNERZu[FimeMQTN] = ChxNERZu[FimeMQTN], ChxNERZu[shCAJajc]
-        local ANHyZtrM = ChxNERZu[(ChxNERZu[shCAJajc] + ChxNERZu[FimeMQTN]) % 256]
-        table.insert(GEAAsngC, string.char(bit32.bxor(akaIUvvR, ANHyZtrM)))
+    local fhaWBVJm = 0
+    local QscAbUbx = 0
+    local iJArmexJ = {}
+    for _, ohlDYGPY in ipairs(ExiqYAmI_data) do
+        fhaWBVJm = (fhaWBVJm + 1) % 256
+        QscAbUbx = (QscAbUbx + ExiqYAmI[fhaWBVJm]) % 256
+        ExiqYAmI[fhaWBVJm], ExiqYAmI[QscAbUbx] = ExiqYAmI[QscAbUbx], ExiqYAmI[fhaWBVJm]
+        local BnUScwbb = ExiqYAmI[(ExiqYAmI[fhaWBVJm] + ExiqYAmI[QscAbUbx]) % 256]
+        table.insert(iJArmexJ, string.char(bit32.bxor(ohlDYGPY, BnUScwbb)))
     end
-    return table.concat(GEAAsngC)
+    return table.concat(iJArmexJ)
 end
 
-local ChxNERZu_flat = {}
-for _, chunk in ipairs(ilcYyBNo) do
+local ExiqYAmI_flat = {}
+for _, chunk in ipairs(YvHFCJon) do
     for _, byte in ipairs(chunk) do
-        table.insert(ChxNERZu_flat, byte)
+        table.insert(ExiqYAmI_flat, byte)
     end
 end
 
-local decrypted = mAOnDqmE(ChxNERZu_flat, juteEtjR)
-local LNRAmFKs, vCCISZVM = loadstring(decrypted)
+local decrypted = teKsYagK(ExiqYAmI_flat, meKwHtiE)
+local GkiVyaRM, TcpXdjcW = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(ChxNERZu_flat)
-ChxNERZu_flat = nil
+table.clear(ExiqYAmI_flat)
+ExiqYAmI_flat = nil
 
-if LNRAmFKs then 
-    local result = LNRAmFKs() 
+if GkiVyaRM then 
+    local result = GkiVyaRM() 
     decrypted = nil
-    LNRAmFKs = nil
+    GkiVyaRM = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(vCCISZVM)) 
+    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(TcpXdjcW)) 
 end
