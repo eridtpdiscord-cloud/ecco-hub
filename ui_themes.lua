@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local dpdVnIzj = {
-{89,61,35,69,184,108,163,118,201,86,244,137,23,158,240,107,52,206,75,255,114,64,39,65,88,62,111,245,100,67,63,163,70,159,20,176,28,187,246,100,150,231,229,205,31,156,215,53,75,68,215,36,193,255,94,77,197,77,22,89},{160,204,82,69,11,124,59,192,22,194,177,192,190,17,68,183,166,109,115,253,112,60,64,142,126,202,100,12,134,216,97,133,56,33,21,162,157,234,112,186,164,56,194,34,244,217,210,206,107,225,239,1,52,7,88,165,209,35,134,171},{248,172,222,208,36,31,104,214,8,229,202,101,127,253,101,52,118,177,76,54,90}
+local eiDUDIJh = {
+{13,98,132,51,21,189,240,142,46,39,71,211,188,124,82,9,49,78,204,240,154,142,184,255,36,211,47,70,60,140,179,92,159,200,98,111,191,15,165,55,144,250,248,107,60,2,132,96,60,79,155,32,147,55,103,247,13,4,76,3},{236,143,0,28,6,36,210,118,168,216,245,253,111,103,156,64,244,142,68,128,251,142,118,41,112,23,236,127,6,192,254,233,116,136,117,245,35,70,49,159,53,202,132,30,48,15,151,245,153,85,69,169,241,54,234,142,255,130,187,241},{139,153,47,117,154,72,78,108,4,6,48,99,123,216,214,142,173,70,249,160,140}
 }
-local ojczPyfJ = "kMtRebXePXGiBBlG"
+local VgrTqLrQ = "iNDZRVQtLNJSaLQS"
 
-local function hvCJlyJP(GiAefNZy_data, GiAefNZy_key)
-    local GiAefNZy = {}
-    for kWhTTFlX = 0, 255 do GiAefNZy[kWhTTFlX] = kWhTTFlX end
-    local VdCRCNuH = 0
-    for kWhTTFlX = 0, 255 do
-        local kHiVgcSj = GiAefNZy_key:byte((kWhTTFlX % #GiAefNZy_key) + 1)
-        VdCRCNuH = (VdCRCNuH + GiAefNZy[kWhTTFlX] + kHiVgcSj) % 256
-        GiAefNZy[kWhTTFlX], GiAefNZy[VdCRCNuH] = GiAefNZy[VdCRCNuH], GiAefNZy[kWhTTFlX]
+local function QFxWTrje(UBMJFMcj_data, UBMJFMcj_key)
+    local UBMJFMcj = {}
+    for aCUoUfZA = 0, 255 do UBMJFMcj[aCUoUfZA] = aCUoUfZA end
+    local OjfbBcoo = 0
+    for aCUoUfZA = 0, 255 do
+        local dlxnPTVE = UBMJFMcj_key:byte((aCUoUfZA % #UBMJFMcj_key) + 1)
+        OjfbBcoo = (OjfbBcoo + UBMJFMcj[aCUoUfZA] + dlxnPTVE) % 256
+        UBMJFMcj[aCUoUfZA], UBMJFMcj[OjfbBcoo] = UBMJFMcj[OjfbBcoo], UBMJFMcj[aCUoUfZA]
     end
-    local kWhTTFlX = 0
-    local VdCRCNuH = 0
-    local FvRIaZSK = {}
-    for _, OLfapzFi in ipairs(GiAefNZy_data) do
-        kWhTTFlX = (kWhTTFlX + 1) % 256
-        VdCRCNuH = (VdCRCNuH + GiAefNZy[kWhTTFlX]) % 256
-        GiAefNZy[kWhTTFlX], GiAefNZy[VdCRCNuH] = GiAefNZy[VdCRCNuH], GiAefNZy[kWhTTFlX]
-        local kHiVgcSj = GiAefNZy[(GiAefNZy[kWhTTFlX] + GiAefNZy[VdCRCNuH]) % 256]
-        table.insert(FvRIaZSK, string.char(bit32.bxor(OLfapzFi, kHiVgcSj)))
+    local aCUoUfZA = 0
+    local OjfbBcoo = 0
+    local tfgHrHWQ = {}
+    for _, sBovAflM in ipairs(UBMJFMcj_data) do
+        aCUoUfZA = (aCUoUfZA + 1) % 256
+        OjfbBcoo = (OjfbBcoo + UBMJFMcj[aCUoUfZA]) % 256
+        UBMJFMcj[aCUoUfZA], UBMJFMcj[OjfbBcoo] = UBMJFMcj[OjfbBcoo], UBMJFMcj[aCUoUfZA]
+        local dlxnPTVE = UBMJFMcj[(UBMJFMcj[aCUoUfZA] + UBMJFMcj[OjfbBcoo]) % 256]
+        table.insert(tfgHrHWQ, string.char(bit32.bxor(sBovAflM, dlxnPTVE)))
     end
-    return table.concat(FvRIaZSK)
+    return table.concat(tfgHrHWQ)
 end
 
-local GiAefNZy_flat = {}
-for _, chunk in ipairs(dpdVnIzj) do
+local UBMJFMcj_flat = {}
+for _, chunk in ipairs(eiDUDIJh) do
     for _, byte in ipairs(chunk) do
-        table.insert(GiAefNZy_flat, byte)
+        table.insert(UBMJFMcj_flat, byte)
     end
 end
 
-local decrypted = hvCJlyJP(GiAefNZy_flat, ojczPyfJ)
-local eRtmkiDM, OoGwqYID = loadstring(decrypted)
+local decrypted = QFxWTrje(UBMJFMcj_flat, VgrTqLrQ)
+local IjAlrayp, fEQKCYli = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(GiAefNZy_flat)
-GiAefNZy_flat = nil
+table.clear(UBMJFMcj_flat)
+UBMJFMcj_flat = nil
 
-if eRtmkiDM then 
-    local result = eRtmkiDM() 
+if IjAlrayp then 
+    local result = IjAlrayp() 
     decrypted = nil
-    eRtmkiDM = nil
+    IjAlrayp = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(OoGwqYID)) 
+    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(fEQKCYli)) 
 end
