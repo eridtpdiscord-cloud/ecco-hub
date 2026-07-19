@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local OtcFVxYn = {
-{248,195,150,12,58,119,195,193,249,169,227,108,140,30,45,69,44,116,230,190,165,242,175,236,229,44,92,93,16,145,252,91,244,1,247,0,142,158,109,69,47,35,239,144,157,65,238,174,64,116,2,81,141,42,31,141,246,3,12,246},{210,245,34,196,119,68,169,142,54,244,180,32,209,129,243,124,148,47,72,75,140,155,139,40,182,247,98,191,73,216,97,55,84,66,233,167,138,85,158,156,127,208,159,145,109,58,55,171,39,119,158,133,98,170,38,191,223,187,151,250},{224,94,136,167,124,171,12,193,135,151,31,67,199,210,172,84,241,102,57,164,25,114,78,70,205,189,243,144}
+local QgPzrjby = {
+{193,196,170,191,96,77,79,129,152,16,246,122,253,79,178,169,190,74,233,95,82,213,220,26,101,222,62,36,36,67,64,154,24,158,142,35,128,100,223,57,161,146,67,56,204,9,185,186,106,227,125,78,17,105,176,0,186,89,50,173},{50,160,141,157,251,6,215,109,117,205,145,217,28,212,251,133,82,23,193,198,116,151,97,69,153,164,216,116,89,98,236,52,44,221,112,223,236,205,54,201,215,38,106,216,74,40,4,54,35,135,255,213,163,149,125,97,133,250,206,113},{141,151,119,145,148,195,202,237,97,231,27,228,41,119,47,108,130,167,155,250,44,59,215,200,67,36,107,52}
 }
-local ApKlNatY = "coUEjmNnusVWilve"
+local jCpKlqyV = "kHHeAzoQzsIEVRbr"
 
-local function FXUvrKPO(fCaLdKXS_data, fCaLdKXS_key)
-    local fCaLdKXS = {}
-    for DrRTvQRI = 0, 255 do fCaLdKXS[DrRTvQRI] = DrRTvQRI end
-    local brmTiGYd = 0
-    for DrRTvQRI = 0, 255 do
-        local iCbderDI = fCaLdKXS_key:byte((DrRTvQRI % #fCaLdKXS_key) + 1)
-        brmTiGYd = (brmTiGYd + fCaLdKXS[DrRTvQRI] + iCbderDI) % 256
-        fCaLdKXS[DrRTvQRI], fCaLdKXS[brmTiGYd] = fCaLdKXS[brmTiGYd], fCaLdKXS[DrRTvQRI]
+local function McAUfIiO(YfGwQnQN_data, YfGwQnQN_key)
+    local YfGwQnQN = {}
+    for ydxnNtlR = 0, 255 do YfGwQnQN[ydxnNtlR] = ydxnNtlR end
+    local sqpQDegT = 0
+    for ydxnNtlR = 0, 255 do
+        local wxgZdnzj = YfGwQnQN_key:byte((ydxnNtlR % #YfGwQnQN_key) + 1)
+        sqpQDegT = (sqpQDegT + YfGwQnQN[ydxnNtlR] + wxgZdnzj) % 256
+        YfGwQnQN[ydxnNtlR], YfGwQnQN[sqpQDegT] = YfGwQnQN[sqpQDegT], YfGwQnQN[ydxnNtlR]
     end
-    local DrRTvQRI = 0
-    local brmTiGYd = 0
-    local mQeyXZnl = {}
-    for _, kxrDudgY in ipairs(fCaLdKXS_data) do
-        DrRTvQRI = (DrRTvQRI + 1) % 256
-        brmTiGYd = (brmTiGYd + fCaLdKXS[DrRTvQRI]) % 256
-        fCaLdKXS[DrRTvQRI], fCaLdKXS[brmTiGYd] = fCaLdKXS[brmTiGYd], fCaLdKXS[DrRTvQRI]
-        local iCbderDI = fCaLdKXS[(fCaLdKXS[DrRTvQRI] + fCaLdKXS[brmTiGYd]) % 256]
-        table.insert(mQeyXZnl, string.char(bit32.bxor(kxrDudgY, iCbderDI)))
+    local ydxnNtlR = 0
+    local sqpQDegT = 0
+    local cAbLoixt = {}
+    for _, NDroQGRd in ipairs(YfGwQnQN_data) do
+        ydxnNtlR = (ydxnNtlR + 1) % 256
+        sqpQDegT = (sqpQDegT + YfGwQnQN[ydxnNtlR]) % 256
+        YfGwQnQN[ydxnNtlR], YfGwQnQN[sqpQDegT] = YfGwQnQN[sqpQDegT], YfGwQnQN[ydxnNtlR]
+        local wxgZdnzj = YfGwQnQN[(YfGwQnQN[ydxnNtlR] + YfGwQnQN[sqpQDegT]) % 256]
+        table.insert(cAbLoixt, string.char(bit32.bxor(NDroQGRd, wxgZdnzj)))
     end
-    return table.concat(mQeyXZnl)
+    return table.concat(cAbLoixt)
 end
 
-local fCaLdKXS_flat = {}
-for _, chunk in ipairs(OtcFVxYn) do
+local YfGwQnQN_flat = {}
+for _, chunk in ipairs(QgPzrjby) do
     for _, byte in ipairs(chunk) do
-        table.insert(fCaLdKXS_flat, byte)
+        table.insert(YfGwQnQN_flat, byte)
     end
 end
 
-local decrypted = FXUvrKPO(fCaLdKXS_flat, ApKlNatY)
-local KEMxqZpI, vGdsTjwO = loadstring(decrypted)
+local decrypted = McAUfIiO(YfGwQnQN_flat, jCpKlqyV)
+local YBrDLGjb, taaaEiLW = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(fCaLdKXS_flat)
-fCaLdKXS_flat = nil
+table.clear(YfGwQnQN_flat)
+YfGwQnQN_flat = nil
 
-if KEMxqZpI then 
-    local result = KEMxqZpI() 
+if YBrDLGjb then 
+    local result = YBrDLGjb() 
     decrypted = nil
-    KEMxqZpI = nil
+    YBrDLGjb = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "teleport_handler" .. "): " .. tostring(vGdsTjwO)) 
+    warn("[ecco] Boot Error (" .. "teleport_handler" .. "): " .. tostring(taaaEiLW)) 
 end
