@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local nRqCqCWe = {
-{207,205,165,186,111,211,223,158,174,99,233,222,237,247,24,10,161,181,27,144,168,211,227,99,60,214,48,237,73,49,129,240,170,218,42,115,249,226,73,124,210,15,214,176,81,83,132,228,201,132,222,43,165,102,145,132,66,242,128,253},{18,74,17,139,102,111,84,83,236,199,236,138,229,156,120,183,18,3,245,106,110,215,192,161,247,105,120,191,19,243,196,166,166,219,199,48,252,251,73,127,15,218,201,14,205,200,25,226,190,98,172,249,233,107,9,131,56,16,39,252},{183,36,196,208,38,45,19,227,42,95,40,129,225,175,143,168,111,128,128,159,60,82,192,28,243,253}
+local zafgqGCc = {
+{55,116,216,120,153,63,4,7,42,76,194,40,196,127,209,64,130,165,18,51,23,112,89,88,106,181,39,100,23,84,82,12,234,104,176,100,199,239,237,148,28,35,77,128,41,136,65,234,220,26,64,26,158,54,84,14,214,68,190,66},{230,185,151,51,29,47,4,99,37,146,160,215,123,55,41,190,88,55,40,1,7,211,205,95,215,235,72,77,35,99,98,144,158,139,60,216,177,192,211,156,96,33,241,89,66,196,30,167,137,129,137,26,254,129,123,7,122,173,63,195},{46,180,54,37,185,208,248,27,154,153,94,231,174,74,10,157,15,200,107,94,233,91,60,213,229,76}
 }
-local PeqtzkMm = "kPGvxpCeEoRWqBtn"
+local ogBemjDc = "LScefdPDqNOfFaaJ"
 
-local function SgyPUEnx(FRliNAAL_data, FRliNAAL_key)
-    local FRliNAAL = {}
-    for tEIRyRJT = 0, 255 do FRliNAAL[tEIRyRJT] = tEIRyRJT end
-    local HoOXTxRY = 0
-    for tEIRyRJT = 0, 255 do
-        local kJegLXWx = FRliNAAL_key:byte((tEIRyRJT % #FRliNAAL_key) + 1)
-        HoOXTxRY = (HoOXTxRY + FRliNAAL[tEIRyRJT] + kJegLXWx) % 256
-        FRliNAAL[tEIRyRJT], FRliNAAL[HoOXTxRY] = FRliNAAL[HoOXTxRY], FRliNAAL[tEIRyRJT]
+local function GtckBHZq(JiCwmgWF_data, JiCwmgWF_key)
+    local JiCwmgWF = {}
+    for RcCTcMMn = 0, 255 do JiCwmgWF[RcCTcMMn] = RcCTcMMn end
+    local HXaKceQB = 0
+    for RcCTcMMn = 0, 255 do
+        local fHvCIAbU = JiCwmgWF_key:byte((RcCTcMMn % #JiCwmgWF_key) + 1)
+        HXaKceQB = (HXaKceQB + JiCwmgWF[RcCTcMMn] + fHvCIAbU) % 256
+        JiCwmgWF[RcCTcMMn], JiCwmgWF[HXaKceQB] = JiCwmgWF[HXaKceQB], JiCwmgWF[RcCTcMMn]
     end
-    local tEIRyRJT = 0
-    local HoOXTxRY = 0
-    local oafpWZCv = {}
-    for _, wprKJtrU in ipairs(FRliNAAL_data) do
-        tEIRyRJT = (tEIRyRJT + 1) % 256
-        HoOXTxRY = (HoOXTxRY + FRliNAAL[tEIRyRJT]) % 256
-        FRliNAAL[tEIRyRJT], FRliNAAL[HoOXTxRY] = FRliNAAL[HoOXTxRY], FRliNAAL[tEIRyRJT]
-        local kJegLXWx = FRliNAAL[(FRliNAAL[tEIRyRJT] + FRliNAAL[HoOXTxRY]) % 256]
-        table.insert(oafpWZCv, string.char(bit32.bxor(wprKJtrU, kJegLXWx)))
+    local RcCTcMMn = 0
+    local HXaKceQB = 0
+    local pRLsXghN = {}
+    for _, cwTWiUlg in ipairs(JiCwmgWF_data) do
+        RcCTcMMn = (RcCTcMMn + 1) % 256
+        HXaKceQB = (HXaKceQB + JiCwmgWF[RcCTcMMn]) % 256
+        JiCwmgWF[RcCTcMMn], JiCwmgWF[HXaKceQB] = JiCwmgWF[HXaKceQB], JiCwmgWF[RcCTcMMn]
+        local fHvCIAbU = JiCwmgWF[(JiCwmgWF[RcCTcMMn] + JiCwmgWF[HXaKceQB]) % 256]
+        table.insert(pRLsXghN, string.char(bit32.bxor(cwTWiUlg, fHvCIAbU)))
     end
-    return table.concat(oafpWZCv)
+    return table.concat(pRLsXghN)
 end
 
-local FRliNAAL_flat = {}
-for _, chunk in ipairs(nRqCqCWe) do
+local JiCwmgWF_flat = {}
+for _, chunk in ipairs(zafgqGCc) do
     for _, byte in ipairs(chunk) do
-        table.insert(FRliNAAL_flat, byte)
+        table.insert(JiCwmgWF_flat, byte)
     end
 end
 
-local decrypted = SgyPUEnx(FRliNAAL_flat, PeqtzkMm)
-local GzVRkzMs, GLJOBAbh = loadstring(decrypted)
+local decrypted = GtckBHZq(JiCwmgWF_flat, ogBemjDc)
+local gckssVrt, DZraWnXh = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(FRliNAAL_flat)
-FRliNAAL_flat = nil
+table.clear(JiCwmgWF_flat)
+JiCwmgWF_flat = nil
 
-if GzVRkzMs then 
-    local result = GzVRkzMs() 
+if gckssVrt then 
+    local result = gckssVrt() 
     decrypted = nil
-    GzVRkzMs = nil
+    gckssVrt = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(GLJOBAbh)) 
+    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(DZraWnXh)) 
 end
