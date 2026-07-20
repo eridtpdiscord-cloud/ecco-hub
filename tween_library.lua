@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local RaQPQFkZ = {
-{34,98,112,105,113,180,172,164,107,226,159,101,144,183,219,178,100,230,246,44,207,44,15,138,10,132,218,89,95,29,144,183,119,106,214,14,8,99,0,28,160,76,168,54,244,101,94,165,214,11,42,218,127,31,150,45,236,108,142,109},{246,1,154,57,186,5,252,23,190,15,42,9,142,193,164,169,79,6,123,156,69,99,94,63,228,70,240,80,235,47,15,82,67,35,158,10,29,148,11,65,61,236,220,105,177,31,241,177,172,70,30,226,46,243,92,221,12,172,161,229},{227,125,117,79,251,183,225,131,250,90,82,34,220,180,251,203,76,114,164,171,219,250,116,179,38}
+local hcRvDYVt = {
+{14,42,240,114,94,126,58,85,213,94,202,78,92,244,79,199,40,245,2,60,139,221,212,240,239,31,236,239,61,15,106,218,127,90,29,3,177,154,203,40,221,131,69,211,225,89,146,236,73,7,32,99,5,55,182,124,222,89,54,111},{131,221,252,253,186,233,112,219,244,79,165,95,230,16,225,68,119,226,160,197,67,117,192,215,160,147,228,66,223,195,80,202,250,165,5,15,7,17,15,10,205,115,44,170,197,184,59,24,44,31,240,165,77,127,26,53,133,19,135,95},{151,255,96,123,62,10,219,168,152,150,162,53,151,254,74,152,252,232,132,80,119,2,185,165,203}
 }
-local zNPpjKzF = "nUOCnXeeUtxEBcfW"
+local XJnkxcME = "uwmhyiDUgdrZCzzW"
 
-local function HyoaGLuX(rzXXOigr_data, rzXXOigr_key)
-    local rzXXOigr = {}
-    for OMPIIXGk = 0, 255 do rzXXOigr[OMPIIXGk] = OMPIIXGk end
-    local UmtgXclc = 0
-    for OMPIIXGk = 0, 255 do
-        local hlgNUsRX = rzXXOigr_key:byte((OMPIIXGk % #rzXXOigr_key) + 1)
-        UmtgXclc = (UmtgXclc + rzXXOigr[OMPIIXGk] + hlgNUsRX) % 256
-        rzXXOigr[OMPIIXGk], rzXXOigr[UmtgXclc] = rzXXOigr[UmtgXclc], rzXXOigr[OMPIIXGk]
+local function UwwzgAAs(wmOTIRqS_data, wmOTIRqS_key)
+    local wmOTIRqS = {}
+    for BNdGOKNS = 0, 255 do wmOTIRqS[BNdGOKNS] = BNdGOKNS end
+    local QNitztgB = 0
+    for BNdGOKNS = 0, 255 do
+        local VPannihE = wmOTIRqS_key:byte((BNdGOKNS % #wmOTIRqS_key) + 1)
+        QNitztgB = (QNitztgB + wmOTIRqS[BNdGOKNS] + VPannihE) % 256
+        wmOTIRqS[BNdGOKNS], wmOTIRqS[QNitztgB] = wmOTIRqS[QNitztgB], wmOTIRqS[BNdGOKNS]
     end
-    local OMPIIXGk = 0
-    local UmtgXclc = 0
-    local DzhhiDqv = {}
-    for _, SRtpmbse in ipairs(rzXXOigr_data) do
-        OMPIIXGk = (OMPIIXGk + 1) % 256
-        UmtgXclc = (UmtgXclc + rzXXOigr[OMPIIXGk]) % 256
-        rzXXOigr[OMPIIXGk], rzXXOigr[UmtgXclc] = rzXXOigr[UmtgXclc], rzXXOigr[OMPIIXGk]
-        local hlgNUsRX = rzXXOigr[(rzXXOigr[OMPIIXGk] + rzXXOigr[UmtgXclc]) % 256]
-        table.insert(DzhhiDqv, string.char(bit32.bxor(SRtpmbse, hlgNUsRX)))
+    local BNdGOKNS = 0
+    local QNitztgB = 0
+    local DhezmVlC = {}
+    for _, YeXbpBjf in ipairs(wmOTIRqS_data) do
+        BNdGOKNS = (BNdGOKNS + 1) % 256
+        QNitztgB = (QNitztgB + wmOTIRqS[BNdGOKNS]) % 256
+        wmOTIRqS[BNdGOKNS], wmOTIRqS[QNitztgB] = wmOTIRqS[QNitztgB], wmOTIRqS[BNdGOKNS]
+        local VPannihE = wmOTIRqS[(wmOTIRqS[BNdGOKNS] + wmOTIRqS[QNitztgB]) % 256]
+        table.insert(DhezmVlC, string.char(bit32.bxor(YeXbpBjf, VPannihE)))
     end
-    return table.concat(DzhhiDqv)
+    return table.concat(DhezmVlC)
 end
 
-local rzXXOigr_flat = {}
-for _, chunk in ipairs(RaQPQFkZ) do
+local wmOTIRqS_flat = {}
+for _, chunk in ipairs(hcRvDYVt) do
     for _, byte in ipairs(chunk) do
-        table.insert(rzXXOigr_flat, byte)
+        table.insert(wmOTIRqS_flat, byte)
     end
 end
 
-local decrypted = HyoaGLuX(rzXXOigr_flat, zNPpjKzF)
-local kaonnzxP, tiWhVhBa = loadstring(decrypted)
+local decrypted = UwwzgAAs(wmOTIRqS_flat, XJnkxcME)
+local LfitRTGC, nLaLysNo = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(rzXXOigr_flat)
-rzXXOigr_flat = nil
+table.clear(wmOTIRqS_flat)
+wmOTIRqS_flat = nil
 
-if kaonnzxP then 
-    local result = kaonnzxP() 
+if LfitRTGC then 
+    local result = LfitRTGC() 
     decrypted = nil
-    kaonnzxP = nil
+    LfitRTGC = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(tiWhVhBa)) 
+    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(nLaLysNo)) 
 end
