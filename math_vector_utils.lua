@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local fIWYdZes = {
-{252,35,177,131,7,134,129,91,28,27,211,126,0,55,70,98,143,57,155,238,82,112,215,133,202,252,122,97,101,68,140,92,173,215,87,167,92,150,140,229,43,205,124,169,151,90,214,202,42,89,188,144,29,65,155,46,150,76,77,151},{240,36,194,207,91,212,107,191,68,34,98,95,224,225,208,88,86,64,116,83,156,128,200,113,240,113,71,174,213,200,221,163,234,28,143,117,63,80,101,123,249,179,59,82,129,221,253,202,135,29,125,248,178,244,23,91,18,81,156,74},{179,119,251,225,129,110,109,52,56,186,54,195,180,249,254,233,83,115,227,0,217,36,116,167,6,46,118,235,159}
+local afljJJRd = {
+{12,239,73,49,250,166,168,47,215,235,223,164,240,65,89,227,33,87,140,71,41,32,185,84,205,246,59,42,241,143,47,141,52,6,102,93,164,179,207,46,138,112,108,148,180,204,184,168,149,119,239,35,54,27,1,76,114,17,49,191},{146,181,191,44,55,186,141,228,131,85,146,177,141,200,52,182,21,123,179,110,26,19,2,199,109,142,45,186,225,63,63,190,154,91,112,109,11,183,97,114,70,185,15,246,48,184,42,193,180,219,158,201,62,187,37,189,189,156,223,62},{1,143,106,218,19,34,102,57,11,176,116,157,116,138,246,105,123,210,142,45,178,235,86,28,162,15,46,103,202}
 }
-local mDrowiir = "CZpTOrJfqJqqMHKZ"
+local mmJtYhCo = "mgyPOqndbIBLuVVx"
 
-local function ZreFZStM(iTnecCQB_data, iTnecCQB_key)
-    local iTnecCQB = {}
-    for SjzNqlSD = 0, 255 do iTnecCQB[SjzNqlSD] = SjzNqlSD end
-    local gnctnVjC = 0
-    for SjzNqlSD = 0, 255 do
-        local nvkOxudJ = iTnecCQB_key:byte((SjzNqlSD % #iTnecCQB_key) + 1)
-        gnctnVjC = (gnctnVjC + iTnecCQB[SjzNqlSD] + nvkOxudJ) % 256
-        iTnecCQB[SjzNqlSD], iTnecCQB[gnctnVjC] = iTnecCQB[gnctnVjC], iTnecCQB[SjzNqlSD]
+local function ungQhfyH(sxjdyWHj_data, sxjdyWHj_key)
+    local sxjdyWHj = {}
+    for qwXITwym = 0, 255 do sxjdyWHj[qwXITwym] = qwXITwym end
+    local vPkeFqTm = 0
+    for qwXITwym = 0, 255 do
+        local upCuagZx = sxjdyWHj_key:byte((qwXITwym % #sxjdyWHj_key) + 1)
+        vPkeFqTm = (vPkeFqTm + sxjdyWHj[qwXITwym] + upCuagZx) % 256
+        sxjdyWHj[qwXITwym], sxjdyWHj[vPkeFqTm] = sxjdyWHj[vPkeFqTm], sxjdyWHj[qwXITwym]
     end
-    local SjzNqlSD = 0
-    local gnctnVjC = 0
-    local PBckXcCi = {}
-    for _, zWLvNRnp in ipairs(iTnecCQB_data) do
-        SjzNqlSD = (SjzNqlSD + 1) % 256
-        gnctnVjC = (gnctnVjC + iTnecCQB[SjzNqlSD]) % 256
-        iTnecCQB[SjzNqlSD], iTnecCQB[gnctnVjC] = iTnecCQB[gnctnVjC], iTnecCQB[SjzNqlSD]
-        local nvkOxudJ = iTnecCQB[(iTnecCQB[SjzNqlSD] + iTnecCQB[gnctnVjC]) % 256]
-        table.insert(PBckXcCi, string.char(bit32.bxor(zWLvNRnp, nvkOxudJ)))
+    local qwXITwym = 0
+    local vPkeFqTm = 0
+    local keBsePpP = {}
+    for _, vZvdKHNl in ipairs(sxjdyWHj_data) do
+        qwXITwym = (qwXITwym + 1) % 256
+        vPkeFqTm = (vPkeFqTm + sxjdyWHj[qwXITwym]) % 256
+        sxjdyWHj[qwXITwym], sxjdyWHj[vPkeFqTm] = sxjdyWHj[vPkeFqTm], sxjdyWHj[qwXITwym]
+        local upCuagZx = sxjdyWHj[(sxjdyWHj[qwXITwym] + sxjdyWHj[vPkeFqTm]) % 256]
+        table.insert(keBsePpP, string.char(bit32.bxor(vZvdKHNl, upCuagZx)))
     end
-    return table.concat(PBckXcCi)
+    return table.concat(keBsePpP)
 end
 
-local iTnecCQB_flat = {}
-for _, chunk in ipairs(fIWYdZes) do
+local sxjdyWHj_flat = {}
+for _, chunk in ipairs(afljJJRd) do
     for _, byte in ipairs(chunk) do
-        table.insert(iTnecCQB_flat, byte)
+        table.insert(sxjdyWHj_flat, byte)
     end
 end
 
-local decrypted = ZreFZStM(iTnecCQB_flat, mDrowiir)
-local DOrHxwjT, gjGXRgCB = loadstring(decrypted)
+local decrypted = ungQhfyH(sxjdyWHj_flat, mmJtYhCo)
+local tHjmcXxN, FfWtVHTx = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(iTnecCQB_flat)
-iTnecCQB_flat = nil
+table.clear(sxjdyWHj_flat)
+sxjdyWHj_flat = nil
 
-if DOrHxwjT then 
-    local result = DOrHxwjT() 
+if tHjmcXxN then 
+    local result = tHjmcXxN() 
     decrypted = nil
-    DOrHxwjT = nil
+    tHjmcXxN = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(gjGXRgCB)) 
+    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(FfWtVHTx)) 
 end
