@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local nNjLAflk = {
-{21,117,234,110,17,73,107,22,84,90,221,92,202,197,91,13,162,48,166,15,117,164,92,103,130,215,158,38,184,121,241,1,87,163,138,216,86,52,195,200,13,66,45,177,20,31,68,18,248,72,217,39,202,15,168,61,163,139,185,199},{127,20,6,143,62,228,122,125,16,223,156,122,235,14,113,17,185,70,91,132,130,221,5,164,35,127,34,52,101,66,180,184,3,213,44,8,105,49,28,234,62,233,82,164,219,169,7,209,130,37,170,135,182,148,72,200,107,251,183,106},{162,232,222,235,249,216,17,69,246,112,241,173,113,78,237,160,139,38,196,237,51,175,16,131,26,144,251,17,183}
+local ooKBgeqg = {
+{212,222,83,26,105,88,252,129,127,36,232,69,11,101,215,156,158,31,170,46,10,71,176,40,81,20,175,217,161,14,65,236,141,57,141,233,229,181,85,192,178,34,18,239,144,84,183,139,185,169,141,161,104,72,80,204,82,40,10,213},{98,240,111,72,121,196,227,54,241,69,185,204,99,119,79,108,115,239,163,145,47,80,209,28,85,60,76,107,93,239,125,125,124,221,162,128,177,169,219,4,31,68,2,120,112,109,144,165,52,164,206,177,105,93,169,183,0,45,128,29},{245,124,4,40,153,151,82,112,249,232,240,156,2,101,18,240,211,205,19,35,36,183,69,135,197,144,18,11,95}
 }
-local cxwMhQvr = "NLSswgnhmfVgrJAg"
+local giRZpBjF = "yadupoeuiIskFiJX"
 
-local function ZkQXLMnQ(cNtjxCoy_data, cNtjxCoy_key)
-    local cNtjxCoy = {}
-    for YrxhYDaS = 0, 255 do cNtjxCoy[YrxhYDaS] = YrxhYDaS end
-    local oDkIPczJ = 0
-    for YrxhYDaS = 0, 255 do
-        local TqyjLdqf = cNtjxCoy_key:byte((YrxhYDaS % #cNtjxCoy_key) + 1)
-        oDkIPczJ = (oDkIPczJ + cNtjxCoy[YrxhYDaS] + TqyjLdqf) % 256
-        cNtjxCoy[YrxhYDaS], cNtjxCoy[oDkIPczJ] = cNtjxCoy[oDkIPczJ], cNtjxCoy[YrxhYDaS]
+local function eGpuuDED(dJsdVtnt_data, dJsdVtnt_key)
+    local dJsdVtnt = {}
+    for RbtwJzZm = 0, 255 do dJsdVtnt[RbtwJzZm] = RbtwJzZm end
+    local yHxNKTpU = 0
+    for RbtwJzZm = 0, 255 do
+        local LJwYzOAx = dJsdVtnt_key:byte((RbtwJzZm % #dJsdVtnt_key) + 1)
+        yHxNKTpU = (yHxNKTpU + dJsdVtnt[RbtwJzZm] + LJwYzOAx) % 256
+        dJsdVtnt[RbtwJzZm], dJsdVtnt[yHxNKTpU] = dJsdVtnt[yHxNKTpU], dJsdVtnt[RbtwJzZm]
     end
-    local YrxhYDaS = 0
-    local oDkIPczJ = 0
-    local yDgcGNRK = {}
-    for _, SLENclck in ipairs(cNtjxCoy_data) do
-        YrxhYDaS = (YrxhYDaS + 1) % 256
-        oDkIPczJ = (oDkIPczJ + cNtjxCoy[YrxhYDaS]) % 256
-        cNtjxCoy[YrxhYDaS], cNtjxCoy[oDkIPczJ] = cNtjxCoy[oDkIPczJ], cNtjxCoy[YrxhYDaS]
-        local TqyjLdqf = cNtjxCoy[(cNtjxCoy[YrxhYDaS] + cNtjxCoy[oDkIPczJ]) % 256]
-        table.insert(yDgcGNRK, string.char(bit32.bxor(SLENclck, TqyjLdqf)))
+    local RbtwJzZm = 0
+    local yHxNKTpU = 0
+    local RxuaIeOp = {}
+    for _, QlzkaQRs in ipairs(dJsdVtnt_data) do
+        RbtwJzZm = (RbtwJzZm + 1) % 256
+        yHxNKTpU = (yHxNKTpU + dJsdVtnt[RbtwJzZm]) % 256
+        dJsdVtnt[RbtwJzZm], dJsdVtnt[yHxNKTpU] = dJsdVtnt[yHxNKTpU], dJsdVtnt[RbtwJzZm]
+        local LJwYzOAx = dJsdVtnt[(dJsdVtnt[RbtwJzZm] + dJsdVtnt[yHxNKTpU]) % 256]
+        table.insert(RxuaIeOp, string.char(bit32.bxor(QlzkaQRs, LJwYzOAx)))
     end
-    return table.concat(yDgcGNRK)
+    return table.concat(RxuaIeOp)
 end
 
-local cNtjxCoy_flat = {}
-for _, chunk in ipairs(nNjLAflk) do
+local dJsdVtnt_flat = {}
+for _, chunk in ipairs(ooKBgeqg) do
     for _, byte in ipairs(chunk) do
-        table.insert(cNtjxCoy_flat, byte)
+        table.insert(dJsdVtnt_flat, byte)
     end
 end
 
-local decrypted = ZkQXLMnQ(cNtjxCoy_flat, cxwMhQvr)
-local iWPnZmRv, YsHCVLVP = loadstring(decrypted)
+local decrypted = eGpuuDED(dJsdVtnt_flat, giRZpBjF)
+local pZSYbdue, IJBqZKlR = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(cNtjxCoy_flat)
-cNtjxCoy_flat = nil
+table.clear(dJsdVtnt_flat)
+dJsdVtnt_flat = nil
 
-if iWPnZmRv then 
-    local result = iWPnZmRv() 
+if pZSYbdue then 
+    local result = pZSYbdue() 
     decrypted = nil
-    iWPnZmRv = nil
+    pZSYbdue = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "network_optimizer" .. "): " .. tostring(YsHCVLVP)) 
+    warn("[ecco] Boot Error (" .. "network_optimizer" .. "): " .. tostring(IJBqZKlR)) 
 end
