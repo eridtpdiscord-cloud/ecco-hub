@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local AOWtjGgl = {
-{164,88,219,84,83,229,202,153,121,71,151,190,208,92,124,78,77,251,232,65,33,101,59,195,185,76,104,184,225,30,78,152,182,255,210,27,107,83,105,226,58,254,3,215,142,48,85,161,168,50,243,204,111,161,83,242,162,197,43,55},{62,154,105,225,23,9,182,91,109,64,67,78,10,75,140,13,250,1,212,207,191,142,232,223,222,22,94,187,92,137,210,204,198,169,219,29,46,3,36,225,219,100,97,199,27,66,254,166,11,239,19,210,46,162,25,152,85,30,98,101},{50,166,152,2,183,190,155,146,164,253,56,209,184,32,244,116,120,137,174,191,11,12,177,207,133,75,57,145,146,84}
+local BgygXZdN = {
+{80,74,127,109,73,105,89,22,24,121,187,110,225,58,224,148,112,20,176,75,174,229,172,61,94,198,58,230,2,81,122,205,198,45,27,180,149,24,169,138,38,0,224,226,90,232,255,232,228,128,233,67,160,185,36,228,131,202,187,49},{123,27,48,188,209,67,64,104,188,129,32,134,67,30,59,209,117,243,171,226,105,255,66,249,166,88,4,120,12,5,195,2,17,201,78,123,92,154,147,211,159,74,181,250,121,19,203,238,41,174,24,94,253,206,119,146,24,247,24,0},{33,163,42,70,32,242,9,168,44,226,48,218,213,254,83,180,204,250,214,105,55,127,113,205,81,177,111,177,80,232}
 }
-local sYTNULYZ = "uDuxJsWAYbLgkEFE"
+local RZesMYjJ = "jsJMeVstyakqVaOW"
 
-local function oDykAIuh(UWSHxiKZ_data, UWSHxiKZ_key)
-    local UWSHxiKZ = {}
-    for liRRqFzS = 0, 255 do UWSHxiKZ[liRRqFzS] = liRRqFzS end
-    local dsGSRmLT = 0
-    for liRRqFzS = 0, 255 do
-        local FbzXBZjb = UWSHxiKZ_key:byte((liRRqFzS % #UWSHxiKZ_key) + 1)
-        dsGSRmLT = (dsGSRmLT + UWSHxiKZ[liRRqFzS] + FbzXBZjb) % 256
-        UWSHxiKZ[liRRqFzS], UWSHxiKZ[dsGSRmLT] = UWSHxiKZ[dsGSRmLT], UWSHxiKZ[liRRqFzS]
+local function dHWPatgi(LsxlZvyg_data, LsxlZvyg_key)
+    local LsxlZvyg = {}
+    for dfAFdLdW = 0, 255 do LsxlZvyg[dfAFdLdW] = dfAFdLdW end
+    local TMSxEDAJ = 0
+    for dfAFdLdW = 0, 255 do
+        local aVbalsCx = LsxlZvyg_key:byte((dfAFdLdW % #LsxlZvyg_key) + 1)
+        TMSxEDAJ = (TMSxEDAJ + LsxlZvyg[dfAFdLdW] + aVbalsCx) % 256
+        LsxlZvyg[dfAFdLdW], LsxlZvyg[TMSxEDAJ] = LsxlZvyg[TMSxEDAJ], LsxlZvyg[dfAFdLdW]
     end
-    local liRRqFzS = 0
-    local dsGSRmLT = 0
-    local qyerGaGZ = {}
-    for _, wtLijdkv in ipairs(UWSHxiKZ_data) do
-        liRRqFzS = (liRRqFzS + 1) % 256
-        dsGSRmLT = (dsGSRmLT + UWSHxiKZ[liRRqFzS]) % 256
-        UWSHxiKZ[liRRqFzS], UWSHxiKZ[dsGSRmLT] = UWSHxiKZ[dsGSRmLT], UWSHxiKZ[liRRqFzS]
-        local FbzXBZjb = UWSHxiKZ[(UWSHxiKZ[liRRqFzS] + UWSHxiKZ[dsGSRmLT]) % 256]
-        table.insert(qyerGaGZ, string.char(bit32.bxor(wtLijdkv, FbzXBZjb)))
+    local dfAFdLdW = 0
+    local TMSxEDAJ = 0
+    local VbUThDlr = {}
+    for _, QauMtSpt in ipairs(LsxlZvyg_data) do
+        dfAFdLdW = (dfAFdLdW + 1) % 256
+        TMSxEDAJ = (TMSxEDAJ + LsxlZvyg[dfAFdLdW]) % 256
+        LsxlZvyg[dfAFdLdW], LsxlZvyg[TMSxEDAJ] = LsxlZvyg[TMSxEDAJ], LsxlZvyg[dfAFdLdW]
+        local aVbalsCx = LsxlZvyg[(LsxlZvyg[dfAFdLdW] + LsxlZvyg[TMSxEDAJ]) % 256]
+        table.insert(VbUThDlr, string.char(bit32.bxor(QauMtSpt, aVbalsCx)))
     end
-    return table.concat(qyerGaGZ)
+    return table.concat(VbUThDlr)
 end
 
-local UWSHxiKZ_flat = {}
-for _, chunk in ipairs(AOWtjGgl) do
+local LsxlZvyg_flat = {}
+for _, chunk in ipairs(BgygXZdN) do
     for _, byte in ipairs(chunk) do
-        table.insert(UWSHxiKZ_flat, byte)
+        table.insert(LsxlZvyg_flat, byte)
     end
 end
 
-local decrypted = oDykAIuh(UWSHxiKZ_flat, sYTNULYZ)
-local QSeqPLCT, DOFuLWjA = loadstring(decrypted)
+local decrypted = dHWPatgi(LsxlZvyg_flat, RZesMYjJ)
+local niWjlvsw, bAZrRfLQ = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(UWSHxiKZ_flat)
-UWSHxiKZ_flat = nil
+table.clear(LsxlZvyg_flat)
+LsxlZvyg_flat = nil
 
-if QSeqPLCT then 
-    local result = QSeqPLCT() 
+if niWjlvsw then 
+    local result = niWjlvsw() 
     decrypted = nil
-    QSeqPLCT = nil
+    niWjlvsw = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(DOFuLWjA)) 
+    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(bAZrRfLQ)) 
 end
