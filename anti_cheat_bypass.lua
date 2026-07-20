@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local JLeyTRhO = {
-{30,242,200,169,145,21,24,14,120,180,5,51,158,207,152,188,200,95,161,115,14,222,32,232,168,245,65,82,215,120,148,230,198,217,102,105,90,95,236,82,227,184,86,70,22,114,119,190,92,87,252,184,232,21,33,114,236,118,21,157},{74,193,141,5,39,252,146,83,111,241,134,91,107,183,35,172,42,57,207,36,6,141,185,0,101,174,180,166,60,193,153,196,144,109,64,140,181,129,104,47,85,27,199,213,112,236,122,161,115,31,73,138,47,191,121,128,71,144,142,56},{158,217,72,25,196,29,244,202,89,201,2,30,243,240,187,10,240,108,239,193,214,105,109,51,131,130,107,147,176}
+local nhYZCWNv = {
+{54,4,228,53,223,239,202,66,203,204,179,201,235,87,38,208,128,26,37,222,13,62,173,9,91,163,80,148,223,227,154,228,46,40,165,247,161,94,211,127,26,5,144,201,160,242,92,219,43,141,18,173,98,105,135,80,209,201,198,129},{10,177,13,222,252,32,54,25,205,1,163,57,155,130,165,90,60,47,80,55,245,66,76,39,108,98,246,49,103,104,227,232,4,232,67,6,102,155,63,50,30,116,163,167,62,24,155,203,144,254,14,75,52,51,95,219,126,72,138,123},{105,12,21,123,118,151,233,176,196,200,12,75,38,172,124,110,231,160,174,160,81,71,59,198,128,239,133,240,23}
 }
-local jVyTAblF = "ZfiozsIJoUaaiBcN"
+local WxWrxKLs = "nUdYRKaiacXobouv"
 
-local function PhptcavU(hgPluiSQ_data, hgPluiSQ_key)
-    local hgPluiSQ = {}
-    for jCZszjnI = 0, 255 do hgPluiSQ[jCZszjnI] = jCZszjnI end
-    local GiskYtBH = 0
-    for jCZszjnI = 0, 255 do
-        local pPYeMbkA = hgPluiSQ_key:byte((jCZszjnI % #hgPluiSQ_key) + 1)
-        GiskYtBH = (GiskYtBH + hgPluiSQ[jCZszjnI] + pPYeMbkA) % 256
-        hgPluiSQ[jCZszjnI], hgPluiSQ[GiskYtBH] = hgPluiSQ[GiskYtBH], hgPluiSQ[jCZszjnI]
+local function nlGcwtaA(swaBLDnU_data, swaBLDnU_key)
+    local swaBLDnU = {}
+    for MgATTOjg = 0, 255 do swaBLDnU[MgATTOjg] = MgATTOjg end
+    local aXMbNNpb = 0
+    for MgATTOjg = 0, 255 do
+        local IPIhlfII = swaBLDnU_key:byte((MgATTOjg % #swaBLDnU_key) + 1)
+        aXMbNNpb = (aXMbNNpb + swaBLDnU[MgATTOjg] + IPIhlfII) % 256
+        swaBLDnU[MgATTOjg], swaBLDnU[aXMbNNpb] = swaBLDnU[aXMbNNpb], swaBLDnU[MgATTOjg]
     end
-    local jCZszjnI = 0
-    local GiskYtBH = 0
-    local PXZhmoDr = {}
-    for _, FjynMMSw in ipairs(hgPluiSQ_data) do
-        jCZszjnI = (jCZszjnI + 1) % 256
-        GiskYtBH = (GiskYtBH + hgPluiSQ[jCZszjnI]) % 256
-        hgPluiSQ[jCZszjnI], hgPluiSQ[GiskYtBH] = hgPluiSQ[GiskYtBH], hgPluiSQ[jCZszjnI]
-        local pPYeMbkA = hgPluiSQ[(hgPluiSQ[jCZszjnI] + hgPluiSQ[GiskYtBH]) % 256]
-        table.insert(PXZhmoDr, string.char(bit32.bxor(FjynMMSw, pPYeMbkA)))
+    local MgATTOjg = 0
+    local aXMbNNpb = 0
+    local mTFMcjdl = {}
+    for _, KlTGymEh in ipairs(swaBLDnU_data) do
+        MgATTOjg = (MgATTOjg + 1) % 256
+        aXMbNNpb = (aXMbNNpb + swaBLDnU[MgATTOjg]) % 256
+        swaBLDnU[MgATTOjg], swaBLDnU[aXMbNNpb] = swaBLDnU[aXMbNNpb], swaBLDnU[MgATTOjg]
+        local IPIhlfII = swaBLDnU[(swaBLDnU[MgATTOjg] + swaBLDnU[aXMbNNpb]) % 256]
+        table.insert(mTFMcjdl, string.char(bit32.bxor(KlTGymEh, IPIhlfII)))
     end
-    return table.concat(PXZhmoDr)
+    return table.concat(mTFMcjdl)
 end
 
-local hgPluiSQ_flat = {}
-for _, chunk in ipairs(JLeyTRhO) do
+local swaBLDnU_flat = {}
+for _, chunk in ipairs(nhYZCWNv) do
     for _, byte in ipairs(chunk) do
-        table.insert(hgPluiSQ_flat, byte)
+        table.insert(swaBLDnU_flat, byte)
     end
 end
 
-local decrypted = PhptcavU(hgPluiSQ_flat, jVyTAblF)
-local rPnGyLbg, LpxpcyQN = loadstring(decrypted)
+local decrypted = nlGcwtaA(swaBLDnU_flat, WxWrxKLs)
+local azbiXUGt, KahiCXxO = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(hgPluiSQ_flat)
-hgPluiSQ_flat = nil
+table.clear(swaBLDnU_flat)
+swaBLDnU_flat = nil
 
-if rPnGyLbg then 
-    local result = rPnGyLbg() 
+if azbiXUGt then 
+    local result = azbiXUGt() 
     decrypted = nil
-    rPnGyLbg = nil
+    azbiXUGt = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "anti_cheat_bypass" .. "): " .. tostring(LpxpcyQN)) 
+    warn("[ecco] Boot Error (" .. "anti_cheat_bypass" .. "): " .. tostring(KahiCXxO)) 
 end
