@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local JXydVGZF = {
-{78,144,90,87,80,37,171,50,197,65,134,71,37,243,229,203,107,39,169,190,92,191,232,216,231,80,196,159,103,62,158,200,185,167,172,188,216,78,35,169,18,70,24,200,188,91,157,188,201,5,109,61,161,141,46,174,159,124,190,202},{56,39,193,2,36,123,101,40,60,49,50,87,179,72,252,57,37,223,118,71,20,149,41,140,105,11,241,3,88,186,16,194,114,182,76,188,197,76,209,95,150,200,224,252,7,23,38,24,201,3,120,88,87,126,130,38,170,86,130,31},{208,102,22,199,72,2,224,90,233,104,100,0,25,107,141,154,87,150,240,196,246,179,246,46,37,91,148,145}
+local mbpEIlqo = {
+{84,175,206,201,58,244,251,136,13,95,145,18,102,119,102,54,201,43,55,118,78,187,36,181,234,30,16,88,72,171,71,234,9,107,97,56,14,52,97,217,90,112,63,80,75,35,147,134,23,174,5,221,19,134,229,221,195,255,206,76},{43,213,226,168,46,9,28,72,21,200,29,211,174,21,125,83,232,122,195,22,87,141,56,157,82,85,84,200,255,130,2,186,249,129,202,36,81,123,231,47,101,250,41,149,237,84,78,62,152,146,113,141,77,150,180,197,209,0,52,20},{19,133,244,95,149,169,3,228,69,217,79,130,150,22,149,133,64,223,98,170,102,46,27,10,112,243,101,124}
 }
-local nTUNhAjo = "EDHNRfDcJKOmBlkw"
+local dOkxlXuS = "cERUOiohhArLXMVL"
 
-local function PDaTgOZd(ZaDphHmc_data, ZaDphHmc_key)
-    local ZaDphHmc = {}
-    for fHVXoPBC = 0, 255 do ZaDphHmc[fHVXoPBC] = fHVXoPBC end
-    local hZGBUOwd = 0
-    for fHVXoPBC = 0, 255 do
-        local uPrieqaL = ZaDphHmc_key:byte((fHVXoPBC % #ZaDphHmc_key) + 1)
-        hZGBUOwd = (hZGBUOwd + ZaDphHmc[fHVXoPBC] + uPrieqaL) % 256
-        ZaDphHmc[fHVXoPBC], ZaDphHmc[hZGBUOwd] = ZaDphHmc[hZGBUOwd], ZaDphHmc[fHVXoPBC]
+local function KzHViMCU(zaSxoaon_data, zaSxoaon_key)
+    local zaSxoaon = {}
+    for pmZZRnAk = 0, 255 do zaSxoaon[pmZZRnAk] = pmZZRnAk end
+    local efWXIVWs = 0
+    for pmZZRnAk = 0, 255 do
+        local wvYDVnge = zaSxoaon_key:byte((pmZZRnAk % #zaSxoaon_key) + 1)
+        efWXIVWs = (efWXIVWs + zaSxoaon[pmZZRnAk] + wvYDVnge) % 256
+        zaSxoaon[pmZZRnAk], zaSxoaon[efWXIVWs] = zaSxoaon[efWXIVWs], zaSxoaon[pmZZRnAk]
     end
-    local fHVXoPBC = 0
-    local hZGBUOwd = 0
-    local ZaojobWL = {}
-    for _, kWivKjWS in ipairs(ZaDphHmc_data) do
-        fHVXoPBC = (fHVXoPBC + 1) % 256
-        hZGBUOwd = (hZGBUOwd + ZaDphHmc[fHVXoPBC]) % 256
-        ZaDphHmc[fHVXoPBC], ZaDphHmc[hZGBUOwd] = ZaDphHmc[hZGBUOwd], ZaDphHmc[fHVXoPBC]
-        local uPrieqaL = ZaDphHmc[(ZaDphHmc[fHVXoPBC] + ZaDphHmc[hZGBUOwd]) % 256]
-        table.insert(ZaojobWL, string.char(bit32.bxor(kWivKjWS, uPrieqaL)))
+    local pmZZRnAk = 0
+    local efWXIVWs = 0
+    local atcuUutN = {}
+    for _, dHnBCnTR in ipairs(zaSxoaon_data) do
+        pmZZRnAk = (pmZZRnAk + 1) % 256
+        efWXIVWs = (efWXIVWs + zaSxoaon[pmZZRnAk]) % 256
+        zaSxoaon[pmZZRnAk], zaSxoaon[efWXIVWs] = zaSxoaon[efWXIVWs], zaSxoaon[pmZZRnAk]
+        local wvYDVnge = zaSxoaon[(zaSxoaon[pmZZRnAk] + zaSxoaon[efWXIVWs]) % 256]
+        table.insert(atcuUutN, string.char(bit32.bxor(dHnBCnTR, wvYDVnge)))
     end
-    return table.concat(ZaojobWL)
+    return table.concat(atcuUutN)
 end
 
-local ZaDphHmc_flat = {}
-for _, chunk in ipairs(JXydVGZF) do
+local zaSxoaon_flat = {}
+for _, chunk in ipairs(mbpEIlqo) do
     for _, byte in ipairs(chunk) do
-        table.insert(ZaDphHmc_flat, byte)
+        table.insert(zaSxoaon_flat, byte)
     end
 end
 
-local decrypted = PDaTgOZd(ZaDphHmc_flat, nTUNhAjo)
-local gQVRjfeO, ZWvVAsgw = loadstring(decrypted)
+local decrypted = KzHViMCU(zaSxoaon_flat, dOkxlXuS)
+local uXuSSHdo, WBCCIaAq = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(ZaDphHmc_flat)
-ZaDphHmc_flat = nil
+table.clear(zaSxoaon_flat)
+zaSxoaon_flat = nil
 
-if gQVRjfeO then 
-    local result = gQVRjfeO() 
+if uXuSSHdo then 
+    local result = uXuSSHdo() 
     decrypted = nil
-    gQVRjfeO = nil
+    uXuSSHdo = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "teleport_handler" .. "): " .. tostring(ZWvVAsgw)) 
+    warn("[ecco] Boot Error (" .. "teleport_handler" .. "): " .. tostring(WBCCIaAq)) 
 end
