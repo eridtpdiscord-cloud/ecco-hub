@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local zafgqGCc = {
-{55,116,216,120,153,63,4,7,42,76,194,40,196,127,209,64,130,165,18,51,23,112,89,88,106,181,39,100,23,84,82,12,234,104,176,100,199,239,237,148,28,35,77,128,41,136,65,234,220,26,64,26,158,54,84,14,214,68,190,66},{230,185,151,51,29,47,4,99,37,146,160,215,123,55,41,190,88,55,40,1,7,211,205,95,215,235,72,77,35,99,98,144,158,139,60,216,177,192,211,156,96,33,241,89,66,196,30,167,137,129,137,26,254,129,123,7,122,173,63,195},{46,180,54,37,185,208,248,27,154,153,94,231,174,74,10,157,15,200,107,94,233,91,60,213,229,76}
+local pOeAqGOk = {
+{172,56,250,61,204,125,183,32,43,215,139,35,178,50,61,156,176,19,69,146,16,85,125,10,76,188,76,14,21,13,226,10,245,74,209,216,117,51,198,89,131,74,154,235,180,169,122,50,165,255,101,69,172,65,76,206,179,67,255,103},{149,167,50,86,1,223,216,169,66,57,111,101,10,247,243,132,180,142,211,89,223,135,78,49,130,35,241,72,143,29,244,100,103,26,108,233,172,160,182,44,167,52,80,174,64,43,36,203,94,253,163,30,130,175,104,70,129,171,103,41},{10,161,3,205,225,54,6,227,48,30,134,91,67,106,161,52,112,127,207,91,203,125,103,146,244,111}
 }
-local ogBemjDc = "LScefdPDqNOfFaaJ"
+local YMvnSpNp = "tKMwHPcPJjAllwkv"
 
-local function GtckBHZq(JiCwmgWF_data, JiCwmgWF_key)
-    local JiCwmgWF = {}
-    for RcCTcMMn = 0, 255 do JiCwmgWF[RcCTcMMn] = RcCTcMMn end
-    local HXaKceQB = 0
-    for RcCTcMMn = 0, 255 do
-        local fHvCIAbU = JiCwmgWF_key:byte((RcCTcMMn % #JiCwmgWF_key) + 1)
-        HXaKceQB = (HXaKceQB + JiCwmgWF[RcCTcMMn] + fHvCIAbU) % 256
-        JiCwmgWF[RcCTcMMn], JiCwmgWF[HXaKceQB] = JiCwmgWF[HXaKceQB], JiCwmgWF[RcCTcMMn]
+local function BaXXeKri(NKvKcVoX_data, NKvKcVoX_key)
+    local NKvKcVoX = {}
+    for iBxVQhDV = 0, 255 do NKvKcVoX[iBxVQhDV] = iBxVQhDV end
+    local yYHhMvKU = 0
+    for iBxVQhDV = 0, 255 do
+        local kXCTSIyP = NKvKcVoX_key:byte((iBxVQhDV % #NKvKcVoX_key) + 1)
+        yYHhMvKU = (yYHhMvKU + NKvKcVoX[iBxVQhDV] + kXCTSIyP) % 256
+        NKvKcVoX[iBxVQhDV], NKvKcVoX[yYHhMvKU] = NKvKcVoX[yYHhMvKU], NKvKcVoX[iBxVQhDV]
     end
-    local RcCTcMMn = 0
-    local HXaKceQB = 0
-    local pRLsXghN = {}
-    for _, cwTWiUlg in ipairs(JiCwmgWF_data) do
-        RcCTcMMn = (RcCTcMMn + 1) % 256
-        HXaKceQB = (HXaKceQB + JiCwmgWF[RcCTcMMn]) % 256
-        JiCwmgWF[RcCTcMMn], JiCwmgWF[HXaKceQB] = JiCwmgWF[HXaKceQB], JiCwmgWF[RcCTcMMn]
-        local fHvCIAbU = JiCwmgWF[(JiCwmgWF[RcCTcMMn] + JiCwmgWF[HXaKceQB]) % 256]
-        table.insert(pRLsXghN, string.char(bit32.bxor(cwTWiUlg, fHvCIAbU)))
+    local iBxVQhDV = 0
+    local yYHhMvKU = 0
+    local muhcQsjm = {}
+    for _, iUvlmDxm in ipairs(NKvKcVoX_data) do
+        iBxVQhDV = (iBxVQhDV + 1) % 256
+        yYHhMvKU = (yYHhMvKU + NKvKcVoX[iBxVQhDV]) % 256
+        NKvKcVoX[iBxVQhDV], NKvKcVoX[yYHhMvKU] = NKvKcVoX[yYHhMvKU], NKvKcVoX[iBxVQhDV]
+        local kXCTSIyP = NKvKcVoX[(NKvKcVoX[iBxVQhDV] + NKvKcVoX[yYHhMvKU]) % 256]
+        table.insert(muhcQsjm, string.char(bit32.bxor(iUvlmDxm, kXCTSIyP)))
     end
-    return table.concat(pRLsXghN)
+    return table.concat(muhcQsjm)
 end
 
-local JiCwmgWF_flat = {}
-for _, chunk in ipairs(zafgqGCc) do
+local NKvKcVoX_flat = {}
+for _, chunk in ipairs(pOeAqGOk) do
     for _, byte in ipairs(chunk) do
-        table.insert(JiCwmgWF_flat, byte)
+        table.insert(NKvKcVoX_flat, byte)
     end
 end
 
-local decrypted = GtckBHZq(JiCwmgWF_flat, ogBemjDc)
-local gckssVrt, DZraWnXh = loadstring(decrypted)
+local decrypted = BaXXeKri(NKvKcVoX_flat, YMvnSpNp)
+local fZEbilRb, QVlWVBbD = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(JiCwmgWF_flat)
-JiCwmgWF_flat = nil
+table.clear(NKvKcVoX_flat)
+NKvKcVoX_flat = nil
 
-if gckssVrt then 
-    local result = gckssVrt() 
+if fZEbilRb then 
+    local result = fZEbilRb() 
     decrypted = nil
-    gckssVrt = nil
+    fZEbilRb = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(DZraWnXh)) 
+    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(QVlWVBbD)) 
 end
