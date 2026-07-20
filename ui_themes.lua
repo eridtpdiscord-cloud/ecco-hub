@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local rpSspzYX = {
-{141,224,119,247,26,61,242,188,249,137,179,94,59,0,62,162,41,5,31,16,85,141,32,47,79,3,216,150,232,13,209,90,67,171,46,25,127,220,188,150,205,48,232,159,229,45,217,219,119,198,211,212,250,42,80,61,176,242,178,133},{60,27,244,40,60,254,232,231,144,157,59,66,241,70,13,21,247,147,195,109,117,245,140,181,220,239,25,165,239,160,239,61,233,164,32,87,242,37,70,96,22,234,148,26,86,239,35,215,85,250,207,8,153,3,212,129,65,21,255,86},{151,100,112,188,248,159,125,47,37,216,66,112,99,17,124,154,155,237,218,110,164}
+local nnSUJXRK = {
+{92,90,179,249,253,183,225,199,241,68,59,165,130,132,224,12,53,215,30,113,14,43,90,201,17,59,91,183,213,193,167,225,215,207,82,209,75,45,123,209,175,28,29,233,169,197,68,213,189,131,121,131,87,231,69,87,98,59,236,170},{107,211,64,129,65,126,220,251,30,7,46,183,235,166,10,137,50,210,84,96,112,104,7,70,61,7,166,197,94,9,153,79,135,169,170,212,225,59,227,158,192,131,170,111,135,190,187,234,210,25,103,79,79,90,6,105,188,110,23,148},{131,217,196,0,135,4,59,113,169,198,175,228,190,81,164,90,135,86,249,223,178}
 }
-local SoSgQFMB = "SHCkPgDExAnGEFAt"
+local eKqYHtvL = "aBTmAkwvtXwJbxpI"
 
-local function dPltrmpU(wnGBasrL_data, wnGBasrL_key)
-    local wnGBasrL = {}
-    for oUHmnjKi = 0, 255 do wnGBasrL[oUHmnjKi] = oUHmnjKi end
-    local wyHiVbqS = 0
-    for oUHmnjKi = 0, 255 do
-        local RRpuceqM = wnGBasrL_key:byte((oUHmnjKi % #wnGBasrL_key) + 1)
-        wyHiVbqS = (wyHiVbqS + wnGBasrL[oUHmnjKi] + RRpuceqM) % 256
-        wnGBasrL[oUHmnjKi], wnGBasrL[wyHiVbqS] = wnGBasrL[wyHiVbqS], wnGBasrL[oUHmnjKi]
+local function EHSjiCWe(nbijBXMt_data, nbijBXMt_key)
+    local nbijBXMt = {}
+    for cvePDLTe = 0, 255 do nbijBXMt[cvePDLTe] = cvePDLTe end
+    local FueBjBDX = 0
+    for cvePDLTe = 0, 255 do
+        local vCSCbDNk = nbijBXMt_key:byte((cvePDLTe % #nbijBXMt_key) + 1)
+        FueBjBDX = (FueBjBDX + nbijBXMt[cvePDLTe] + vCSCbDNk) % 256
+        nbijBXMt[cvePDLTe], nbijBXMt[FueBjBDX] = nbijBXMt[FueBjBDX], nbijBXMt[cvePDLTe]
     end
-    local oUHmnjKi = 0
-    local wyHiVbqS = 0
-    local NcPZEUBz = {}
-    for _, xhGbABuE in ipairs(wnGBasrL_data) do
-        oUHmnjKi = (oUHmnjKi + 1) % 256
-        wyHiVbqS = (wyHiVbqS + wnGBasrL[oUHmnjKi]) % 256
-        wnGBasrL[oUHmnjKi], wnGBasrL[wyHiVbqS] = wnGBasrL[wyHiVbqS], wnGBasrL[oUHmnjKi]
-        local RRpuceqM = wnGBasrL[(wnGBasrL[oUHmnjKi] + wnGBasrL[wyHiVbqS]) % 256]
-        table.insert(NcPZEUBz, string.char(bit32.bxor(xhGbABuE, RRpuceqM)))
+    local cvePDLTe = 0
+    local FueBjBDX = 0
+    local MSwQmyJw = {}
+    for _, INeUpEgb in ipairs(nbijBXMt_data) do
+        cvePDLTe = (cvePDLTe + 1) % 256
+        FueBjBDX = (FueBjBDX + nbijBXMt[cvePDLTe]) % 256
+        nbijBXMt[cvePDLTe], nbijBXMt[FueBjBDX] = nbijBXMt[FueBjBDX], nbijBXMt[cvePDLTe]
+        local vCSCbDNk = nbijBXMt[(nbijBXMt[cvePDLTe] + nbijBXMt[FueBjBDX]) % 256]
+        table.insert(MSwQmyJw, string.char(bit32.bxor(INeUpEgb, vCSCbDNk)))
     end
-    return table.concat(NcPZEUBz)
+    return table.concat(MSwQmyJw)
 end
 
-local wnGBasrL_flat = {}
-for _, chunk in ipairs(rpSspzYX) do
+local nbijBXMt_flat = {}
+for _, chunk in ipairs(nnSUJXRK) do
     for _, byte in ipairs(chunk) do
-        table.insert(wnGBasrL_flat, byte)
+        table.insert(nbijBXMt_flat, byte)
     end
 end
 
-local decrypted = dPltrmpU(wnGBasrL_flat, SoSgQFMB)
-local PPjqyBql, XjslYYHZ = loadstring(decrypted)
+local decrypted = EHSjiCWe(nbijBXMt_flat, eKqYHtvL)
+local fssiXGQl, fNahOsxm = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(wnGBasrL_flat)
-wnGBasrL_flat = nil
+table.clear(nbijBXMt_flat)
+nbijBXMt_flat = nil
 
-if PPjqyBql then 
-    local result = PPjqyBql() 
+if fssiXGQl then 
+    local result = fssiXGQl() 
     decrypted = nil
-    PPjqyBql = nil
+    fssiXGQl = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(XjslYYHZ)) 
+    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(fNahOsxm)) 
 end
