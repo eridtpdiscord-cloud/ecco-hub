@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local cuNLTFgB = {
-{48,184,232,213,160,121,5,248,25,220,124,213,223,141,227,154,144,72,46,215,60,49,166,222,162,33,14,87,222,162,7,130,106,139,44,141,146,150,131,185,203,50,13,217,7,130,157,39,163,213,39,126,93,27,158,94,168,42,28,87},{177,116,162,89,15,115,42,142,51,199,147,64,142,14,23,143,230,158,64,248,124,239,20,92,174,247,137,133,83,227,84,122,16,82,22,171,219,73,215,20,252,201,240,72,208,149,81,147,224,119,218,212,215,150,63,134,19,116,244,28},{115,191,218,37,213,71,40,116,126,95,32,37,42,43,143,141,236,91,43,9,103}
+local gzQXnjtJ = {
+{16,155,190,163,142,252,109,39,85,3,142,186,96,3,39,161,218,183,116,125,145,112,126,123,238,42,74,50,45,165,242,203,139,4,170,30,94,30,165,46,20,3,54,128,158,82,94,220,251,195,101,101,221,68,226,103,121,67,112,75},{65,228,85,42,173,75,68,227,255,91,212,50,231,22,125,29,225,0,227,87,215,31,66,40,90,95,225,90,154,183,130,118,116,39,29,197,222,229,137,211,255,142,142,10,236,251,12,190,100,219,187,108,193,213,99,77,59,50,10,148},{99,17,28,82,35,93,234,106,194,234,166,244,254,102,80,254,17,206,127,123,205}
 }
-local aNNHTHGL = "ZhPHzWzybwIviXCr"
+local XrJBcXDr = "CMfUxIwnzCJMJqpd"
 
-local function cfUijqiM(udTURtDd_data, udTURtDd_key)
-    local udTURtDd = {}
-    for jYUkUanD = 0, 255 do udTURtDd[jYUkUanD] = jYUkUanD end
-    local RJTyzWyt = 0
-    for jYUkUanD = 0, 255 do
-        local UizDvqjF = udTURtDd_key:byte((jYUkUanD % #udTURtDd_key) + 1)
-        RJTyzWyt = (RJTyzWyt + udTURtDd[jYUkUanD] + UizDvqjF) % 256
-        udTURtDd[jYUkUanD], udTURtDd[RJTyzWyt] = udTURtDd[RJTyzWyt], udTURtDd[jYUkUanD]
+local function iqFhzIMX(jWWTrycX_data, jWWTrycX_key)
+    local jWWTrycX = {}
+    for fCjasNWa = 0, 255 do jWWTrycX[fCjasNWa] = fCjasNWa end
+    local esqDmTFA = 0
+    for fCjasNWa = 0, 255 do
+        local VTZcEUBD = jWWTrycX_key:byte((fCjasNWa % #jWWTrycX_key) + 1)
+        esqDmTFA = (esqDmTFA + jWWTrycX[fCjasNWa] + VTZcEUBD) % 256
+        jWWTrycX[fCjasNWa], jWWTrycX[esqDmTFA] = jWWTrycX[esqDmTFA], jWWTrycX[fCjasNWa]
     end
-    local jYUkUanD = 0
-    local RJTyzWyt = 0
-    local txWbtcUG = {}
-    for _, ORNtERPR in ipairs(udTURtDd_data) do
-        jYUkUanD = (jYUkUanD + 1) % 256
-        RJTyzWyt = (RJTyzWyt + udTURtDd[jYUkUanD]) % 256
-        udTURtDd[jYUkUanD], udTURtDd[RJTyzWyt] = udTURtDd[RJTyzWyt], udTURtDd[jYUkUanD]
-        local UizDvqjF = udTURtDd[(udTURtDd[jYUkUanD] + udTURtDd[RJTyzWyt]) % 256]
-        table.insert(txWbtcUG, string.char(bit32.bxor(ORNtERPR, UizDvqjF)))
+    local fCjasNWa = 0
+    local esqDmTFA = 0
+    local GvIDlLbF = {}
+    for _, kJeEZijJ in ipairs(jWWTrycX_data) do
+        fCjasNWa = (fCjasNWa + 1) % 256
+        esqDmTFA = (esqDmTFA + jWWTrycX[fCjasNWa]) % 256
+        jWWTrycX[fCjasNWa], jWWTrycX[esqDmTFA] = jWWTrycX[esqDmTFA], jWWTrycX[fCjasNWa]
+        local VTZcEUBD = jWWTrycX[(jWWTrycX[fCjasNWa] + jWWTrycX[esqDmTFA]) % 256]
+        table.insert(GvIDlLbF, string.char(bit32.bxor(kJeEZijJ, VTZcEUBD)))
     end
-    return table.concat(txWbtcUG)
+    return table.concat(GvIDlLbF)
 end
 
-local udTURtDd_flat = {}
-for _, chunk in ipairs(cuNLTFgB) do
+local jWWTrycX_flat = {}
+for _, chunk in ipairs(gzQXnjtJ) do
     for _, byte in ipairs(chunk) do
-        table.insert(udTURtDd_flat, byte)
+        table.insert(jWWTrycX_flat, byte)
     end
 end
 
-local decrypted = cfUijqiM(udTURtDd_flat, aNNHTHGL)
-local rDYfAXjO, StXoHzdd = loadstring(decrypted)
+local decrypted = iqFhzIMX(jWWTrycX_flat, XrJBcXDr)
+local wwWbTNzy, jqYMiqaZ = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(udTURtDd_flat)
-udTURtDd_flat = nil
+table.clear(jWWTrycX_flat)
+jWWTrycX_flat = nil
 
-if rDYfAXjO then 
-    local result = rDYfAXjO() 
+if wwWbTNzy then 
+    local result = wwWbTNzy() 
     decrypted = nil
-    rDYfAXjO = nil
+    wwWbTNzy = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(StXoHzdd)) 
+    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(jqYMiqaZ)) 
 end
