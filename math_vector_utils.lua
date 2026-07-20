@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local XsOQvjFx = {
-{23,192,226,166,133,223,213,17,142,23,238,81,15,57,58,84,3,15,173,41,43,203,113,224,128,97,152,17,180,50,80,218,65,171,219,9,234,71,216,76,36,192,22,66,88,93,62,109,35,46,182,109,56,180,88,80,138,186,181,47},{16,112,89,197,107,75,231,200,213,125,105,7,112,51,108,105,69,95,191,139,173,159,56,86,220,132,76,184,154,118,5,249,157,111,162,234,50,145,121,237,212,59,131,19,130,133,194,14,153,192,2,139,219,158,212,168,5,168,85,198},{106,111,253,74,255,180,25,180,251,111,38,211,246,193,64,215,93,181,135,24,131,228,61,32,98,168,200,41,74}
+local mnhAeMCZ = {
+{158,98,8,227,251,184,216,243,238,25,245,189,83,215,199,113,100,98,19,87,184,233,207,248,118,227,145,197,180,8,148,219,48,1,167,248,36,210,149,45,251,24,127,101,0,61,56,110,156,107,115,68,24,197,53,77,155,6,10,127},{193,157,41,116,147,49,80,146,87,201,130,152,70,24,102,47,119,174,203,43,132,203,247,64,224,75,4,39,50,120,30,186,253,104,106,51,164,225,175,111,78,9,190,217,101,75,27,221,48,225,35,198,175,24,201,174,67,177,177,209},{238,44,194,59,156,25,91,162,182,44,88,216,23,176,147,119,223,100,136,122,40,130,140,153,52,76,188,38,102}
 }
-local YHYqjpsI = "kZKQyJVKGYGLUpVI"
+local OjLQWtxN = "HQyUnRDyTGNYIyAm"
 
-local function BzNJraRV(zlGDuwWE_data, zlGDuwWE_key)
-    local zlGDuwWE = {}
-    for GoHOfHnA = 0, 255 do zlGDuwWE[GoHOfHnA] = GoHOfHnA end
-    local vghEmCvR = 0
-    for GoHOfHnA = 0, 255 do
-        local LPUOGJpP = zlGDuwWE_key:byte((GoHOfHnA % #zlGDuwWE_key) + 1)
-        vghEmCvR = (vghEmCvR + zlGDuwWE[GoHOfHnA] + LPUOGJpP) % 256
-        zlGDuwWE[GoHOfHnA], zlGDuwWE[vghEmCvR] = zlGDuwWE[vghEmCvR], zlGDuwWE[GoHOfHnA]
+local function nWouTGho(mtXQsInu_data, mtXQsInu_key)
+    local mtXQsInu = {}
+    for uavZqrcq = 0, 255 do mtXQsInu[uavZqrcq] = uavZqrcq end
+    local dCSPLDHp = 0
+    for uavZqrcq = 0, 255 do
+        local LNSWhVkk = mtXQsInu_key:byte((uavZqrcq % #mtXQsInu_key) + 1)
+        dCSPLDHp = (dCSPLDHp + mtXQsInu[uavZqrcq] + LNSWhVkk) % 256
+        mtXQsInu[uavZqrcq], mtXQsInu[dCSPLDHp] = mtXQsInu[dCSPLDHp], mtXQsInu[uavZqrcq]
     end
-    local GoHOfHnA = 0
-    local vghEmCvR = 0
-    local YVigbXjN = {}
-    for _, YYlHnaZx in ipairs(zlGDuwWE_data) do
-        GoHOfHnA = (GoHOfHnA + 1) % 256
-        vghEmCvR = (vghEmCvR + zlGDuwWE[GoHOfHnA]) % 256
-        zlGDuwWE[GoHOfHnA], zlGDuwWE[vghEmCvR] = zlGDuwWE[vghEmCvR], zlGDuwWE[GoHOfHnA]
-        local LPUOGJpP = zlGDuwWE[(zlGDuwWE[GoHOfHnA] + zlGDuwWE[vghEmCvR]) % 256]
-        table.insert(YVigbXjN, string.char(bit32.bxor(YYlHnaZx, LPUOGJpP)))
+    local uavZqrcq = 0
+    local dCSPLDHp = 0
+    local WFqnfkjH = {}
+    for _, RJeFCAkl in ipairs(mtXQsInu_data) do
+        uavZqrcq = (uavZqrcq + 1) % 256
+        dCSPLDHp = (dCSPLDHp + mtXQsInu[uavZqrcq]) % 256
+        mtXQsInu[uavZqrcq], mtXQsInu[dCSPLDHp] = mtXQsInu[dCSPLDHp], mtXQsInu[uavZqrcq]
+        local LNSWhVkk = mtXQsInu[(mtXQsInu[uavZqrcq] + mtXQsInu[dCSPLDHp]) % 256]
+        table.insert(WFqnfkjH, string.char(bit32.bxor(RJeFCAkl, LNSWhVkk)))
     end
-    return table.concat(YVigbXjN)
+    return table.concat(WFqnfkjH)
 end
 
-local zlGDuwWE_flat = {}
-for _, chunk in ipairs(XsOQvjFx) do
+local mtXQsInu_flat = {}
+for _, chunk in ipairs(mnhAeMCZ) do
     for _, byte in ipairs(chunk) do
-        table.insert(zlGDuwWE_flat, byte)
+        table.insert(mtXQsInu_flat, byte)
     end
 end
 
-local decrypted = BzNJraRV(zlGDuwWE_flat, YHYqjpsI)
-local rKNmrdEW, CugwRfFk = loadstring(decrypted)
+local decrypted = nWouTGho(mtXQsInu_flat, OjLQWtxN)
+local isbvXOtJ, UVQefUgw = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(zlGDuwWE_flat)
-zlGDuwWE_flat = nil
+table.clear(mtXQsInu_flat)
+mtXQsInu_flat = nil
 
-if rKNmrdEW then 
-    local result = rKNmrdEW() 
+if isbvXOtJ then 
+    local result = isbvXOtJ() 
     decrypted = nil
-    rKNmrdEW = nil
+    isbvXOtJ = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(CugwRfFk)) 
+    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(UVQefUgw)) 
 end
