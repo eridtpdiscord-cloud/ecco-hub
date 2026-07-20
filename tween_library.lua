@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local pDtHyxjI = {
-{99,204,208,88,94,101,22,95,160,217,68,205,145,0,243,93,77,18,45,81,72,147,9,69,221,180,201,92,83,148,34,243,154,201,83,142,161,2,183,51,28,233,37,108,129,239,87,241,162,172,42,189,126,104,228,119,84,0,207,181},{192,25,219,143,150,121,204,27,16,40,63,15,130,102,175,134,29,221,42,246,71,33,99,27,185,240,190,124,91,87,2,33,169,180,59,71,176,50,4,48,96,132,42,126,67,136,43,105,116,177,66,53,158,118,191,157,51,213,65,68},{132,137,195,146,53,206,245,234,2,82,191,252,206,59,227,127,179,177,73,103,44,50,142,242,23}
+local ZzJGQEHz = {
+{109,209,220,232,53,208,167,148,104,163,160,161,35,68,116,202,5,155,182,12,231,221,251,39,208,101,29,108,198,16,115,3,134,115,132,57,24,130,68,78,13,88,72,22,175,154,175,62,99,209,219,138,196,165,218,123,252,50,213,43},{153,55,138,129,109,161,41,138,251,68,1,84,19,142,176,136,250,145,49,57,145,88,184,24,25,135,183,21,45,216,232,16,4,36,67,235,116,247,38,73,15,105,203,35,61,206,220,16,44,56,14,220,72,178,44,176,185,141,51,248},{27,210,38,178,78,1,211,105,186,56,212,191,209,87,138,75,129,84,184,182,121,31,186,153,78}
 }
-local GJRskjJy = "eULBUQHWbXkzfczO"
+local NHHpjroX = "TrQQWSoqUNpMabMW"
 
-local function QFzYbWgX(YRLgiaoo_data, YRLgiaoo_key)
-    local YRLgiaoo = {}
-    for eCqZpcaG = 0, 255 do YRLgiaoo[eCqZpcaG] = eCqZpcaG end
-    local VOIBuSqx = 0
-    for eCqZpcaG = 0, 255 do
-        local bVRCfvvQ = YRLgiaoo_key:byte((eCqZpcaG % #YRLgiaoo_key) + 1)
-        VOIBuSqx = (VOIBuSqx + YRLgiaoo[eCqZpcaG] + bVRCfvvQ) % 256
-        YRLgiaoo[eCqZpcaG], YRLgiaoo[VOIBuSqx] = YRLgiaoo[VOIBuSqx], YRLgiaoo[eCqZpcaG]
+local function muFPgrwj(WYtAjlkW_data, WYtAjlkW_key)
+    local WYtAjlkW = {}
+    for mSCNhLJM = 0, 255 do WYtAjlkW[mSCNhLJM] = mSCNhLJM end
+    local DkLLOIkI = 0
+    for mSCNhLJM = 0, 255 do
+        local utxOfkur = WYtAjlkW_key:byte((mSCNhLJM % #WYtAjlkW_key) + 1)
+        DkLLOIkI = (DkLLOIkI + WYtAjlkW[mSCNhLJM] + utxOfkur) % 256
+        WYtAjlkW[mSCNhLJM], WYtAjlkW[DkLLOIkI] = WYtAjlkW[DkLLOIkI], WYtAjlkW[mSCNhLJM]
     end
-    local eCqZpcaG = 0
-    local VOIBuSqx = 0
-    local DzFvhQUF = {}
-    for _, fcfFryDj in ipairs(YRLgiaoo_data) do
-        eCqZpcaG = (eCqZpcaG + 1) % 256
-        VOIBuSqx = (VOIBuSqx + YRLgiaoo[eCqZpcaG]) % 256
-        YRLgiaoo[eCqZpcaG], YRLgiaoo[VOIBuSqx] = YRLgiaoo[VOIBuSqx], YRLgiaoo[eCqZpcaG]
-        local bVRCfvvQ = YRLgiaoo[(YRLgiaoo[eCqZpcaG] + YRLgiaoo[VOIBuSqx]) % 256]
-        table.insert(DzFvhQUF, string.char(bit32.bxor(fcfFryDj, bVRCfvvQ)))
+    local mSCNhLJM = 0
+    local DkLLOIkI = 0
+    local RiXepmFQ = {}
+    for _, rBfdmZov in ipairs(WYtAjlkW_data) do
+        mSCNhLJM = (mSCNhLJM + 1) % 256
+        DkLLOIkI = (DkLLOIkI + WYtAjlkW[mSCNhLJM]) % 256
+        WYtAjlkW[mSCNhLJM], WYtAjlkW[DkLLOIkI] = WYtAjlkW[DkLLOIkI], WYtAjlkW[mSCNhLJM]
+        local utxOfkur = WYtAjlkW[(WYtAjlkW[mSCNhLJM] + WYtAjlkW[DkLLOIkI]) % 256]
+        table.insert(RiXepmFQ, string.char(bit32.bxor(rBfdmZov, utxOfkur)))
     end
-    return table.concat(DzFvhQUF)
+    return table.concat(RiXepmFQ)
 end
 
-local YRLgiaoo_flat = {}
-for _, chunk in ipairs(pDtHyxjI) do
+local WYtAjlkW_flat = {}
+for _, chunk in ipairs(ZzJGQEHz) do
     for _, byte in ipairs(chunk) do
-        table.insert(YRLgiaoo_flat, byte)
+        table.insert(WYtAjlkW_flat, byte)
     end
 end
 
-local decrypted = QFzYbWgX(YRLgiaoo_flat, GJRskjJy)
-local BVSWPwEl, cMRGUrwe = loadstring(decrypted)
+local decrypted = muFPgrwj(WYtAjlkW_flat, NHHpjroX)
+local JeoxcGKL, kqQHPnUG = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(YRLgiaoo_flat)
-YRLgiaoo_flat = nil
+table.clear(WYtAjlkW_flat)
+WYtAjlkW_flat = nil
 
-if BVSWPwEl then 
-    local result = BVSWPwEl() 
+if JeoxcGKL then 
+    local result = JeoxcGKL() 
     decrypted = nil
-    BVSWPwEl = nil
+    JeoxcGKL = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(cMRGUrwe)) 
+    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(kqQHPnUG)) 
 end
