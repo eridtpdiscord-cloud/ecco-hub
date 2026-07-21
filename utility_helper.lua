@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local TkznkLKl = {
-{201,222,145,180,150,152,65,218,0,173,169,249,76,40,123,177,225,56,231,242,201,125,8,71,24,124,65,111,143,210,136,2,117,180,126,132,4,203,130,200,108,190,221,143,86,129,140,79,9,76,232,36,180,101,29,8,141,97,1,206},{168,59,138,52,212,167,186,68,212,150,152,180,215,45,255,38,216,176,202,90,42,182,161,112,92,147,204,155,73,1,114,138,16,17,177,115,247,122,152,237,73,75,41,81,19,2,191,134,153,203,38,139,21,233,213,212,200,128,149,241},{33,196,26,108,129,52,157,115,77,107,147,255,45,126,238,121,175,210,46,109,30,246,229,206,66,138}
+local xKfgWUMZ = {
+{231,245,206,247,27,157,16,202,231,137,116,137,51,89,255,40,57,12,230,151,245,62,217,229,122,38,182,252,100,247,201,54,150,82,228,55,107,156,44,156,230,7,84,215,123,114,119,134,141,238,117,20,69,127,227,176,43,43,106,77},{162,183,97,99,152,53,75,241,181,83,183,145,21,199,151,5,122,116,19,181,238,79,141,148,120,40,96,239,27,83,2,216,114,219,39,130,5,150,208,247,145,110,143,126,202,109,62,161,97,86,91,64,104,34,155,13,111,247,79,125},{86,148,186,162,94,61,12,62,64,55,115,149,162,100,31,92,62,76,109,55,3,25,67,130,124,212}
 }
-local tAcwUSTy = "jlMoYmKgbOvUTCPo"
+local iNTtUiUO = "VDxXroTAEEBZLKPO"
 
-local function wWbSkaeE(SDwccPzy_data, SDwccPzy_key)
-    local SDwccPzy = {}
-    for HQfkcUxf = 0, 255 do SDwccPzy[HQfkcUxf] = HQfkcUxf end
-    local cIXBkKfe = 0
-    for HQfkcUxf = 0, 255 do
-        local grmPfLjX = SDwccPzy_key:byte((HQfkcUxf % #SDwccPzy_key) + 1)
-        cIXBkKfe = (cIXBkKfe + SDwccPzy[HQfkcUxf] + grmPfLjX) % 256
-        SDwccPzy[HQfkcUxf], SDwccPzy[cIXBkKfe] = SDwccPzy[cIXBkKfe], SDwccPzy[HQfkcUxf]
+local function zEDQgcPd(nzFinCkI_data, nzFinCkI_key)
+    local nzFinCkI = {}
+    for DaxlpOQI = 0, 255 do nzFinCkI[DaxlpOQI] = DaxlpOQI end
+    local qqkNceWE = 0
+    for DaxlpOQI = 0, 255 do
+        local UglgUMsD = nzFinCkI_key:byte((DaxlpOQI % #nzFinCkI_key) + 1)
+        qqkNceWE = (qqkNceWE + nzFinCkI[DaxlpOQI] + UglgUMsD) % 256
+        nzFinCkI[DaxlpOQI], nzFinCkI[qqkNceWE] = nzFinCkI[qqkNceWE], nzFinCkI[DaxlpOQI]
     end
-    local HQfkcUxf = 0
-    local cIXBkKfe = 0
-    local QGcZunCj = {}
-    for _, HqmbuRtr in ipairs(SDwccPzy_data) do
-        HQfkcUxf = (HQfkcUxf + 1) % 256
-        cIXBkKfe = (cIXBkKfe + SDwccPzy[HQfkcUxf]) % 256
-        SDwccPzy[HQfkcUxf], SDwccPzy[cIXBkKfe] = SDwccPzy[cIXBkKfe], SDwccPzy[HQfkcUxf]
-        local grmPfLjX = SDwccPzy[(SDwccPzy[HQfkcUxf] + SDwccPzy[cIXBkKfe]) % 256]
-        table.insert(QGcZunCj, string.char(bit32.bxor(HqmbuRtr, grmPfLjX)))
+    local DaxlpOQI = 0
+    local qqkNceWE = 0
+    local avsliHKX = {}
+    for _, LfJaUzIK in ipairs(nzFinCkI_data) do
+        DaxlpOQI = (DaxlpOQI + 1) % 256
+        qqkNceWE = (qqkNceWE + nzFinCkI[DaxlpOQI]) % 256
+        nzFinCkI[DaxlpOQI], nzFinCkI[qqkNceWE] = nzFinCkI[qqkNceWE], nzFinCkI[DaxlpOQI]
+        local UglgUMsD = nzFinCkI[(nzFinCkI[DaxlpOQI] + nzFinCkI[qqkNceWE]) % 256]
+        table.insert(avsliHKX, string.char(bit32.bxor(LfJaUzIK, UglgUMsD)))
     end
-    return table.concat(QGcZunCj)
+    return table.concat(avsliHKX)
 end
 
-local SDwccPzy_flat = {}
-for _, chunk in ipairs(TkznkLKl) do
+local nzFinCkI_flat = {}
+for _, chunk in ipairs(xKfgWUMZ) do
     for _, byte in ipairs(chunk) do
-        table.insert(SDwccPzy_flat, byte)
+        table.insert(nzFinCkI_flat, byte)
     end
 end
 
-local decrypted = wWbSkaeE(SDwccPzy_flat, tAcwUSTy)
-local TAYgVRdI, creAIhqg = loadstring(decrypted)
+local decrypted = zEDQgcPd(nzFinCkI_flat, iNTtUiUO)
+local sAOIuhfy, SHBBQHnF = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(SDwccPzy_flat)
-SDwccPzy_flat = nil
+table.clear(nzFinCkI_flat)
+nzFinCkI_flat = nil
 
-if TAYgVRdI then 
-    local result = TAYgVRdI() 
+if sAOIuhfy then 
+    local result = sAOIuhfy() 
     decrypted = nil
-    TAYgVRdI = nil
+    sAOIuhfy = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(creAIhqg)) 
+    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(SHBBQHnF)) 
 end
