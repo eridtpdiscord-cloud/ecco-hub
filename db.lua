@@ -1,53 +1,53 @@
 -- Protected Segment (db)
-local hmeLiQHm = 54
-local pTHcthDp = {
-{182,233,0,225,172,226,141,16,110,190,116,97,103,95,163,15,178,173,229,192,245,207,219,40,29,66,192,239,156,111,10,92,176,91,158,108,87,172,44,90,250,228,252,192,51,227,204,164,186,189,191,76,57,58,93,35,101,141,182,252},{129,228,56,208,223,166,84,212,69,174,119,21,173,252,57,28,91,14,58,61,239,32,119,218,188,30,87,193,165,168,60,191,168,23,11,44,232,52,200,242,75,88,248,57,22,77,187,87,253,147,131,155,29,37,206,66,70,203,227,183},{91,164,234,192,197,171,253,1,109,181,196,98,106,174,210,203,252,1,94,123,77,121,157,69,184,128,241,1,138,148,58,240,92,169,190,79,34,198,85,15,26,237,203,208,42,47,153,192,27,117,164,22,32,248,54,209,105,88,120,85},{43,175,113,0,151,196,136,188,0,111,221,87,9,106,182,183,29,10,28,12,32,199,239,190,85,82,166,36,26,44,40,81,193,5,163,207,72,41,6,156,209,46,24,43,225,52,224,155,156,68,144,78,161,229,143,39,192,167,247,98},{100,47,133,61,102,1,213,253,145,237,28,144,227,133,230,221,246,103,172,59,142,236,247,119,165,213,100,255,111,181,212,251,5,97,7,31,116,140,24,231,206,224,145,33,202,25,16,200,38,103,188,205,79,30,180,113,221,80,130,30},{214,204,65,124,225,20,71,227,1,83,72,226,198,191,16,181,118,157,227,224,174,188,42,132,94,60,240,192,52,49,239,203,122,5,98,90,16,68,159,6,237,225,198,71,58,30,180,191,187,30,228,163,239,147,2,103,206,11,251,184},{48,125,23,178,127,24,93,225,30,87,66,220,240,29,181,64,191,94,252,99,112,153,103,236,36,142,66,186,175,172,133,204,217,219,122,217,219,39,135,25,234,69,20,92,11,248,226,241}
+local XPtFThVd = 243
+local rgKEpFQd = {
+{133,145,189,237,191,2,102,25,89,136,5,220,146,143,39,228,193,213,76,4,170,239,90,165,210,16,254,117,162,110,76,159,49,197,0,153,189,168,107,169,84,184,154,40,72,53,146,75,205,212,206,49,248,199,150,71,198,42,125,175},{31,153,157,56,35,42,63,7,173,93,76,194,136,237,63,11,163,210,64,52,49,201,242,124,177,169,152,196,168,71,196,116,176,95,85,100,9,80,188,88,222,92,155,201,72,97,157,147,255,255,88,4,37,136,5,195,18,119,30,18},{205,227,42,194,25,91,30,109,240,208,246,195,152,188,50,245,29,179,118,237,64,144,173,84,252,86,117,20,247,34,219,231,115,235,127,185,205,162,89,167,9,41,130,233,113,130,172,119,245,208,54,115,70,229,133,37,147,72,91,148},{217,49,233,40,123,119,113,129,185,60,41,167,187,174,132,71,163,36,4,23,17,251,34,63,10,157,53,148,180,241,77,47,20,100,78,162,180,138,77,241,62,153,105,223,224,97,5,158,32,199,93,223,48,149,217,218,182,220,252,226},{116,210,247,224,148,91,50,166,89,105,238,158,3,114,254,216,223,200,108,7,139,202,138,168,66,20,71,193,152,4,213,90,120,43,175,36,220,8,29,170,98,51,29,234,88,100,195,227,92,244,35,34,31,17,230,202,147,207,39,246},{218,243,46,40,132,104,23,92,159,190,106,118,87,91,42,52,255,64,143,116,42,131,15,136,166,236,82,156,215,198,84,99,70,88,93,111,76,243,11,117,54,210,167,115,118,157,178,157,154,195,113,216,121,124,243,91,217,9,255,241},{49,7,104,87,170,36,46,156,159,254,210,1,173,231,220,105,105,180,167,75,80,207,152,66,162,74,215,37,85,179,109,17,19,164,77,114,119,144,249,14,82,197,108,73,89}
 }
-local iVlXfOGH = "YXgPrBPZnkyeCZZo"
+local xNqzpnYe = "csHXZRgIBXzIpaHB"
 
-local function nBpHoJuC(BaHIdmMw_data, BaHIdmMw_key)
-    local BaHIdmMw = {}
-    for JJnLRJZh = 0, 255 do BaHIdmMw[JJnLRJZh] = JJnLRJZh end
-    local cnFLFAtu = 0
-    for JJnLRJZh = 0, 255 do
-        local gIqbVTsD = BaHIdmMw_key:byte((JJnLRJZh % #BaHIdmMw_key) + 1)
-        cnFLFAtu = (cnFLFAtu + BaHIdmMw[JJnLRJZh] + gIqbVTsD) % 256
-        BaHIdmMw[JJnLRJZh], BaHIdmMw[cnFLFAtu] = BaHIdmMw[cnFLFAtu], BaHIdmMw[JJnLRJZh]
+local function KYhEMbrX(ZRVFgRBX_data, ZRVFgRBX_key)
+    local ZRVFgRBX = {}
+    for NjSEIAdk = 0, 255 do ZRVFgRBX[NjSEIAdk] = NjSEIAdk end
+    local JRcfEEjC = 0
+    for NjSEIAdk = 0, 255 do
+        local MOEybNUM = ZRVFgRBX_key:byte((NjSEIAdk % #ZRVFgRBX_key) + 1)
+        JRcfEEjC = (JRcfEEjC + ZRVFgRBX[NjSEIAdk] + MOEybNUM) % 256
+        ZRVFgRBX[NjSEIAdk], ZRVFgRBX[JRcfEEjC] = ZRVFgRBX[JRcfEEjC], ZRVFgRBX[NjSEIAdk]
     end
-    local JJnLRJZh = 0
-    local cnFLFAtu = 0
-    local blcwnhts = {}
-    for _, TtzuBEoV in ipairs(BaHIdmMw_data) do
-        JJnLRJZh = (JJnLRJZh + 1) % 256
-        cnFLFAtu = (cnFLFAtu + BaHIdmMw[JJnLRJZh]) % 256
-        BaHIdmMw[JJnLRJZh], BaHIdmMw[cnFLFAtu] = BaHIdmMw[cnFLFAtu], BaHIdmMw[JJnLRJZh]
-        local gIqbVTsD = BaHIdmMw[(BaHIdmMw[JJnLRJZh] + BaHIdmMw[cnFLFAtu]) % 256]
-        local unmasked = bit32.bxor(TtzuBEoV, hmeLiQHm)
-        table.insert(blcwnhts, string.char(bit32.bxor(unmasked, gIqbVTsD)))
+    local NjSEIAdk = 0
+    local JRcfEEjC = 0
+    local EyvYDbaF = {}
+    for _, zSONHLmz in ipairs(ZRVFgRBX_data) do
+        NjSEIAdk = (NjSEIAdk + 1) % 256
+        JRcfEEjC = (JRcfEEjC + ZRVFgRBX[NjSEIAdk]) % 256
+        ZRVFgRBX[NjSEIAdk], ZRVFgRBX[JRcfEEjC] = ZRVFgRBX[JRcfEEjC], ZRVFgRBX[NjSEIAdk]
+        local MOEybNUM = ZRVFgRBX[(ZRVFgRBX[NjSEIAdk] + ZRVFgRBX[JRcfEEjC]) % 256]
+        local unmasked = bit32.bxor(zSONHLmz, XPtFThVd)
+        table.insert(EyvYDbaF, string.char(bit32.bxor(unmasked, MOEybNUM)))
     end
-    return table.concat(blcwnhts)
+    return table.concat(EyvYDbaF)
 end
 
-local BaHIdmMw_flat = {}
-for _, chunk in ipairs(pTHcthDp) do
+local ZRVFgRBX_flat = {}
+for _, chunk in ipairs(rgKEpFQd) do
     for _, byte in ipairs(chunk) do
-        table.insert(BaHIdmMw_flat, byte)
+        table.insert(ZRVFgRBX_flat, byte)
     end
 end
 
-local decrypted = nBpHoJuC(BaHIdmMw_flat, iVlXfOGH)
-local orOvaskd, LoykGWBm = loadstring(decrypted)
+local decrypted = KYhEMbrX(ZRVFgRBX_flat, xNqzpnYe)
+local uSgazHuj, sTOoxZHn = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(BaHIdmMw_flat)
-BaHIdmMw_flat = nil
+table.clear(ZRVFgRBX_flat)
+ZRVFgRBX_flat = nil
 
-if orOvaskd then 
-    local result = orOvaskd() 
+if uSgazHuj then 
+    local result = uSgazHuj() 
     decrypted = nil
-    orOvaskd = nil
+    uSgazHuj = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "db" .. "): " .. tostring(LoykGWBm)) 
+    warn("[ecco] Boot Error (" .. "db" .. "): " .. tostring(sTOoxZHn)) 
 end
