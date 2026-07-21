@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local EWUlaDtU = {
-{2,87,91,3,47,75,19,36,159,38,15,120,13,194,68,98,216,168,250,13,119,21,48,208,105,57,158,249,64,34,67,163,247,178,136,115,178,40,163,2,212,76,94,70,236,196,131,85,38,55,127,155,55,208,3,145,128,105,215,204},{69,142,7,167,63,221,99,210,52,17,246,153,143,164,7,14,192,125,234,52,234,73,217,203,155,198,107,48,135,43,168,56,238,228,99,165,197,74,107,116,195,226,177,54,84,105,203,121,254,165,158,48,179,215,60,98,173,82,157,215},{117,60,1,101,184,117,149,26,128,42,64,46,82,214,223,139,147,26,19,247,122,159,13,148,31,46,129,139,152}
+local xQKMbPKJ = {
+{86,78,23,92,253,88,245,247,200,24,202,168,168,48,75,86,148,85,160,153,229,139,63,245,152,224,138,19,253,84,127,132,176,120,164,181,202,100,168,161,130,245,52,234,229,63,187,118,169,194,23,252,57,188,178,204,128,126,18,131},{140,41,94,34,11,37,79,153,139,251,65,204,46,54,111,234,32,122,143,235,48,92,29,37,75,35,196,179,129,121,218,57,216,72,167,184,193,52,242,125,67,1,57,147,149,249,253,130,43,169,150,49,169,64,66,5,195,210,226,51},{102,161,26,240,113,13,213,251,110,79,159,68,221,150,160,180,77,158,54,103,113,245,117,6,240,222,1,243,241}
 }
-local CgQmptUW = "HcLxmsZKLImtGLID"
+local iynCPHeM = "cQfZGaxUDYasuiSh"
 
-local function rQoUJfBz(avAHNRgM_data, avAHNRgM_key)
-    local avAHNRgM = {}
-    for xeHIyrsR = 0, 255 do avAHNRgM[xeHIyrsR] = xeHIyrsR end
-    local GWhqzLGw = 0
-    for xeHIyrsR = 0, 255 do
-        local PUkHIdNP = avAHNRgM_key:byte((xeHIyrsR % #avAHNRgM_key) + 1)
-        GWhqzLGw = (GWhqzLGw + avAHNRgM[xeHIyrsR] + PUkHIdNP) % 256
-        avAHNRgM[xeHIyrsR], avAHNRgM[GWhqzLGw] = avAHNRgM[GWhqzLGw], avAHNRgM[xeHIyrsR]
+local function hTxHXqqA(PdqmALnB_data, PdqmALnB_key)
+    local PdqmALnB = {}
+    for URTEZyAG = 0, 255 do PdqmALnB[URTEZyAG] = URTEZyAG end
+    local yRjtbcNF = 0
+    for URTEZyAG = 0, 255 do
+        local TcBdKZwp = PdqmALnB_key:byte((URTEZyAG % #PdqmALnB_key) + 1)
+        yRjtbcNF = (yRjtbcNF + PdqmALnB[URTEZyAG] + TcBdKZwp) % 256
+        PdqmALnB[URTEZyAG], PdqmALnB[yRjtbcNF] = PdqmALnB[yRjtbcNF], PdqmALnB[URTEZyAG]
     end
-    local xeHIyrsR = 0
-    local GWhqzLGw = 0
-    local FjWIrHAN = {}
-    for _, WvWKDVMe in ipairs(avAHNRgM_data) do
-        xeHIyrsR = (xeHIyrsR + 1) % 256
-        GWhqzLGw = (GWhqzLGw + avAHNRgM[xeHIyrsR]) % 256
-        avAHNRgM[xeHIyrsR], avAHNRgM[GWhqzLGw] = avAHNRgM[GWhqzLGw], avAHNRgM[xeHIyrsR]
-        local PUkHIdNP = avAHNRgM[(avAHNRgM[xeHIyrsR] + avAHNRgM[GWhqzLGw]) % 256]
-        table.insert(FjWIrHAN, string.char(bit32.bxor(WvWKDVMe, PUkHIdNP)))
+    local URTEZyAG = 0
+    local yRjtbcNF = 0
+    local fLVgeTVT = {}
+    for _, fvrLZanW in ipairs(PdqmALnB_data) do
+        URTEZyAG = (URTEZyAG + 1) % 256
+        yRjtbcNF = (yRjtbcNF + PdqmALnB[URTEZyAG]) % 256
+        PdqmALnB[URTEZyAG], PdqmALnB[yRjtbcNF] = PdqmALnB[yRjtbcNF], PdqmALnB[URTEZyAG]
+        local TcBdKZwp = PdqmALnB[(PdqmALnB[URTEZyAG] + PdqmALnB[yRjtbcNF]) % 256]
+        table.insert(fLVgeTVT, string.char(bit32.bxor(fvrLZanW, TcBdKZwp)))
     end
-    return table.concat(FjWIrHAN)
+    return table.concat(fLVgeTVT)
 end
 
-local avAHNRgM_flat = {}
-for _, chunk in ipairs(EWUlaDtU) do
+local PdqmALnB_flat = {}
+for _, chunk in ipairs(xQKMbPKJ) do
     for _, byte in ipairs(chunk) do
-        table.insert(avAHNRgM_flat, byte)
+        table.insert(PdqmALnB_flat, byte)
     end
 end
 
-local decrypted = rQoUJfBz(avAHNRgM_flat, CgQmptUW)
-local ASVaOVfL, LqRYhgnx = loadstring(decrypted)
+local decrypted = hTxHXqqA(PdqmALnB_flat, iynCPHeM)
+local mfIMTgrU, DABWiSgr = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(avAHNRgM_flat)
-avAHNRgM_flat = nil
+table.clear(PdqmALnB_flat)
+PdqmALnB_flat = nil
 
-if ASVaOVfL then 
-    local result = ASVaOVfL() 
+if mfIMTgrU then 
+    local result = mfIMTgrU() 
     decrypted = nil
-    ASVaOVfL = nil
+    mfIMTgrU = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(LqRYhgnx)) 
+    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(DABWiSgr)) 
 end
