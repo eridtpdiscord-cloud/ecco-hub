@@ -1,53 +1,53 @@
 -- Protected Segment (db)
-local IWXTbmwE = 179
-local jgPRbYqo = {
-{71,136,55,197,239,149,129,62,116,164,79,159,189,200,217,187,91,192,131,179,122,230,170,40,159,127,57,15,165,113,19,184,100,255,157,69,245,154,58,211,245,19,26,62,190,127,40,120,50,231,247,207,173,3,56,111,158,49,97,52},{237,189,196,167,1,141,244,7,138,127,55,192,15,61,12,97,24,189,251,46,124,154,68,41,254,110,7,102,238,36,60,47,216,149,211,209,114,78,119,68,125,167,14,18,195,6,31,210,73,16,242,197,142,49,244,74,125,57,44,62},{182,204,127,76,202,16,208,195,22,28,237,61,127,151,214,161,38,240,27,189,123,220,143,196,109,197,68,103,44,31,50,127,236,231,53,130,178,233,248,109,3,134,67,170,39,216,69,182,91,164,189,24,6,180,233,15,239,150,23,9},{134,176,175,186,134,199,121,8,192,72,106,6,115,254,216,114,184,178,81,249,123,207,68,223,125,177,204,238,15,226,175,234,206,52,138,209,83,87,34,10,208,61,218,85,114,207,116,39,89,91,238,194,95,114,185,22,152,65,86,37},{87,60,136,39,72,6,162,255,255,228,154,189,85,21,61,28,116,233,126,142,113,119,189,177,139,208,5,59,219,196,112,203,154,142,170,85,56,105,235,28,26,253,202,149,120,97,231,88,7,101,81,242,106,95,86,55,140,71,163,151},{107,14,152,249,230,197,122,35,196,113,38,46,228,127,247,8,173,178,166,228,221,123,159,29,118,121,13,68,115,217,29,141,30,132,254,53,36,144,193,43,252,91,231,118,233,57,62,18,179,42,108,187,140,123,66,239,69,53,180,64},{212,177,123,36,54,102,200,63,158,206,202,33,60,232,109,194,104,210,98,50,249,123,239,24,75,10,66,164,234,45,164,157,213,187,99,229,74,124,201,55,113,34,245,213,135,144,27}
+local BWrmJyYL = 53
+local VCdJllyP = {
+{199,137,7,213,122,7,77,138,35,126,99,196,155,155,62,242,190,217,197,129,141,98,36,78,64,219,45,105,98,102,133,197,7,76,72,113,157,72,20,122,129,79,86,94,56,145,157,187,215,240,76,26,72,15,110,213,127,90,53,161},{132,94,233,27,33,76,120,197,86,21,173,112,45,102,56,243,40,235,88,240,11,61,177,57,174,22,30,157,24,101,57,52,9,246,229,133,227,219,98,184,166,83,79,90,125,66,68,135,143,149,194,82,172,115,90,93,79,166,207,165},{26,118,12,232,219,153,192,41,145,33,208,246,165,206,174,61,170,134,44,143,171,235,83,228,201,136,17,103,70,89,254,195,170,181,64,35,162,144,194,125,216,32,166,85,185,114,95,22,218,195,249,125,139,39,186,80,143,33,232,37},{25,238,138,138,185,244,13,91,130,66,207,135,157,188,154,93,74,82,43,87,212,173,181,4,228,250,31,113,226,15,185,106,21,207,163,82,184,247,206,145,20,9,40,181,29,177,193,43,68,203,27,129,2,35,109,52,144,67,244,171},{176,72,98,27,40,137,214,75,46,199,222,186,159,128,110,44,49,102,28,196,40,187,74,229,16,166,16,87,211,225,165,247,230,158,77,117,79,87,64,94,89,15,121,23,177,149,122,120,93,67,100,61,41,33,252,197,240,208,227,123},{227,101,126,251,153,231,77,145,124,83,234,228,77,153,114,186,98,234,83,192,46,208,77,253,85,240,44,88,66,32,85,211,181,51,233,2,96,149,68,141,243,245,5,130,236,210,139,95,120,99,174,79,122,2,168,147,73,64,15,68},{96,240,151,221,88,49,80,230,10,74,246,243,180,98,234,93,42,159,41,8,214,236,215,46,215,18,49,96,190,48,172,166,149,227,36,103,62,202,215,198,237}
 }
-local pUAntxvu = "wlYGTrNJzXDuVWsC"
+local KVakcyUc = "iRjsMLwTBYXcAEEo"
 
-local function zCQHBrYO(eikULzJZ_data, eikULzJZ_key)
-    local eikULzJZ = {}
-    for bxXDfhgV = 0, 255 do eikULzJZ[bxXDfhgV] = bxXDfhgV end
-    local OlbAUnhS = 0
-    for bxXDfhgV = 0, 255 do
-        local fmWUzPjY = eikULzJZ_key:byte((bxXDfhgV % #eikULzJZ_key) + 1)
-        OlbAUnhS = (OlbAUnhS + eikULzJZ[bxXDfhgV] + fmWUzPjY) % 256
-        eikULzJZ[bxXDfhgV], eikULzJZ[OlbAUnhS] = eikULzJZ[OlbAUnhS], eikULzJZ[bxXDfhgV]
+local function ycYeMbMY(jBmMhiAq_data, jBmMhiAq_key)
+    local jBmMhiAq = {}
+    for teDAdjCp = 0, 255 do jBmMhiAq[teDAdjCp] = teDAdjCp end
+    local BKKOlgNI = 0
+    for teDAdjCp = 0, 255 do
+        local LyLTUdUv = jBmMhiAq_key:byte((teDAdjCp % #jBmMhiAq_key) + 1)
+        BKKOlgNI = (BKKOlgNI + jBmMhiAq[teDAdjCp] + LyLTUdUv) % 256
+        jBmMhiAq[teDAdjCp], jBmMhiAq[BKKOlgNI] = jBmMhiAq[BKKOlgNI], jBmMhiAq[teDAdjCp]
     end
-    local bxXDfhgV = 0
-    local OlbAUnhS = 0
-    local eCMsTicL = {}
-    for _, tYkpmiYv in ipairs(eikULzJZ_data) do
-        bxXDfhgV = (bxXDfhgV + 1) % 256
-        OlbAUnhS = (OlbAUnhS + eikULzJZ[bxXDfhgV]) % 256
-        eikULzJZ[bxXDfhgV], eikULzJZ[OlbAUnhS] = eikULzJZ[OlbAUnhS], eikULzJZ[bxXDfhgV]
-        local fmWUzPjY = eikULzJZ[(eikULzJZ[bxXDfhgV] + eikULzJZ[OlbAUnhS]) % 256]
-        local unmasked = bit32.bxor(tYkpmiYv, IWXTbmwE)
-        table.insert(eCMsTicL, string.char(bit32.bxor(unmasked, fmWUzPjY)))
+    local teDAdjCp = 0
+    local BKKOlgNI = 0
+    local YwqkFPNb = {}
+    for _, yNkHQsxF in ipairs(jBmMhiAq_data) do
+        teDAdjCp = (teDAdjCp + 1) % 256
+        BKKOlgNI = (BKKOlgNI + jBmMhiAq[teDAdjCp]) % 256
+        jBmMhiAq[teDAdjCp], jBmMhiAq[BKKOlgNI] = jBmMhiAq[BKKOlgNI], jBmMhiAq[teDAdjCp]
+        local LyLTUdUv = jBmMhiAq[(jBmMhiAq[teDAdjCp] + jBmMhiAq[BKKOlgNI]) % 256]
+        local unmasked = bit32.bxor(yNkHQsxF, BWrmJyYL)
+        table.insert(YwqkFPNb, string.char(bit32.bxor(unmasked, LyLTUdUv)))
     end
-    return table.concat(eCMsTicL)
+    return table.concat(YwqkFPNb)
 end
 
-local eikULzJZ_flat = {}
-for _, chunk in ipairs(jgPRbYqo) do
+local jBmMhiAq_flat = {}
+for _, chunk in ipairs(VCdJllyP) do
     for _, byte in ipairs(chunk) do
-        table.insert(eikULzJZ_flat, byte)
+        table.insert(jBmMhiAq_flat, byte)
     end
 end
 
-local decrypted = zCQHBrYO(eikULzJZ_flat, pUAntxvu)
-local HKsaFiEw, vIDqfdmE = loadstring(decrypted)
+local decrypted = ycYeMbMY(jBmMhiAq_flat, KVakcyUc)
+local qodhVBTd, FYLAezFr = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(eikULzJZ_flat)
-eikULzJZ_flat = nil
+table.clear(jBmMhiAq_flat)
+jBmMhiAq_flat = nil
 
-if HKsaFiEw then 
-    local result = HKsaFiEw() 
+if qodhVBTd then 
+    local result = qodhVBTd() 
     decrypted = nil
-    HKsaFiEw = nil
+    qodhVBTd = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "db" .. "): " .. tostring(vIDqfdmE)) 
+    warn("[ecco] Boot Error (" .. "db" .. "): " .. tostring(FYLAezFr)) 
 end
