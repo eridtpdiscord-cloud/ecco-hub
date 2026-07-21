@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local jaJUkAEL = {
-{166,95,28,100,165,246,248,52,226,94,221,32,34,246,73,108,6,235,175,201,185,59,153,20,67,226,176,234,159,195,253,83,53,159,127,187,139,221,98,5,145,106,177,212,247,198,16,66,211,182,223,240,75,65,30,43,247,71,49,24},{58,93,143,157,78,164,210,137,104,216,15,198,143,199,88,60,182,37,102,166,59,34,173,109,135,162,102,83,197,9,142,168,198,207,142,139,87,236,37,246,232,100,117,61,92,239,174,255,92,231,133,156,180,190,88,225,12,212,20,102},{236,31,230,60,81,123,7,248,34,85,230,187,168,227,145,142,32,214,65,102,34}
+local AKvkikTd = {
+{141,185,5,192,221,203,157,238,228,78,208,170,127,167,61,167,45,180,181,65,105,172,3,243,182,163,33,188,200,69,50,27,50,4,25,212,182,198,25,244,72,152,46,134,111,238,40,12,51,173,190,96,171,7,48,154,51,193,37,182},{145,104,67,164,127,240,11,110,80,67,120,213,35,97,42,100,194,106,176,71,21,138,172,237,69,166,85,147,183,94,64,241,102,156,232,138,87,224,157,150,231,46,115,217,100,47,69,185,114,49,219,41,174,162,135,32,231,117,128,250},{166,198,245,244,221,198,202,21,107,65,69,193,124,33,163,194,164,49,133,102,221}
 }
-local SCOphGIr = "LwIouqMwAjjOivVW"
+local XgoFEPXL = "abxZOVjcAFbdowVV"
 
-local function lXtLxAtl(hDLRPaMW_data, hDLRPaMW_key)
-    local hDLRPaMW = {}
-    for LPUSvNTN = 0, 255 do hDLRPaMW[LPUSvNTN] = LPUSvNTN end
-    local BLrkbiZU = 0
-    for LPUSvNTN = 0, 255 do
-        local HjGzdnVj = hDLRPaMW_key:byte((LPUSvNTN % #hDLRPaMW_key) + 1)
-        BLrkbiZU = (BLrkbiZU + hDLRPaMW[LPUSvNTN] + HjGzdnVj) % 256
-        hDLRPaMW[LPUSvNTN], hDLRPaMW[BLrkbiZU] = hDLRPaMW[BLrkbiZU], hDLRPaMW[LPUSvNTN]
+local function HeyUWuYe(TojxqiwZ_data, TojxqiwZ_key)
+    local TojxqiwZ = {}
+    for IplQCbxJ = 0, 255 do TojxqiwZ[IplQCbxJ] = IplQCbxJ end
+    local sTGJLfDG = 0
+    for IplQCbxJ = 0, 255 do
+        local KfypSlLD = TojxqiwZ_key:byte((IplQCbxJ % #TojxqiwZ_key) + 1)
+        sTGJLfDG = (sTGJLfDG + TojxqiwZ[IplQCbxJ] + KfypSlLD) % 256
+        TojxqiwZ[IplQCbxJ], TojxqiwZ[sTGJLfDG] = TojxqiwZ[sTGJLfDG], TojxqiwZ[IplQCbxJ]
     end
-    local LPUSvNTN = 0
-    local BLrkbiZU = 0
-    local sPIHFlTN = {}
-    for _, ExjZvQnd in ipairs(hDLRPaMW_data) do
-        LPUSvNTN = (LPUSvNTN + 1) % 256
-        BLrkbiZU = (BLrkbiZU + hDLRPaMW[LPUSvNTN]) % 256
-        hDLRPaMW[LPUSvNTN], hDLRPaMW[BLrkbiZU] = hDLRPaMW[BLrkbiZU], hDLRPaMW[LPUSvNTN]
-        local HjGzdnVj = hDLRPaMW[(hDLRPaMW[LPUSvNTN] + hDLRPaMW[BLrkbiZU]) % 256]
-        table.insert(sPIHFlTN, string.char(bit32.bxor(ExjZvQnd, HjGzdnVj)))
+    local IplQCbxJ = 0
+    local sTGJLfDG = 0
+    local CsAIgKoz = {}
+    for _, vCNnXffS in ipairs(TojxqiwZ_data) do
+        IplQCbxJ = (IplQCbxJ + 1) % 256
+        sTGJLfDG = (sTGJLfDG + TojxqiwZ[IplQCbxJ]) % 256
+        TojxqiwZ[IplQCbxJ], TojxqiwZ[sTGJLfDG] = TojxqiwZ[sTGJLfDG], TojxqiwZ[IplQCbxJ]
+        local KfypSlLD = TojxqiwZ[(TojxqiwZ[IplQCbxJ] + TojxqiwZ[sTGJLfDG]) % 256]
+        table.insert(CsAIgKoz, string.char(bit32.bxor(vCNnXffS, KfypSlLD)))
     end
-    return table.concat(sPIHFlTN)
+    return table.concat(CsAIgKoz)
 end
 
-local hDLRPaMW_flat = {}
-for _, chunk in ipairs(jaJUkAEL) do
+local TojxqiwZ_flat = {}
+for _, chunk in ipairs(AKvkikTd) do
     for _, byte in ipairs(chunk) do
-        table.insert(hDLRPaMW_flat, byte)
+        table.insert(TojxqiwZ_flat, byte)
     end
 end
 
-local decrypted = lXtLxAtl(hDLRPaMW_flat, SCOphGIr)
-local rbcJBziJ, uRGdgVsv = loadstring(decrypted)
+local decrypted = HeyUWuYe(TojxqiwZ_flat, XgoFEPXL)
+local TxFIOnvR, XUBffYed = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(hDLRPaMW_flat)
-hDLRPaMW_flat = nil
+table.clear(TojxqiwZ_flat)
+TojxqiwZ_flat = nil
 
-if rbcJBziJ then 
-    local result = rbcJBziJ() 
+if TxFIOnvR then 
+    local result = TxFIOnvR() 
     decrypted = nil
-    rbcJBziJ = nil
+    TxFIOnvR = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(uRGdgVsv)) 
+    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(XUBffYed)) 
 end
