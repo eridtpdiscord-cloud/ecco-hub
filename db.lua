@@ -1,53 +1,53 @@
 -- Protected Segment (db)
-local zRxAMKdQ = 98
-local oWXQAeNp = {
-{244,71,212,134,116,70,131,135,15,38,11,92,17,99,5,138,249,7,222,67,83,241,141,10,77,254,182,91,124,29,190,1,247,37,146,37,22,143,76,224,163,46,39,174,27,205,151,198,87,6,87,246,147,9,139,4,175,143,30,47},{254,215,79,210,215,159,105,108,172,238,119,82,246,181,112,240,113,52,34,120,75,132,247,80,140,15,2,228,34,166,28,171,193,72,33,215,243,184,13,85,208,238,70,104,95,241,241,188,162,32,220,124,73,184,193,30,132,206,191,1},{87,226,192,140,200,108,36,200,244,248,89,120,150,81,78,114,17,121,224,178,207,100,210,21,32,129,45,150,210,1,243,154,0,51,41,52,122,190,28,178,67,238,53,164,195,40,119,203,111,74,181,61,206,54,252,188,50,17,130,146},{20,173,212,39,106,123,155,200,82,115,211,171,47,6,208,234,88,138,82,108,232,244,214,234,148,112,251,228,255,100,171,222,161,131,195,37,176,60,196,76,236,167,23,132,43,218,86,9,143,111,99,80,113,162,247,80,92,9,117,192},{103,148,87,119,28,199,90,198,253,234,122,206,142,193,132,74,247,48,34,135,188,103,253,63,114,198,4,77,117,216,191,120,49,113,81,191,253,133,105,163,21,123,245,255,101,66,39,26,126,86,251,148,132,7,215,7,3,241,255,93},{47,244,249,244,1,250,20,231,250,162,11,237,247,49,124,76,25,1,147,190,110,118,85,56,35,127,126,212,188,62,191,88,203,210,218,210,13,184,253,177,203,125,208,77,179,35,223,113,215,38,133,4,95,181,113,191,180,219,98,82},{213,194,26,91,210,120,193,62,15,248,146,229,43,210,11,29,47,246,140,92,56,174,237,160,73,192,144,215,238,154,138,52,234,47,223,205,196,144,253,116,8,33,152,104,141,17,87}
+local zhKPaOBa = 197
+local IvNUgSWg = {
+{81,131,249,43,240,86,221,118,48,31,51,153,150,50,188,153,235,99,233,219,143,84,248,83,26,184,81,154,202,109,164,203,139,34,111,15,119,113,223,148,62,160,46,153,245,95,30,105,190,122,95,193,43,84,133,139,158,250,144,148},{44,194,246,137,66,94,219,37,242,105,47,101,5,125,202,175,20,169,11,43,188,208,181,1,195,28,105,29,195,119,33,247,74,151,11,176,95,122,204,201,245,26,229,187,140,111,214,78,96,141,40,59,95,183,221,27,227,125,7,132},{112,85,113,245,199,80,238,243,233,13,135,20,85,15,83,16,248,157,79,134,146,100,231,19,169,78,135,34,240,142,233,18,120,211,52,139,88,95,14,116,121,233,214,254,138,153,249,92,103,128,105,206,255,104,43,69,11,3,145,68},{156,66,221,2,97,168,78,89,136,214,230,228,54,72,227,20,167,251,192,22,138,202,192,240,201,40,15,162,35,213,195,47,199,131,148,210,137,84,18,188,193,14,41,127,41,213,31,248,21,168,150,50,213,40,18,231,165,192,165,225},{163,91,156,159,187,10,12,125,105,215,85,4,204,232,53,77,237,228,107,207,2,198,145,148,176,103,188,6,177,196,99,77,24,6,120,44,182,44,183,16,125,111,191,248,141,138,203,236,86,101,237,193,215,17,254,220,206,41,168,206},{175,214,253,133,160,48,209,219,194,135,143,101,199,120,56,180,33,113,243,26,53,158,224,150,26,88,0,161,205,117,176,126,216,219,107,156,102,22,134,202,170,97,114,170,176,127,42,136,24,47,122,205,152,23,66,155,104,230,124,195},{112,172,208,138,163,255,252,115,100,158,106,181,11,170,148,150,151,79,16,95,226,220,10,51,193,3,126,199,36,128,178,243,227,221,131,88,128,221,94,198,16,40,71,119,46}
 }
-local ZtxpQsWU = "xXozJwDtRmeiWxvc"
+local gjOKVcPP = "IufbHihmeySqweTz"
 
-local function PswxAawD(yIDBVTgY_data, yIDBVTgY_key)
-    local yIDBVTgY = {}
-    for rEOaOknI = 0, 255 do yIDBVTgY[rEOaOknI] = rEOaOknI end
-    local TOIRtXKe = 0
-    for rEOaOknI = 0, 255 do
-        local WOQIjOLt = yIDBVTgY_key:byte((rEOaOknI % #yIDBVTgY_key) + 1)
-        TOIRtXKe = (TOIRtXKe + yIDBVTgY[rEOaOknI] + WOQIjOLt) % 256
-        yIDBVTgY[rEOaOknI], yIDBVTgY[TOIRtXKe] = yIDBVTgY[TOIRtXKe], yIDBVTgY[rEOaOknI]
+local function vzMMuouC(CkBNdgou_data, CkBNdgou_key)
+    local CkBNdgou = {}
+    for eTBiUFPC = 0, 255 do CkBNdgou[eTBiUFPC] = eTBiUFPC end
+    local nvumjsNe = 0
+    for eTBiUFPC = 0, 255 do
+        local MuqLbDuX = CkBNdgou_key:byte((eTBiUFPC % #CkBNdgou_key) + 1)
+        nvumjsNe = (nvumjsNe + CkBNdgou[eTBiUFPC] + MuqLbDuX) % 256
+        CkBNdgou[eTBiUFPC], CkBNdgou[nvumjsNe] = CkBNdgou[nvumjsNe], CkBNdgou[eTBiUFPC]
     end
-    local rEOaOknI = 0
-    local TOIRtXKe = 0
-    local sUxDVtfy = {}
-    for _, AzVsGGqn in ipairs(yIDBVTgY_data) do
-        rEOaOknI = (rEOaOknI + 1) % 256
-        TOIRtXKe = (TOIRtXKe + yIDBVTgY[rEOaOknI]) % 256
-        yIDBVTgY[rEOaOknI], yIDBVTgY[TOIRtXKe] = yIDBVTgY[TOIRtXKe], yIDBVTgY[rEOaOknI]
-        local WOQIjOLt = yIDBVTgY[(yIDBVTgY[rEOaOknI] + yIDBVTgY[TOIRtXKe]) % 256]
-        local unmasked = bit32.bxor(AzVsGGqn, zRxAMKdQ)
-        table.insert(sUxDVtfy, string.char(bit32.bxor(unmasked, WOQIjOLt)))
+    local eTBiUFPC = 0
+    local nvumjsNe = 0
+    local JbfykmIC = {}
+    for _, pmoKnwxy in ipairs(CkBNdgou_data) do
+        eTBiUFPC = (eTBiUFPC + 1) % 256
+        nvumjsNe = (nvumjsNe + CkBNdgou[eTBiUFPC]) % 256
+        CkBNdgou[eTBiUFPC], CkBNdgou[nvumjsNe] = CkBNdgou[nvumjsNe], CkBNdgou[eTBiUFPC]
+        local MuqLbDuX = CkBNdgou[(CkBNdgou[eTBiUFPC] + CkBNdgou[nvumjsNe]) % 256]
+        local unmasked = bit32.bxor(pmoKnwxy, zhKPaOBa)
+        table.insert(JbfykmIC, string.char(bit32.bxor(unmasked, MuqLbDuX)))
     end
-    return table.concat(sUxDVtfy)
+    return table.concat(JbfykmIC)
 end
 
-local yIDBVTgY_flat = {}
-for _, chunk in ipairs(oWXQAeNp) do
+local CkBNdgou_flat = {}
+for _, chunk in ipairs(IvNUgSWg) do
     for _, byte in ipairs(chunk) do
-        table.insert(yIDBVTgY_flat, byte)
+        table.insert(CkBNdgou_flat, byte)
     end
 end
 
-local decrypted = PswxAawD(yIDBVTgY_flat, ZtxpQsWU)
-local qCgjkWxg, KksOUUIb = loadstring(decrypted)
+local decrypted = vzMMuouC(CkBNdgou_flat, gjOKVcPP)
+local HYjCUngl, wtVZkfWA = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(yIDBVTgY_flat)
-yIDBVTgY_flat = nil
+table.clear(CkBNdgou_flat)
+CkBNdgou_flat = nil
 
-if qCgjkWxg then 
-    local result = qCgjkWxg() 
+if HYjCUngl then 
+    local result = HYjCUngl() 
     decrypted = nil
-    qCgjkWxg = nil
+    HYjCUngl = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "db" .. "): " .. tostring(KksOUUIb)) 
+    warn("[ecco] Boot Error (" .. "db" .. "): " .. tostring(wtVZkfWA)) 
 end
