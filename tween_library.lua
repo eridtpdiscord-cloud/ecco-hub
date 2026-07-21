@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local MwPJeTJw = {
-{103,170,32,13,13,187,89,202,90,55,81,188,92,39,8,5,177,202,203,190,60,41,171,76,201,91,0,239,204,245,138,172,206,221,219,207,10,208,251,113,217,54,66,63,21,94,29,18,20,220,183,194,127,8,252,248,195,102,74,163},{76,113,85,108,13,63,45,140,58,135,200,126,55,255,212,55,204,127,190,115,154,195,145,35,207,92,27,8,40,240,43,204,149,31,198,159,22,236,144,127,243,246,91,175,122,143,167,12,110,100,237,80,13,167,140,69,148,211,10,71},{161,234,11,66,252,212,90,139,24,172,205,50,171,91,255,249,192,230,206,196,203,126,105,97,96}
+local DnIFdlKC = {
+{59,9,223,117,202,250,247,66,59,124,247,255,251,150,52,216,169,184,163,4,37,83,126,129,118,117,244,125,74,0,43,178,155,196,184,191,169,50,196,188,78,215,12,156,31,158,210,80,100,61,5,58,102,64,144,204,154,92,47,117},{172,191,130,211,24,58,240,251,139,55,1,31,58,247,126,200,57,37,171,6,29,131,100,119,18,110,138,79,82,165,118,213,37,238,51,228,121,201,159,235,32,54,178,222,106,199,13,54,51,67,74,8,218,239,71,159,157,184,196,223},{211,237,243,25,89,40,85,183,12,255,133,176,0,163,14,57,13,67,243,230,56,104,217,25,48}
 }
-local jvNcqCSb = "useNbmwRpYbbeneC"
+local CIkhZeUX = "ZeUDOGXaLSGIIEyB"
 
-local function bXuLovjC(oKeSZIqh_data, oKeSZIqh_key)
-    local oKeSZIqh = {}
-    for NsiblFdA = 0, 255 do oKeSZIqh[NsiblFdA] = NsiblFdA end
-    local lSyRkWBt = 0
-    for NsiblFdA = 0, 255 do
-        local wnfqbBjD = oKeSZIqh_key:byte((NsiblFdA % #oKeSZIqh_key) + 1)
-        lSyRkWBt = (lSyRkWBt + oKeSZIqh[NsiblFdA] + wnfqbBjD) % 256
-        oKeSZIqh[NsiblFdA], oKeSZIqh[lSyRkWBt] = oKeSZIqh[lSyRkWBt], oKeSZIqh[NsiblFdA]
+local function cceDOIHU(JFgPmlFP_data, JFgPmlFP_key)
+    local JFgPmlFP = {}
+    for lmkDIEkP = 0, 255 do JFgPmlFP[lmkDIEkP] = lmkDIEkP end
+    local HNUQozoA = 0
+    for lmkDIEkP = 0, 255 do
+        local gUnuZKui = JFgPmlFP_key:byte((lmkDIEkP % #JFgPmlFP_key) + 1)
+        HNUQozoA = (HNUQozoA + JFgPmlFP[lmkDIEkP] + gUnuZKui) % 256
+        JFgPmlFP[lmkDIEkP], JFgPmlFP[HNUQozoA] = JFgPmlFP[HNUQozoA], JFgPmlFP[lmkDIEkP]
     end
-    local NsiblFdA = 0
-    local lSyRkWBt = 0
-    local semqBBVL = {}
-    for _, AiynPQHv in ipairs(oKeSZIqh_data) do
-        NsiblFdA = (NsiblFdA + 1) % 256
-        lSyRkWBt = (lSyRkWBt + oKeSZIqh[NsiblFdA]) % 256
-        oKeSZIqh[NsiblFdA], oKeSZIqh[lSyRkWBt] = oKeSZIqh[lSyRkWBt], oKeSZIqh[NsiblFdA]
-        local wnfqbBjD = oKeSZIqh[(oKeSZIqh[NsiblFdA] + oKeSZIqh[lSyRkWBt]) % 256]
-        table.insert(semqBBVL, string.char(bit32.bxor(AiynPQHv, wnfqbBjD)))
+    local lmkDIEkP = 0
+    local HNUQozoA = 0
+    local xqPusbSr = {}
+    for _, TznzFDPr in ipairs(JFgPmlFP_data) do
+        lmkDIEkP = (lmkDIEkP + 1) % 256
+        HNUQozoA = (HNUQozoA + JFgPmlFP[lmkDIEkP]) % 256
+        JFgPmlFP[lmkDIEkP], JFgPmlFP[HNUQozoA] = JFgPmlFP[HNUQozoA], JFgPmlFP[lmkDIEkP]
+        local gUnuZKui = JFgPmlFP[(JFgPmlFP[lmkDIEkP] + JFgPmlFP[HNUQozoA]) % 256]
+        table.insert(xqPusbSr, string.char(bit32.bxor(TznzFDPr, gUnuZKui)))
     end
-    return table.concat(semqBBVL)
+    return table.concat(xqPusbSr)
 end
 
-local oKeSZIqh_flat = {}
-for _, chunk in ipairs(MwPJeTJw) do
+local JFgPmlFP_flat = {}
+for _, chunk in ipairs(DnIFdlKC) do
     for _, byte in ipairs(chunk) do
-        table.insert(oKeSZIqh_flat, byte)
+        table.insert(JFgPmlFP_flat, byte)
     end
 end
 
-local decrypted = bXuLovjC(oKeSZIqh_flat, jvNcqCSb)
-local ZKvKTgML, xJFtoBTP = loadstring(decrypted)
+local decrypted = cceDOIHU(JFgPmlFP_flat, CIkhZeUX)
+local ApzluBVG, uZnfOsrd = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(oKeSZIqh_flat)
-oKeSZIqh_flat = nil
+table.clear(JFgPmlFP_flat)
+JFgPmlFP_flat = nil
 
-if ZKvKTgML then 
-    local result = ZKvKTgML() 
+if ApzluBVG then 
+    local result = ApzluBVG() 
     decrypted = nil
-    ZKvKTgML = nil
+    ApzluBVG = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(xJFtoBTP)) 
+    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(uZnfOsrd)) 
 end
