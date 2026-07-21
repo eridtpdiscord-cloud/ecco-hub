@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local fvWqtPkw = {
-{80,163,219,115,18,9,133,176,203,14,181,139,169,110,147,187,102,45,220,99,155,58,46,95,82,33,3,218,146,54,175,190,173,156,157,154,91,4,101,182,67,195,42,41,10,117,220,174,17,68,59,93,186,64,245,77,122,70,176,17},{237,136,144,3,6,135,65,49,90,194,204,128,51,85,245,108,87,172,39,71,168,33,175,23,96,28,0,124,131,108,16,250,152,124,102,108,218,45,218,67,146,62,200,171,162,26,50,93,214,208,124,92,189,212,64,135,252,212,74,176},{118,212,171,51,46,132,245,32,159,34,246,233,195,133,185,132,150,163,144,117,162,234,255,153,26,234,155,142,80}
+local vUkoKGzO = {
+{8,246,219,117,141,163,173,39,37,192,158,95,44,68,45,13,107,166,235,216,70,114,124,93,103,42,52,127,106,31,5,161,23,34,196,73,186,170,180,43,188,89,98,34,16,172,183,234,86,83,83,152,12,207,29,141,72,98,214,222},{246,26,225,250,197,46,116,156,2,45,195,229,127,158,68,12,221,32,188,19,98,249,69,168,209,38,98,147,241,41,25,155,20,227,255,172,165,186,122,130,189,121,20,235,16,243,189,66,9,146,179,72,206,77,37,143,29,242,56,19},{231,248,40,10,21,10,17,108,191,65,205,46,35,8,193,48,220,59,139,136,238,181,57,255,250,43,223,47,219}
 }
-local xTohKimK = "CXYuzzjHBdbCpyoh"
+local uXnGvUMF = "uGZwgSTMexIHEZvb"
 
-local function gRVAYQUG(vTDnUaDY_data, vTDnUaDY_key)
-    local vTDnUaDY = {}
-    for MObyLzvU = 0, 255 do vTDnUaDY[MObyLzvU] = MObyLzvU end
-    local IxsIywqG = 0
-    for MObyLzvU = 0, 255 do
-        local pzcETojg = vTDnUaDY_key:byte((MObyLzvU % #vTDnUaDY_key) + 1)
-        IxsIywqG = (IxsIywqG + vTDnUaDY[MObyLzvU] + pzcETojg) % 256
-        vTDnUaDY[MObyLzvU], vTDnUaDY[IxsIywqG] = vTDnUaDY[IxsIywqG], vTDnUaDY[MObyLzvU]
+local function mrckferC(lkOTfpwt_data, lkOTfpwt_key)
+    local lkOTfpwt = {}
+    for nyTxOlFi = 0, 255 do lkOTfpwt[nyTxOlFi] = nyTxOlFi end
+    local lnaMdWvQ = 0
+    for nyTxOlFi = 0, 255 do
+        local sijNqpeU = lkOTfpwt_key:byte((nyTxOlFi % #lkOTfpwt_key) + 1)
+        lnaMdWvQ = (lnaMdWvQ + lkOTfpwt[nyTxOlFi] + sijNqpeU) % 256
+        lkOTfpwt[nyTxOlFi], lkOTfpwt[lnaMdWvQ] = lkOTfpwt[lnaMdWvQ], lkOTfpwt[nyTxOlFi]
     end
-    local MObyLzvU = 0
-    local IxsIywqG = 0
-    local PBWPPYkg = {}
-    for _, FLzHDOHJ in ipairs(vTDnUaDY_data) do
-        MObyLzvU = (MObyLzvU + 1) % 256
-        IxsIywqG = (IxsIywqG + vTDnUaDY[MObyLzvU]) % 256
-        vTDnUaDY[MObyLzvU], vTDnUaDY[IxsIywqG] = vTDnUaDY[IxsIywqG], vTDnUaDY[MObyLzvU]
-        local pzcETojg = vTDnUaDY[(vTDnUaDY[MObyLzvU] + vTDnUaDY[IxsIywqG]) % 256]
-        table.insert(PBWPPYkg, string.char(bit32.bxor(FLzHDOHJ, pzcETojg)))
+    local nyTxOlFi = 0
+    local lnaMdWvQ = 0
+    local RLmOBwDe = {}
+    for _, ZaUPdgRB in ipairs(lkOTfpwt_data) do
+        nyTxOlFi = (nyTxOlFi + 1) % 256
+        lnaMdWvQ = (lnaMdWvQ + lkOTfpwt[nyTxOlFi]) % 256
+        lkOTfpwt[nyTxOlFi], lkOTfpwt[lnaMdWvQ] = lkOTfpwt[lnaMdWvQ], lkOTfpwt[nyTxOlFi]
+        local sijNqpeU = lkOTfpwt[(lkOTfpwt[nyTxOlFi] + lkOTfpwt[lnaMdWvQ]) % 256]
+        table.insert(RLmOBwDe, string.char(bit32.bxor(ZaUPdgRB, sijNqpeU)))
     end
-    return table.concat(PBWPPYkg)
+    return table.concat(RLmOBwDe)
 end
 
-local vTDnUaDY_flat = {}
-for _, chunk in ipairs(fvWqtPkw) do
+local lkOTfpwt_flat = {}
+for _, chunk in ipairs(vUkoKGzO) do
     for _, byte in ipairs(chunk) do
-        table.insert(vTDnUaDY_flat, byte)
+        table.insert(lkOTfpwt_flat, byte)
     end
 end
 
-local decrypted = gRVAYQUG(vTDnUaDY_flat, xTohKimK)
-local tPIsEyzX, ZWukMjSn = loadstring(decrypted)
+local decrypted = mrckferC(lkOTfpwt_flat, uXnGvUMF)
+local pwuUSDej, pFKkrkyD = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(vTDnUaDY_flat)
-vTDnUaDY_flat = nil
+table.clear(lkOTfpwt_flat)
+lkOTfpwt_flat = nil
 
-if tPIsEyzX then 
-    local result = tPIsEyzX() 
+if pwuUSDej then 
+    local result = pwuUSDej() 
     decrypted = nil
-    tPIsEyzX = nil
+    pwuUSDej = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "network_optimizer" .. "): " .. tostring(ZWukMjSn)) 
+    warn("[ecco] Boot Error (" .. "network_optimizer" .. "): " .. tostring(pFKkrkyD)) 
 end
