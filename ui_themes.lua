@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local WmCJwfnB = {
-{109,148,22,80,130,82,80,126,104,77,69,13,119,59,225,109,95,233,83,131,89,60,99,22,244,225,230,138,173,24,106,98,209,74,83,36,111,239,110,210,195,73,0,67,17,151,239,156,175,154,218,181,62,150,118,210,253,182,251,156},{18,116,92,218,43,130,116,136,160,42,22,73,113,42,80,0,146,128,39,181,157,149,200,37,165,62,201,52,177,239,8,16,244,110,195,83,211,52,20,34,181,154,56,194,83,255,58,16,136,116,231,145,98,249,148,197,4,218,62,39},{202,198,111,195,200,222,140,108,50,136,6,29,77,10,58,9,164,87,200,28,110}
+local jaJUkAEL = {
+{166,95,28,100,165,246,248,52,226,94,221,32,34,246,73,108,6,235,175,201,185,59,153,20,67,226,176,234,159,195,253,83,53,159,127,187,139,221,98,5,145,106,177,212,247,198,16,66,211,182,223,240,75,65,30,43,247,71,49,24},{58,93,143,157,78,164,210,137,104,216,15,198,143,199,88,60,182,37,102,166,59,34,173,109,135,162,102,83,197,9,142,168,198,207,142,139,87,236,37,246,232,100,117,61,92,239,174,255,92,231,133,156,180,190,88,225,12,212,20,102},{236,31,230,60,81,123,7,248,34,85,230,187,168,227,145,142,32,214,65,102,34}
 }
-local QlfCfmlq = "stnHGxbDSfIrzTfY"
+local SCOphGIr = "LwIouqMwAjjOivVW"
 
-local function elBHTevL(MEXzVbaO_data, MEXzVbaO_key)
-    local MEXzVbaO = {}
-    for WygrlLVd = 0, 255 do MEXzVbaO[WygrlLVd] = WygrlLVd end
-    local ezMEXGyd = 0
-    for WygrlLVd = 0, 255 do
-        local RAbuigcc = MEXzVbaO_key:byte((WygrlLVd % #MEXzVbaO_key) + 1)
-        ezMEXGyd = (ezMEXGyd + MEXzVbaO[WygrlLVd] + RAbuigcc) % 256
-        MEXzVbaO[WygrlLVd], MEXzVbaO[ezMEXGyd] = MEXzVbaO[ezMEXGyd], MEXzVbaO[WygrlLVd]
+local function lXtLxAtl(hDLRPaMW_data, hDLRPaMW_key)
+    local hDLRPaMW = {}
+    for LPUSvNTN = 0, 255 do hDLRPaMW[LPUSvNTN] = LPUSvNTN end
+    local BLrkbiZU = 0
+    for LPUSvNTN = 0, 255 do
+        local HjGzdnVj = hDLRPaMW_key:byte((LPUSvNTN % #hDLRPaMW_key) + 1)
+        BLrkbiZU = (BLrkbiZU + hDLRPaMW[LPUSvNTN] + HjGzdnVj) % 256
+        hDLRPaMW[LPUSvNTN], hDLRPaMW[BLrkbiZU] = hDLRPaMW[BLrkbiZU], hDLRPaMW[LPUSvNTN]
     end
-    local WygrlLVd = 0
-    local ezMEXGyd = 0
-    local PcnuthAp = {}
-    for _, mlPgmPSL in ipairs(MEXzVbaO_data) do
-        WygrlLVd = (WygrlLVd + 1) % 256
-        ezMEXGyd = (ezMEXGyd + MEXzVbaO[WygrlLVd]) % 256
-        MEXzVbaO[WygrlLVd], MEXzVbaO[ezMEXGyd] = MEXzVbaO[ezMEXGyd], MEXzVbaO[WygrlLVd]
-        local RAbuigcc = MEXzVbaO[(MEXzVbaO[WygrlLVd] + MEXzVbaO[ezMEXGyd]) % 256]
-        table.insert(PcnuthAp, string.char(bit32.bxor(mlPgmPSL, RAbuigcc)))
+    local LPUSvNTN = 0
+    local BLrkbiZU = 0
+    local sPIHFlTN = {}
+    for _, ExjZvQnd in ipairs(hDLRPaMW_data) do
+        LPUSvNTN = (LPUSvNTN + 1) % 256
+        BLrkbiZU = (BLrkbiZU + hDLRPaMW[LPUSvNTN]) % 256
+        hDLRPaMW[LPUSvNTN], hDLRPaMW[BLrkbiZU] = hDLRPaMW[BLrkbiZU], hDLRPaMW[LPUSvNTN]
+        local HjGzdnVj = hDLRPaMW[(hDLRPaMW[LPUSvNTN] + hDLRPaMW[BLrkbiZU]) % 256]
+        table.insert(sPIHFlTN, string.char(bit32.bxor(ExjZvQnd, HjGzdnVj)))
     end
-    return table.concat(PcnuthAp)
+    return table.concat(sPIHFlTN)
 end
 
-local MEXzVbaO_flat = {}
-for _, chunk in ipairs(WmCJwfnB) do
+local hDLRPaMW_flat = {}
+for _, chunk in ipairs(jaJUkAEL) do
     for _, byte in ipairs(chunk) do
-        table.insert(MEXzVbaO_flat, byte)
+        table.insert(hDLRPaMW_flat, byte)
     end
 end
 
-local decrypted = elBHTevL(MEXzVbaO_flat, QlfCfmlq)
-local jSszxiVJ, bOvTqcXb = loadstring(decrypted)
+local decrypted = lXtLxAtl(hDLRPaMW_flat, SCOphGIr)
+local rbcJBziJ, uRGdgVsv = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(MEXzVbaO_flat)
-MEXzVbaO_flat = nil
+table.clear(hDLRPaMW_flat)
+hDLRPaMW_flat = nil
 
-if jSszxiVJ then 
-    local result = jSszxiVJ() 
+if rbcJBziJ then 
+    local result = rbcJBziJ() 
     decrypted = nil
-    jSszxiVJ = nil
+    rbcJBziJ = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(bOvTqcXb)) 
+    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(uRGdgVsv)) 
 end
