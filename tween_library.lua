@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local DnIFdlKC = {
-{59,9,223,117,202,250,247,66,59,124,247,255,251,150,52,216,169,184,163,4,37,83,126,129,118,117,244,125,74,0,43,178,155,196,184,191,169,50,196,188,78,215,12,156,31,158,210,80,100,61,5,58,102,64,144,204,154,92,47,117},{172,191,130,211,24,58,240,251,139,55,1,31,58,247,126,200,57,37,171,6,29,131,100,119,18,110,138,79,82,165,118,213,37,238,51,228,121,201,159,235,32,54,178,222,106,199,13,54,51,67,74,8,218,239,71,159,157,184,196,223},{211,237,243,25,89,40,85,183,12,255,133,176,0,163,14,57,13,67,243,230,56,104,217,25,48}
+local fnWUATgO = {
+{48,255,211,242,189,169,117,7,111,161,172,145,51,29,5,219,209,238,192,37,183,6,231,163,235,162,223,103,29,36,126,154,35,169,11,37,242,99,43,34,165,31,141,228,103,178,213,165,71,105,172,60,174,21,230,22,193,217,247,247},{114,72,36,106,159,224,249,218,5,30,68,126,65,40,87,22,156,94,229,43,71,153,114,97,57,238,81,222,134,19,226,23,183,119,139,87,53,44,97,130,245,62,45,72,124,114,253,228,140,18,72,250,246,111,230,67,191,126,90,30},{232,57,2,251,37,221,186,11,65,111,189,192,64,17,4,59,213,122,182,142,106,187,235,10,125}
 }
-local CIkhZeUX = "ZeUDOGXaLSGIIEyB"
+local ogQcoouY = "qopUwVTJqWMoJLOZ"
 
-local function cceDOIHU(JFgPmlFP_data, JFgPmlFP_key)
-    local JFgPmlFP = {}
-    for lmkDIEkP = 0, 255 do JFgPmlFP[lmkDIEkP] = lmkDIEkP end
-    local HNUQozoA = 0
-    for lmkDIEkP = 0, 255 do
-        local gUnuZKui = JFgPmlFP_key:byte((lmkDIEkP % #JFgPmlFP_key) + 1)
-        HNUQozoA = (HNUQozoA + JFgPmlFP[lmkDIEkP] + gUnuZKui) % 256
-        JFgPmlFP[lmkDIEkP], JFgPmlFP[HNUQozoA] = JFgPmlFP[HNUQozoA], JFgPmlFP[lmkDIEkP]
+local function jEpveMCl(aPOHpDPY_data, aPOHpDPY_key)
+    local aPOHpDPY = {}
+    for keCtmgdY = 0, 255 do aPOHpDPY[keCtmgdY] = keCtmgdY end
+    local vemeoNrT = 0
+    for keCtmgdY = 0, 255 do
+        local ghVQNCLs = aPOHpDPY_key:byte((keCtmgdY % #aPOHpDPY_key) + 1)
+        vemeoNrT = (vemeoNrT + aPOHpDPY[keCtmgdY] + ghVQNCLs) % 256
+        aPOHpDPY[keCtmgdY], aPOHpDPY[vemeoNrT] = aPOHpDPY[vemeoNrT], aPOHpDPY[keCtmgdY]
     end
-    local lmkDIEkP = 0
-    local HNUQozoA = 0
-    local xqPusbSr = {}
-    for _, TznzFDPr in ipairs(JFgPmlFP_data) do
-        lmkDIEkP = (lmkDIEkP + 1) % 256
-        HNUQozoA = (HNUQozoA + JFgPmlFP[lmkDIEkP]) % 256
-        JFgPmlFP[lmkDIEkP], JFgPmlFP[HNUQozoA] = JFgPmlFP[HNUQozoA], JFgPmlFP[lmkDIEkP]
-        local gUnuZKui = JFgPmlFP[(JFgPmlFP[lmkDIEkP] + JFgPmlFP[HNUQozoA]) % 256]
-        table.insert(xqPusbSr, string.char(bit32.bxor(TznzFDPr, gUnuZKui)))
+    local keCtmgdY = 0
+    local vemeoNrT = 0
+    local kmKqiudM = {}
+    for _, EvCKVvEQ in ipairs(aPOHpDPY_data) do
+        keCtmgdY = (keCtmgdY + 1) % 256
+        vemeoNrT = (vemeoNrT + aPOHpDPY[keCtmgdY]) % 256
+        aPOHpDPY[keCtmgdY], aPOHpDPY[vemeoNrT] = aPOHpDPY[vemeoNrT], aPOHpDPY[keCtmgdY]
+        local ghVQNCLs = aPOHpDPY[(aPOHpDPY[keCtmgdY] + aPOHpDPY[vemeoNrT]) % 256]
+        table.insert(kmKqiudM, string.char(bit32.bxor(EvCKVvEQ, ghVQNCLs)))
     end
-    return table.concat(xqPusbSr)
+    return table.concat(kmKqiudM)
 end
 
-local JFgPmlFP_flat = {}
-for _, chunk in ipairs(DnIFdlKC) do
+local aPOHpDPY_flat = {}
+for _, chunk in ipairs(fnWUATgO) do
     for _, byte in ipairs(chunk) do
-        table.insert(JFgPmlFP_flat, byte)
+        table.insert(aPOHpDPY_flat, byte)
     end
 end
 
-local decrypted = cceDOIHU(JFgPmlFP_flat, CIkhZeUX)
-local ApzluBVG, uZnfOsrd = loadstring(decrypted)
+local decrypted = jEpveMCl(aPOHpDPY_flat, ogQcoouY)
+local TnkGSYxE, FnoTuTex = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(JFgPmlFP_flat)
-JFgPmlFP_flat = nil
+table.clear(aPOHpDPY_flat)
+aPOHpDPY_flat = nil
 
-if ApzluBVG then 
-    local result = ApzluBVG() 
+if TnkGSYxE then 
+    local result = TnkGSYxE() 
     decrypted = nil
-    ApzluBVG = nil
+    TnkGSYxE = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(uZnfOsrd)) 
+    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(FnoTuTex)) 
 end
