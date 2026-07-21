@@ -1,51 +1,51 @@
 -- Compiled secure segment
-local fnWUATgO = {
-{48,255,211,242,189,169,117,7,111,161,172,145,51,29,5,219,209,238,192,37,183,6,231,163,235,162,223,103,29,36,126,154,35,169,11,37,242,99,43,34,165,31,141,228,103,178,213,165,71,105,172,60,174,21,230,22,193,217,247,247},{114,72,36,106,159,224,249,218,5,30,68,126,65,40,87,22,156,94,229,43,71,153,114,97,57,238,81,222,134,19,226,23,183,119,139,87,53,44,97,130,245,62,45,72,124,114,253,228,140,18,72,250,246,111,230,67,191,126,90,30},{232,57,2,251,37,221,186,11,65,111,189,192,64,17,4,59,213,122,182,142,106,187,235,10,125}
+local xQmxNWRD = {
+{11,232,82,144,32,149,147,15,177,148,204,8,224,139,200,202,106,186,20,184,186,224,219,197,38,138,240,144,65,214,88,147,178,200,90,232,216,133,144,212,100,145,168,125,12,183,108,214,44,198,168,4,244,204,229,249,12,17,211,87},{224,86,228,73,246,174,183,50,142,20,161,138,113,131,183,69,150,254,36,31,8,51,129,223,85,238,180,55,22,248,93,18,250,219,205,92,159,195,198,142,140,58,148,125,215,122,187,166,161,133,255,101,32,133,126,91,29,103,239,126},{55,163,241,63,88,38,104,186,226,63,168,232,229,85,21,241,94,215,204,63,157,85,18,74,81}
 }
-local ogQcoouY = "qopUwVTJqWMoJLOZ"
+local HEuCiclC = "JlXSQMFpuFvkUuvW"
 
-local function jEpveMCl(aPOHpDPY_data, aPOHpDPY_key)
-    local aPOHpDPY = {}
-    for keCtmgdY = 0, 255 do aPOHpDPY[keCtmgdY] = keCtmgdY end
-    local vemeoNrT = 0
-    for keCtmgdY = 0, 255 do
-        local ghVQNCLs = aPOHpDPY_key:byte((keCtmgdY % #aPOHpDPY_key) + 1)
-        vemeoNrT = (vemeoNrT + aPOHpDPY[keCtmgdY] + ghVQNCLs) % 256
-        aPOHpDPY[keCtmgdY], aPOHpDPY[vemeoNrT] = aPOHpDPY[vemeoNrT], aPOHpDPY[keCtmgdY]
+local function ZFsijGfE(wpBPuEdr_data, wpBPuEdr_key)
+    local wpBPuEdr = {}
+    for rpAfgPGD = 0, 255 do wpBPuEdr[rpAfgPGD] = rpAfgPGD end
+    local ldDgHcSn = 0
+    for rpAfgPGD = 0, 255 do
+        local uIXBXtxl = wpBPuEdr_key:byte((rpAfgPGD % #wpBPuEdr_key) + 1)
+        ldDgHcSn = (ldDgHcSn + wpBPuEdr[rpAfgPGD] + uIXBXtxl) % 256
+        wpBPuEdr[rpAfgPGD], wpBPuEdr[ldDgHcSn] = wpBPuEdr[ldDgHcSn], wpBPuEdr[rpAfgPGD]
     end
-    local keCtmgdY = 0
-    local vemeoNrT = 0
-    local kmKqiudM = {}
-    for _, EvCKVvEQ in ipairs(aPOHpDPY_data) do
-        keCtmgdY = (keCtmgdY + 1) % 256
-        vemeoNrT = (vemeoNrT + aPOHpDPY[keCtmgdY]) % 256
-        aPOHpDPY[keCtmgdY], aPOHpDPY[vemeoNrT] = aPOHpDPY[vemeoNrT], aPOHpDPY[keCtmgdY]
-        local ghVQNCLs = aPOHpDPY[(aPOHpDPY[keCtmgdY] + aPOHpDPY[vemeoNrT]) % 256]
-        table.insert(kmKqiudM, string.char(bit32.bxor(EvCKVvEQ, ghVQNCLs)))
+    local rpAfgPGD = 0
+    local ldDgHcSn = 0
+    local sDkPkFQk = {}
+    for _, mXybwROH in ipairs(wpBPuEdr_data) do
+        rpAfgPGD = (rpAfgPGD + 1) % 256
+        ldDgHcSn = (ldDgHcSn + wpBPuEdr[rpAfgPGD]) % 256
+        wpBPuEdr[rpAfgPGD], wpBPuEdr[ldDgHcSn] = wpBPuEdr[ldDgHcSn], wpBPuEdr[rpAfgPGD]
+        local uIXBXtxl = wpBPuEdr[(wpBPuEdr[rpAfgPGD] + wpBPuEdr[ldDgHcSn]) % 256]
+        table.insert(sDkPkFQk, string.char(bit32.bxor(mXybwROH, uIXBXtxl)))
     end
-    return table.concat(kmKqiudM)
+    return table.concat(sDkPkFQk)
 end
 
-local aPOHpDPY_flat = {}
-for _, chunk in ipairs(fnWUATgO) do
+local wpBPuEdr_flat = {}
+for _, chunk in ipairs(xQmxNWRD) do
     for _, byte in ipairs(chunk) do
-        table.insert(aPOHpDPY_flat, byte)
+        table.insert(wpBPuEdr_flat, byte)
     end
 end
 
-local decrypted = jEpveMCl(aPOHpDPY_flat, ogQcoouY)
-local TnkGSYxE, FnoTuTex = loadstring(decrypted)
+local decrypted = ZFsijGfE(wpBPuEdr_flat, HEuCiclC)
+local bZQlwQZW, IYdgsohM = loadstring(decrypted)
 
 -- Memory Sanitation: Overwrite decrypted variables to block RAM scan extraction
-table.clear(aPOHpDPY_flat)
-aPOHpDPY_flat = nil
+table.clear(wpBPuEdr_flat)
+wpBPuEdr_flat = nil
 
-if TnkGSYxE then 
-    local result = TnkGSYxE() 
+if bZQlwQZW then 
+    local result = bZQlwQZW() 
     decrypted = nil
-    TnkGSYxE = nil
+    bZQlwQZW = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(FnoTuTex)) 
+    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(IYdgsohM)) 
 end
