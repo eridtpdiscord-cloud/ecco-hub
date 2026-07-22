@@ -1,53 +1,53 @@
 -- Protected Segment (math_vector_utils)
-local sKRFddgQ = 97
-local apxVVTep = {
-{20,82,209,172,59,45,102,44,122,223,116,160,75,24,152,119,79,106,33,136,255,59,83,195,3,117,123,69,221,210,45,91,159,245,217,123,123,134,178,240,24,53,173,177,158,62,61,223,128,152,109,42,82,10,221,217,245,48,211,72},{76,50,105,254,36,109,31,39,239,115,101,110,8,225,163,135,113,249,202,139,26,169,38,83,27,145,141,174,1,148,94,35,149,62,197,37,132,13,54,95,189,135,133,186,21,164,10,4,12,69,146,226,180,20,116,128,223,52,57,16},{45,146,201,89,179,125,7,0,234,179,254,179,178,77,218,173,133,48,34,63,126,22,109,135,32,25,239,152,48}
+local zYsnjiZu = 172
+local zrsPPBxf = {
+{12,99,246,236,150,244,64,175,202,164,138,252,22,240,111,104,166,237,119,153,139,79,133,33,104,159,75,230,26,22,124,239,251,31,202,54,205,53,110,199,19,1,170,149,230,186,72,91,104,200,233,83,194,126,237,181,112,5,48,237},{184,116,121,250,252,211,42,216,114,216,48,239,109,44,181,133,22,169,131,18,1,215,101,79,132,60,97,204,2,175,178,191,45,56,134,142,107,117,192,84,51,182,23,15,154,115,205,254,164,182,183,21,220,11,244,89,200,89,120,96},{65,145,178,98,18,83,42,37,189,134,42,230,122,25,244,5,88,216,154,203,104,168,125,141,228,252,4,189,22}
 }
-local SuilWlTp = "vlHPPuHwLCfPaaEV"
+local TEcNgZHx = "EhscHFCmnOoznwDo"
 
-local function YfmcNNcx(zicryQfa_data, zicryQfa_key)
-    local zicryQfa = {}
-    for XKQtGGIx = 0, 255 do zicryQfa[XKQtGGIx] = XKQtGGIx end
-    local aGqfIAlL = 0
-    for XKQtGGIx = 0, 255 do
-        local NCTUSIpD = zicryQfa_key:byte((XKQtGGIx % #zicryQfa_key) + 1)
-        aGqfIAlL = (aGqfIAlL + zicryQfa[XKQtGGIx] + NCTUSIpD) % 256
-        zicryQfa[XKQtGGIx], zicryQfa[aGqfIAlL] = zicryQfa[aGqfIAlL], zicryQfa[XKQtGGIx]
+local function PyCyEQFp(MixWBirT_data, MixWBirT_key)
+    local MixWBirT = {}
+    for swMnaqGn = 0, 255 do MixWBirT[swMnaqGn] = swMnaqGn end
+    local VdHshUkc = 0
+    for swMnaqGn = 0, 255 do
+        local sHsymxOf = MixWBirT_key:byte((swMnaqGn % #MixWBirT_key) + 1)
+        VdHshUkc = (VdHshUkc + MixWBirT[swMnaqGn] + sHsymxOf) % 256
+        MixWBirT[swMnaqGn], MixWBirT[VdHshUkc] = MixWBirT[VdHshUkc], MixWBirT[swMnaqGn]
     end
-    local XKQtGGIx = 0
-    local aGqfIAlL = 0
-    local DynJEKsk = {}
-    for _, pacJYmYW in ipairs(zicryQfa_data) do
-        XKQtGGIx = (XKQtGGIx + 1) % 256
-        aGqfIAlL = (aGqfIAlL + zicryQfa[XKQtGGIx]) % 256
-        zicryQfa[XKQtGGIx], zicryQfa[aGqfIAlL] = zicryQfa[aGqfIAlL], zicryQfa[XKQtGGIx]
-        local NCTUSIpD = zicryQfa[(zicryQfa[XKQtGGIx] + zicryQfa[aGqfIAlL]) % 256]
-        local unmasked = bit32.bxor(pacJYmYW, sKRFddgQ)
-        table.insert(DynJEKsk, string.char(bit32.bxor(unmasked, NCTUSIpD)))
+    local swMnaqGn = 0
+    local VdHshUkc = 0
+    local wiSMqAVG = {}
+    for _, bnJToCuz in ipairs(MixWBirT_data) do
+        swMnaqGn = (swMnaqGn + 1) % 256
+        VdHshUkc = (VdHshUkc + MixWBirT[swMnaqGn]) % 256
+        MixWBirT[swMnaqGn], MixWBirT[VdHshUkc] = MixWBirT[VdHshUkc], MixWBirT[swMnaqGn]
+        local sHsymxOf = MixWBirT[(MixWBirT[swMnaqGn] + MixWBirT[VdHshUkc]) % 256]
+        local unmasked = bit32.bxor(bnJToCuz, zYsnjiZu)
+        table.insert(wiSMqAVG, string.char(bit32.bxor(unmasked, sHsymxOf)))
     end
-    return table.concat(DynJEKsk)
+    return table.concat(wiSMqAVG)
 end
 
-local zicryQfa_flat = {}
-for _, chunk in ipairs(apxVVTep) do
+local MixWBirT_flat = {}
+for _, chunk in ipairs(zrsPPBxf) do
     for _, byte in ipairs(chunk) do
-        table.insert(zicryQfa_flat, byte)
+        table.insert(MixWBirT_flat, byte)
     end
 end
 
-local decrypted = YfmcNNcx(zicryQfa_flat, SuilWlTp)
-local ToKfrkDE, UQvPeabd = loadstring(decrypted)
+local decrypted = PyCyEQFp(MixWBirT_flat, TEcNgZHx)
+local UHmphMxB, pxoQgeCz = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(zicryQfa_flat)
-zicryQfa_flat = nil
+table.clear(MixWBirT_flat)
+MixWBirT_flat = nil
 
-if ToKfrkDE then 
-    local result = ToKfrkDE() 
+if UHmphMxB then 
+    local result = UHmphMxB() 
     decrypted = nil
-    ToKfrkDE = nil
+    UHmphMxB = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(UQvPeabd)) 
+    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(pxoQgeCz)) 
 end
