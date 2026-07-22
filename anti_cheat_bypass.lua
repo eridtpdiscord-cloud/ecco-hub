@@ -1,53 +1,53 @@
 -- Protected Segment (anti_cheat_bypass)
-local YEsLlDRQ = 138
-local ZrLouJln = {
-{129,45,165,240,154,132,123,242,201,4,235,84,215,152,180,160,69,205,157,50,223,142,83,255,35,42,198,77,113,26,110,26,144,57,56,64,238,85,31,208,206,29,6,219,181,74,179,74,140,240,174,199,96,87,247,221,62,75,110,169},{123,147,20,229,202,32,157,114,152,252,97,6,146,1,185,143,3,94,68,147,53,168,84,115,118,186,47,170,143,55,168,15,216,99,177,145,247,141,72,241,244,71,223,194,13,39,96,37,222,102,35,153,207,36,138,64,80,98,19,181},{58,61,91,120,164,223,208,182,246,136,35,241,195,57,77,153,146,226,58,124,171,199,109,223,10,230,187,48,71}
+local mEYcFunH = 61
+local EbXbaHAS = {
+{124,82,211,12,67,215,206,240,198,14,68,5,157,86,253,237,3,225,51,203,179,235,167,219,108,143,38,61,191,119,237,84,191,146,49,218,19,136,226,90,91,77,109,183,253,61,249,8,106,151,102,59,214,54,8,213,175,147,214,85},{168,203,13,75,87,104,27,22,11,223,155,68,25,27,93,51,187,138,217,166,68,237,73,170,227,18,65,160,63,57,233,120,251,177,7,104,200,59,244,214,237,201,208,138,141,82,126,149,133,144,112,188,158,10,116,131,131,212,64,143},{136,72,82,154,101,128,222,68,130,127,146,120,45,67,162,224,212,12,161,151,135,142,2,113,100,148,209,0,251}
 }
-local FGNLHdyf = "BaNZQBqGxgCYfUps"
+local FrsCMIgR = "fJBTWFhFSkEAdtEv"
 
-local function MgiKHEAl(fYtLBoPi_data, fYtLBoPi_key)
-    local fYtLBoPi = {}
-    for uSxwtbsL = 0, 255 do fYtLBoPi[uSxwtbsL] = uSxwtbsL end
-    local ZOjcwJaD = 0
-    for uSxwtbsL = 0, 255 do
-        local MqFyNlxe = fYtLBoPi_key:byte((uSxwtbsL % #fYtLBoPi_key) + 1)
-        ZOjcwJaD = (ZOjcwJaD + fYtLBoPi[uSxwtbsL] + MqFyNlxe) % 256
-        fYtLBoPi[uSxwtbsL], fYtLBoPi[ZOjcwJaD] = fYtLBoPi[ZOjcwJaD], fYtLBoPi[uSxwtbsL]
+local function gyEsGsxa(PARiHoKF_data, PARiHoKF_key)
+    local PARiHoKF = {}
+    for WBoyFytU = 0, 255 do PARiHoKF[WBoyFytU] = WBoyFytU end
+    local uKrOuHVB = 0
+    for WBoyFytU = 0, 255 do
+        local IJKkVzak = PARiHoKF_key:byte((WBoyFytU % #PARiHoKF_key) + 1)
+        uKrOuHVB = (uKrOuHVB + PARiHoKF[WBoyFytU] + IJKkVzak) % 256
+        PARiHoKF[WBoyFytU], PARiHoKF[uKrOuHVB] = PARiHoKF[uKrOuHVB], PARiHoKF[WBoyFytU]
     end
-    local uSxwtbsL = 0
-    local ZOjcwJaD = 0
-    local LUKJJEkw = {}
-    for _, wnxjUkHg in ipairs(fYtLBoPi_data) do
-        uSxwtbsL = (uSxwtbsL + 1) % 256
-        ZOjcwJaD = (ZOjcwJaD + fYtLBoPi[uSxwtbsL]) % 256
-        fYtLBoPi[uSxwtbsL], fYtLBoPi[ZOjcwJaD] = fYtLBoPi[ZOjcwJaD], fYtLBoPi[uSxwtbsL]
-        local MqFyNlxe = fYtLBoPi[(fYtLBoPi[uSxwtbsL] + fYtLBoPi[ZOjcwJaD]) % 256]
-        local unmasked = bit32.bxor(wnxjUkHg, YEsLlDRQ)
-        table.insert(LUKJJEkw, string.char(bit32.bxor(unmasked, MqFyNlxe)))
+    local WBoyFytU = 0
+    local uKrOuHVB = 0
+    local mfdLcLPn = {}
+    for _, EkOyClEc in ipairs(PARiHoKF_data) do
+        WBoyFytU = (WBoyFytU + 1) % 256
+        uKrOuHVB = (uKrOuHVB + PARiHoKF[WBoyFytU]) % 256
+        PARiHoKF[WBoyFytU], PARiHoKF[uKrOuHVB] = PARiHoKF[uKrOuHVB], PARiHoKF[WBoyFytU]
+        local IJKkVzak = PARiHoKF[(PARiHoKF[WBoyFytU] + PARiHoKF[uKrOuHVB]) % 256]
+        local unmasked = bit32.bxor(EkOyClEc, mEYcFunH)
+        table.insert(mfdLcLPn, string.char(bit32.bxor(unmasked, IJKkVzak)))
     end
-    return table.concat(LUKJJEkw)
+    return table.concat(mfdLcLPn)
 end
 
-local fYtLBoPi_flat = {}
-for _, chunk in ipairs(ZrLouJln) do
+local PARiHoKF_flat = {}
+for _, chunk in ipairs(EbXbaHAS) do
     for _, byte in ipairs(chunk) do
-        table.insert(fYtLBoPi_flat, byte)
+        table.insert(PARiHoKF_flat, byte)
     end
 end
 
-local decrypted = MgiKHEAl(fYtLBoPi_flat, FGNLHdyf)
-local wcySGkYh, kjNTsJQA = loadstring(decrypted)
+local decrypted = gyEsGsxa(PARiHoKF_flat, FrsCMIgR)
+local DspCILMe, PcjmnAtI = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(fYtLBoPi_flat)
-fYtLBoPi_flat = nil
+table.clear(PARiHoKF_flat)
+PARiHoKF_flat = nil
 
-if wcySGkYh then 
-    local result = wcySGkYh() 
+if DspCILMe then 
+    local result = DspCILMe() 
     decrypted = nil
-    wcySGkYh = nil
+    DspCILMe = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "anti_cheat_bypass" .. "): " .. tostring(kjNTsJQA)) 
+    warn("[ecco] Boot Error (" .. "anti_cheat_bypass" .. "): " .. tostring(PcjmnAtI)) 
 end
