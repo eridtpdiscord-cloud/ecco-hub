@@ -1,53 +1,53 @@
 -- Protected Segment (anti_cheat_bypass)
-local BwmLYYkc = 84
-local kduvTIbb = {
-{172,202,8,111,92,189,4,52,191,248,91,72,146,31,249,253,51,157,52,224,190,184,1,154,175,182,102,234,121,254,90,44,119,58,131,114,133,78,53,129,133,65,225,96,22,45,87,237,164,134,189,250,162,86,251,177,137,141,136,23},{179,240,82,207,177,13,53,61,132,234,22,106,56,220,212,188,166,67,105,191,8,244,17,203,58,59,255,87,248,104,193,157,3,240,225,243,250,49,255,55,17,70,213,82,104,129,132,243,143,98,246,5,83,239,223,243,69,201,223,72},{144,223,226,125,138,129,73,209,215,231,150,211,201,116,152,53,248,154,163,72,108,107,42,5,193,68,7,167,185}
+local NaACeWQv = 166
+local DuBMgYlT = {
+{90,230,20,172,97,12,61,42,64,79,34,192,159,44,150,184,194,81,127,63,199,113,22,250,105,136,64,38,170,157,236,159,61,40,119,162,41,204,205,52,87,31,232,214,226,62,135,97,194,179,46,165,47,85,134,185,115,94,151,6},{212,35,123,32,105,48,10,41,118,255,157,252,64,68,38,107,10,18,82,211,156,191,83,221,150,57,19,53,212,144,244,104,78,53,137,173,203,16,180,215,108,93,129,75,35,116,191,224,204,218,68,198,93,132,115,37,13,105,172,159},{141,153,105,196,72,145,246,213,2,67,151,175,128,74,224,91,97,49,238,58,230,146,96,108,108,3,55,117,109}
 }
-local EOgniYiW = "duZvcwStvpzfJQJn"
+local xbUMRYJi = "luNgcdergXEkLobU"
 
-local function JxAlABtn(GXrtvXin_data, GXrtvXin_key)
-    local GXrtvXin = {}
-    for GtVjYzEi = 0, 255 do GXrtvXin[GtVjYzEi] = GtVjYzEi end
-    local KfbehcRq = 0
-    for GtVjYzEi = 0, 255 do
-        local htcCFjcU = GXrtvXin_key:byte((GtVjYzEi % #GXrtvXin_key) + 1)
-        KfbehcRq = (KfbehcRq + GXrtvXin[GtVjYzEi] + htcCFjcU) % 256
-        GXrtvXin[GtVjYzEi], GXrtvXin[KfbehcRq] = GXrtvXin[KfbehcRq], GXrtvXin[GtVjYzEi]
+local function FYaUIKGs(JXKaGGHk_data, JXKaGGHk_key)
+    local JXKaGGHk = {}
+    for iNTJOjtu = 0, 255 do JXKaGGHk[iNTJOjtu] = iNTJOjtu end
+    local LlqcLAKH = 0
+    for iNTJOjtu = 0, 255 do
+        local iOmqnXhe = JXKaGGHk_key:byte((iNTJOjtu % #JXKaGGHk_key) + 1)
+        LlqcLAKH = (LlqcLAKH + JXKaGGHk[iNTJOjtu] + iOmqnXhe) % 256
+        JXKaGGHk[iNTJOjtu], JXKaGGHk[LlqcLAKH] = JXKaGGHk[LlqcLAKH], JXKaGGHk[iNTJOjtu]
     end
-    local GtVjYzEi = 0
-    local KfbehcRq = 0
-    local yMTienol = {}
-    for _, BWIZZZHd in ipairs(GXrtvXin_data) do
-        GtVjYzEi = (GtVjYzEi + 1) % 256
-        KfbehcRq = (KfbehcRq + GXrtvXin[GtVjYzEi]) % 256
-        GXrtvXin[GtVjYzEi], GXrtvXin[KfbehcRq] = GXrtvXin[KfbehcRq], GXrtvXin[GtVjYzEi]
-        local htcCFjcU = GXrtvXin[(GXrtvXin[GtVjYzEi] + GXrtvXin[KfbehcRq]) % 256]
-        local unmasked = bit32.bxor(BWIZZZHd, BwmLYYkc)
-        table.insert(yMTienol, string.char(bit32.bxor(unmasked, htcCFjcU)))
+    local iNTJOjtu = 0
+    local LlqcLAKH = 0
+    local oOFGsncv = {}
+    for _, onGMOJFa in ipairs(JXKaGGHk_data) do
+        iNTJOjtu = (iNTJOjtu + 1) % 256
+        LlqcLAKH = (LlqcLAKH + JXKaGGHk[iNTJOjtu]) % 256
+        JXKaGGHk[iNTJOjtu], JXKaGGHk[LlqcLAKH] = JXKaGGHk[LlqcLAKH], JXKaGGHk[iNTJOjtu]
+        local iOmqnXhe = JXKaGGHk[(JXKaGGHk[iNTJOjtu] + JXKaGGHk[LlqcLAKH]) % 256]
+        local unmasked = bit32.bxor(onGMOJFa, NaACeWQv)
+        table.insert(oOFGsncv, string.char(bit32.bxor(unmasked, iOmqnXhe)))
     end
-    return table.concat(yMTienol)
+    return table.concat(oOFGsncv)
 end
 
-local GXrtvXin_flat = {}
-for _, chunk in ipairs(kduvTIbb) do
+local JXKaGGHk_flat = {}
+for _, chunk in ipairs(DuBMgYlT) do
     for _, byte in ipairs(chunk) do
-        table.insert(GXrtvXin_flat, byte)
+        table.insert(JXKaGGHk_flat, byte)
     end
 end
 
-local decrypted = JxAlABtn(GXrtvXin_flat, EOgniYiW)
-local bcsmbBVL, ZsDRTTiy = loadstring(decrypted)
+local decrypted = FYaUIKGs(JXKaGGHk_flat, xbUMRYJi)
+local rOxExjlX, VmeJCkMt = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(GXrtvXin_flat)
-GXrtvXin_flat = nil
+table.clear(JXKaGGHk_flat)
+JXKaGGHk_flat = nil
 
-if bcsmbBVL then 
-    local result = bcsmbBVL() 
+if rOxExjlX then 
+    local result = rOxExjlX() 
     decrypted = nil
-    bcsmbBVL = nil
+    rOxExjlX = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "anti_cheat_bypass" .. "): " .. tostring(ZsDRTTiy)) 
+    warn("[ecco] Boot Error (" .. "anti_cheat_bypass" .. "): " .. tostring(VmeJCkMt)) 
 end
