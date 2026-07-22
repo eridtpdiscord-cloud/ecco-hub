@@ -1,53 +1,53 @@
 -- Protected Segment (tween_library)
-local EgeicMDH = 244
-local zWBVSKPm = {
-{246,160,88,128,87,180,30,97,71,11,225,104,78,166,145,181,150,109,5,231,150,200,111,142,21,102,97,140,74,158,126,191,46,204,159,181,194,250,217,55,7,79,66,127,202,158,45,185,42,2,98,185,151,187,188,85,58,11,187,248},{212,97,80,244,170,153,18,185,38,73,165,185,145,12,122,55,86,103,243,110,137,139,140,243,29,68,80,133,103,250,180,57,4,74,48,3,136,182,197,236,207,235,138,216,102,24,78,53,66,115,137,179,172,151,33,64,116,76,86,255},{243,40,43,122,25,34,50,216,36,86,71,40,168,136,0,217,152,104,125,9,237,160,135,67,14}
+local xbjcoqux = 37
+local ZtwlFBCG = {
+{9,234,45,250,69,208,204,191,5,209,76,81,143,38,244,9,109,229,61,95,75,10,106,160,138,71,69,190,95,127,172,142,145,90,2,163,203,170,212,189,174,195,232,40,48,32,58,206,237,178,236,114,236,205,84,230,213,60,253,7},{199,227,125,138,162,124,247,255,66,232,7,189,31,116,211,158,212,32,230,139,65,194,253,181,211,67,138,163,127,24,210,182,93,147,241,197,253,125,89,168,209,210,113,195,2,210,49,119,83,165,51,242,121,55,61,212,3,253,8,145},{66,45,49,155,2,16,9,5,227,231,83,102,129,66,120,192,218,75,14,107,220,74,83,130,60}
 }
-local cWGKOMMR = "aoDqkespTdPFwXor"
+local LVMbZbbR = "dQsCeTTKtMpIOeUI"
 
-local function rmcybOLX(eVqDmvAS_data, eVqDmvAS_key)
-    local eVqDmvAS = {}
-    for yMiJdSws = 0, 255 do eVqDmvAS[yMiJdSws] = yMiJdSws end
-    local uGySGJpB = 0
-    for yMiJdSws = 0, 255 do
-        local UiGvGmFd = eVqDmvAS_key:byte((yMiJdSws % #eVqDmvAS_key) + 1)
-        uGySGJpB = (uGySGJpB + eVqDmvAS[yMiJdSws] + UiGvGmFd) % 256
-        eVqDmvAS[yMiJdSws], eVqDmvAS[uGySGJpB] = eVqDmvAS[uGySGJpB], eVqDmvAS[yMiJdSws]
+local function tMYQhKYa(xAKBLbQb_data, xAKBLbQb_key)
+    local xAKBLbQb = {}
+    for umVwdVYp = 0, 255 do xAKBLbQb[umVwdVYp] = umVwdVYp end
+    local tBFJueTb = 0
+    for umVwdVYp = 0, 255 do
+        local vVrUsaSa = xAKBLbQb_key:byte((umVwdVYp % #xAKBLbQb_key) + 1)
+        tBFJueTb = (tBFJueTb + xAKBLbQb[umVwdVYp] + vVrUsaSa) % 256
+        xAKBLbQb[umVwdVYp], xAKBLbQb[tBFJueTb] = xAKBLbQb[tBFJueTb], xAKBLbQb[umVwdVYp]
     end
-    local yMiJdSws = 0
-    local uGySGJpB = 0
-    local mzQmMhnv = {}
-    for _, BmQLsZDr in ipairs(eVqDmvAS_data) do
-        yMiJdSws = (yMiJdSws + 1) % 256
-        uGySGJpB = (uGySGJpB + eVqDmvAS[yMiJdSws]) % 256
-        eVqDmvAS[yMiJdSws], eVqDmvAS[uGySGJpB] = eVqDmvAS[uGySGJpB], eVqDmvAS[yMiJdSws]
-        local UiGvGmFd = eVqDmvAS[(eVqDmvAS[yMiJdSws] + eVqDmvAS[uGySGJpB]) % 256]
-        local unmasked = bit32.bxor(BmQLsZDr, EgeicMDH)
-        table.insert(mzQmMhnv, string.char(bit32.bxor(unmasked, UiGvGmFd)))
+    local umVwdVYp = 0
+    local tBFJueTb = 0
+    local NjrTgDaT = {}
+    for _, wnywcHks in ipairs(xAKBLbQb_data) do
+        umVwdVYp = (umVwdVYp + 1) % 256
+        tBFJueTb = (tBFJueTb + xAKBLbQb[umVwdVYp]) % 256
+        xAKBLbQb[umVwdVYp], xAKBLbQb[tBFJueTb] = xAKBLbQb[tBFJueTb], xAKBLbQb[umVwdVYp]
+        local vVrUsaSa = xAKBLbQb[(xAKBLbQb[umVwdVYp] + xAKBLbQb[tBFJueTb]) % 256]
+        local unmasked = bit32.bxor(wnywcHks, xbjcoqux)
+        table.insert(NjrTgDaT, string.char(bit32.bxor(unmasked, vVrUsaSa)))
     end
-    return table.concat(mzQmMhnv)
+    return table.concat(NjrTgDaT)
 end
 
-local eVqDmvAS_flat = {}
-for _, chunk in ipairs(zWBVSKPm) do
+local xAKBLbQb_flat = {}
+for _, chunk in ipairs(ZtwlFBCG) do
     for _, byte in ipairs(chunk) do
-        table.insert(eVqDmvAS_flat, byte)
+        table.insert(xAKBLbQb_flat, byte)
     end
 end
 
-local decrypted = rmcybOLX(eVqDmvAS_flat, cWGKOMMR)
-local eeReHrCU, EwLfuHZn = loadstring(decrypted)
+local decrypted = tMYQhKYa(xAKBLbQb_flat, LVMbZbbR)
+local HDQMWbRZ, PosqBwTL = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(eVqDmvAS_flat)
-eVqDmvAS_flat = nil
+table.clear(xAKBLbQb_flat)
+xAKBLbQb_flat = nil
 
-if eeReHrCU then 
-    local result = eeReHrCU() 
+if HDQMWbRZ then 
+    local result = HDQMWbRZ() 
     decrypted = nil
-    eeReHrCU = nil
+    HDQMWbRZ = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(EwLfuHZn)) 
+    warn("[ecco] Boot Error (" .. "tween_library" .. "): " .. tostring(PosqBwTL)) 
 end
