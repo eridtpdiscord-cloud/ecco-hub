@@ -1,53 +1,53 @@
 -- Protected Segment (ui_themes)
-local pKEddgKC = 131
-local aFHGkHvW = {
-{246,235,117,83,207,51,71,160,24,37,192,125,23,72,102,172,73,34,9,155,145,239,56,26,72,181,229,133,174,48,76,219,137,176,254,134,201,78,16,129,87,238,152,211,92,143,172,46,93,190,0,249,195,94,33,234,44,17,94,1},{125,112,87,163,213,63,62,223,56,221,67,56,173,108,96,33,250,90,41,65,74,230,250,241,121,87,191,14,15,123,111,85,186,31,175,46,84,251,29,202,189,30,106,110,133,116,242,50,98,126,108,18,176,172,153,254,18,12,131,247},{180,41,219,11,57,0,253,65,236,104,132,155,85,121,33,175,161,45,127,238,97}
+local hcrDRMME = 153
+local DxhLGOdl = {
+{95,161,193,242,66,88,191,7,33,158,181,7,129,202,39,245,115,196,221,83,8,9,105,73,233,73,94,86,179,35,162,93,110,113,49,112,118,199,232,168,154,9,231,132,225,223,33,157,124,185,95,201,195,1,131,136,194,193,136,80},{116,40,137,231,218,66,9,125,92,180,19,239,83,141,150,122,24,30,86,111,174,201,35,235,24,185,176,95,78,200,254,103,2,181,51,203,244,228,110,237,172,56,52,44,87,254,64,205,210,100,14,27,145,189,22,58,217,20,195,210},{75,70,124,239,36,153,245,189,176,43,149,26,117,48,184,136,76,204,100,176,106}
 }
-local cuPbmgOJ = "CeGlqTWgnnjGGCom"
+local njkAfleD = "fKYQNuBwcrrJADTz"
 
-local function qodlTuZt(aYOhzyrA_data, aYOhzyrA_key)
-    local aYOhzyrA = {}
-    for GOYHjVhG = 0, 255 do aYOhzyrA[GOYHjVhG] = GOYHjVhG end
-    local QlYYiQWE = 0
-    for GOYHjVhG = 0, 255 do
-        local RUSixVGp = aYOhzyrA_key:byte((GOYHjVhG % #aYOhzyrA_key) + 1)
-        QlYYiQWE = (QlYYiQWE + aYOhzyrA[GOYHjVhG] + RUSixVGp) % 256
-        aYOhzyrA[GOYHjVhG], aYOhzyrA[QlYYiQWE] = aYOhzyrA[QlYYiQWE], aYOhzyrA[GOYHjVhG]
+local function qnVJpRPX(qOftBwyv_data, qOftBwyv_key)
+    local qOftBwyv = {}
+    for onUwTSDU = 0, 255 do qOftBwyv[onUwTSDU] = onUwTSDU end
+    local smGwBadX = 0
+    for onUwTSDU = 0, 255 do
+        local IzRIajjv = qOftBwyv_key:byte((onUwTSDU % #qOftBwyv_key) + 1)
+        smGwBadX = (smGwBadX + qOftBwyv[onUwTSDU] + IzRIajjv) % 256
+        qOftBwyv[onUwTSDU], qOftBwyv[smGwBadX] = qOftBwyv[smGwBadX], qOftBwyv[onUwTSDU]
     end
-    local GOYHjVhG = 0
-    local QlYYiQWE = 0
-    local BqaueOFQ = {}
-    for _, nVcKUNpq in ipairs(aYOhzyrA_data) do
-        GOYHjVhG = (GOYHjVhG + 1) % 256
-        QlYYiQWE = (QlYYiQWE + aYOhzyrA[GOYHjVhG]) % 256
-        aYOhzyrA[GOYHjVhG], aYOhzyrA[QlYYiQWE] = aYOhzyrA[QlYYiQWE], aYOhzyrA[GOYHjVhG]
-        local RUSixVGp = aYOhzyrA[(aYOhzyrA[GOYHjVhG] + aYOhzyrA[QlYYiQWE]) % 256]
-        local unmasked = bit32.bxor(nVcKUNpq, pKEddgKC)
-        table.insert(BqaueOFQ, string.char(bit32.bxor(unmasked, RUSixVGp)))
+    local onUwTSDU = 0
+    local smGwBadX = 0
+    local ophekdYW = {}
+    for _, MFrtEYCP in ipairs(qOftBwyv_data) do
+        onUwTSDU = (onUwTSDU + 1) % 256
+        smGwBadX = (smGwBadX + qOftBwyv[onUwTSDU]) % 256
+        qOftBwyv[onUwTSDU], qOftBwyv[smGwBadX] = qOftBwyv[smGwBadX], qOftBwyv[onUwTSDU]
+        local IzRIajjv = qOftBwyv[(qOftBwyv[onUwTSDU] + qOftBwyv[smGwBadX]) % 256]
+        local unmasked = bit32.bxor(MFrtEYCP, hcrDRMME)
+        table.insert(ophekdYW, string.char(bit32.bxor(unmasked, IzRIajjv)))
     end
-    return table.concat(BqaueOFQ)
+    return table.concat(ophekdYW)
 end
 
-local aYOhzyrA_flat = {}
-for _, chunk in ipairs(aFHGkHvW) do
+local qOftBwyv_flat = {}
+for _, chunk in ipairs(DxhLGOdl) do
     for _, byte in ipairs(chunk) do
-        table.insert(aYOhzyrA_flat, byte)
+        table.insert(qOftBwyv_flat, byte)
     end
 end
 
-local decrypted = qodlTuZt(aYOhzyrA_flat, cuPbmgOJ)
-local ClokbPhL, sEkeEyWd = loadstring(decrypted)
+local decrypted = qnVJpRPX(qOftBwyv_flat, njkAfleD)
+local ODYqKPgE, MHJttIyJ = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(aYOhzyrA_flat)
-aYOhzyrA_flat = nil
+table.clear(qOftBwyv_flat)
+qOftBwyv_flat = nil
 
-if ClokbPhL then 
-    local result = ClokbPhL() 
+if ODYqKPgE then 
+    local result = ODYqKPgE() 
     decrypted = nil
-    ClokbPhL = nil
+    ODYqKPgE = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(sEkeEyWd)) 
+    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(MHJttIyJ)) 
 end
