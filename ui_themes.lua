@@ -1,53 +1,53 @@
 -- Protected Segment (ui_themes)
-local KLyFDsjj = 156
-local daIJXXcq = {
-{240,130,227,97,97,193,131,236,232,132,124,91,247,112,26,61,114,229,112,164,94,122,143,7,88,167,167,132,241,219,197,201,172,220,232,77,227,233,156,61,126,52,44,137,182,112,51,15,161,107,96,253,74,217,153,228,3,160,104,194},{191,73,160,107,25,163,166,225,97,41,171,10,40,109,250,125,203,34,161,171,89,154,7,235,206,146,98,50,115,223,177,34,136,198,46,2,244,16,145,90,16,154,138,87,209,60,121,118,80,149,70,245,15,92,64,249,216,41,198,154},{246,174,126,95,199,210,251,54,235,79,45,179,60,68,224,182,117,208,234,79,82}
+local tglUMxhW = 28
+local uSJFXMqB = {
+{20,26,73,54,86,172,147,181,67,184,154,16,109,88,141,52,114,63,117,43,194,238,253,104,76,236,192,232,210,68,159,217,227,185,53,71,96,228,119,163,54,149,161,67,248,74,223,156,186,66,10,28,246,25,214,57,117,102,154,242},{69,180,169,208,187,27,137,70,78,29,218,121,236,232,91,217,103,70,69,45,144,114,122,126,191,159,35,100,80,205,148,198,63,112,169,3,130,137,115,37,51,157,196,242,204,146,226,95,13,96,21,72,57,58,68,72,112,228,81,164},{225,147,81,235,148,232,164,168,199,219,111,119,7,212,7,48,34,66,200,240,127}
 }
-local nEVveHQz = "KoGsHRWANkLFWvbz"
+local vWFnTVCU = "gdekkJjNAgNNetmd"
 
-local function WnNlawTh(dvAqLbUY_data, dvAqLbUY_key)
-    local dvAqLbUY = {}
-    for huNieBdv = 0, 255 do dvAqLbUY[huNieBdv] = huNieBdv end
-    local mgmsdhqK = 0
-    for huNieBdv = 0, 255 do
-        local wTqpvtay = dvAqLbUY_key:byte((huNieBdv % #dvAqLbUY_key) + 1)
-        mgmsdhqK = (mgmsdhqK + dvAqLbUY[huNieBdv] + wTqpvtay) % 256
-        dvAqLbUY[huNieBdv], dvAqLbUY[mgmsdhqK] = dvAqLbUY[mgmsdhqK], dvAqLbUY[huNieBdv]
+local function xRHtFpGl(rQqbKIpi_data, rQqbKIpi_key)
+    local rQqbKIpi = {}
+    for XMoJVLjG = 0, 255 do rQqbKIpi[XMoJVLjG] = XMoJVLjG end
+    local cOtMiLxu = 0
+    for XMoJVLjG = 0, 255 do
+        local kZDTLcvp = rQqbKIpi_key:byte((XMoJVLjG % #rQqbKIpi_key) + 1)
+        cOtMiLxu = (cOtMiLxu + rQqbKIpi[XMoJVLjG] + kZDTLcvp) % 256
+        rQqbKIpi[XMoJVLjG], rQqbKIpi[cOtMiLxu] = rQqbKIpi[cOtMiLxu], rQqbKIpi[XMoJVLjG]
     end
-    local huNieBdv = 0
-    local mgmsdhqK = 0
-    local MSXehVlr = {}
-    for _, GRxbzFij in ipairs(dvAqLbUY_data) do
-        huNieBdv = (huNieBdv + 1) % 256
-        mgmsdhqK = (mgmsdhqK + dvAqLbUY[huNieBdv]) % 256
-        dvAqLbUY[huNieBdv], dvAqLbUY[mgmsdhqK] = dvAqLbUY[mgmsdhqK], dvAqLbUY[huNieBdv]
-        local wTqpvtay = dvAqLbUY[(dvAqLbUY[huNieBdv] + dvAqLbUY[mgmsdhqK]) % 256]
-        local unmasked = bit32.bxor(GRxbzFij, KLyFDsjj)
-        table.insert(MSXehVlr, string.char(bit32.bxor(unmasked, wTqpvtay)))
+    local XMoJVLjG = 0
+    local cOtMiLxu = 0
+    local TfpwZUMu = {}
+    for _, oZjwBxGT in ipairs(rQqbKIpi_data) do
+        XMoJVLjG = (XMoJVLjG + 1) % 256
+        cOtMiLxu = (cOtMiLxu + rQqbKIpi[XMoJVLjG]) % 256
+        rQqbKIpi[XMoJVLjG], rQqbKIpi[cOtMiLxu] = rQqbKIpi[cOtMiLxu], rQqbKIpi[XMoJVLjG]
+        local kZDTLcvp = rQqbKIpi[(rQqbKIpi[XMoJVLjG] + rQqbKIpi[cOtMiLxu]) % 256]
+        local unmasked = bit32.bxor(oZjwBxGT, tglUMxhW)
+        table.insert(TfpwZUMu, string.char(bit32.bxor(unmasked, kZDTLcvp)))
     end
-    return table.concat(MSXehVlr)
+    return table.concat(TfpwZUMu)
 end
 
-local dvAqLbUY_flat = {}
-for _, chunk in ipairs(daIJXXcq) do
+local rQqbKIpi_flat = {}
+for _, chunk in ipairs(uSJFXMqB) do
     for _, byte in ipairs(chunk) do
-        table.insert(dvAqLbUY_flat, byte)
+        table.insert(rQqbKIpi_flat, byte)
     end
 end
 
-local decrypted = WnNlawTh(dvAqLbUY_flat, nEVveHQz)
-local aouOXWlx, VZQeqWQZ = loadstring(decrypted)
+local decrypted = xRHtFpGl(rQqbKIpi_flat, vWFnTVCU)
+local KQUcJlBA, TvcVUjvs = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(dvAqLbUY_flat)
-dvAqLbUY_flat = nil
+table.clear(rQqbKIpi_flat)
+rQqbKIpi_flat = nil
 
-if aouOXWlx then 
-    local result = aouOXWlx() 
+if KQUcJlBA then 
+    local result = KQUcJlBA() 
     decrypted = nil
-    aouOXWlx = nil
+    KQUcJlBA = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(VZQeqWQZ)) 
+    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(TvcVUjvs)) 
 end
