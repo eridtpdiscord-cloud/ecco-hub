@@ -1,53 +1,53 @@
 -- Protected Segment (utility_helper)
-local dIwNuMos = 106
-local snhPFXoL = {
-{35,58,51,74,213,56,39,160,80,120,249,39,231,240,159,113,64,193,46,106,97,126,205,206,28,233,70,111,42,118,91,205,6,61,27,198,185,173,128,33,131,84,225,233,173,46,76,101,193,240,60,164,185,93,48,70,39,65,75,71},{75,120,182,105,247,59,199,227,142,253,44,212,96,169,156,66,130,246,169,77,104,215,224,170,76,140,133,65,228,161,152,231,58,1,46,74,76,20,237,74,126,94,49,160,151,84,91,138,31,101,14,192,1,61,86,23,151,65,255,17},{171,51,162,57,187,15,208,116,119,206,238,75,69,28,109,195,219,197,150,163,68,237,64,102,37,57}
+local mhXoYbKq = 131
+local fFhtggip = {
+{81,31,208,87,152,245,232,251,9,247,187,176,248,49,133,158,97,27,150,171,78,100,13,171,47,13,182,243,89,113,117,123,197,179,248,253,4,143,175,2,85,83,48,28,158,121,228,160,165,12,52,5,233,249,67,5,175,198,115,75},{38,239,170,99,237,136,138,68,33,66,32,118,220,88,159,39,171,33,136,91,125,235,142,182,222,100,136,28,135,23,99,158,27,226,110,149,99,156,179,255,202,158,251,170,96,214,127,243,218,126,27,107,184,126,178,36,247,90,35,73},{63,98,25,29,86,138,226,137,27,149,128,172,26,132,29,200,199,41,225,75,213,221,159,165,183,26}
 }
-local OMThaKuW = "ijGvEEPnYzBGqcZV"
+local EWVoecVD = "rkUqsjbMcRjGjLBV"
 
-local function prQyfGYP(UPGkYiYP_data, UPGkYiYP_key)
-    local UPGkYiYP = {}
-    for vCVteFSa = 0, 255 do UPGkYiYP[vCVteFSa] = vCVteFSa end
-    local dhAVmNxu = 0
-    for vCVteFSa = 0, 255 do
-        local xGizXdUk = UPGkYiYP_key:byte((vCVteFSa % #UPGkYiYP_key) + 1)
-        dhAVmNxu = (dhAVmNxu + UPGkYiYP[vCVteFSa] + xGizXdUk) % 256
-        UPGkYiYP[vCVteFSa], UPGkYiYP[dhAVmNxu] = UPGkYiYP[dhAVmNxu], UPGkYiYP[vCVteFSa]
+local function lnOIelGC(hgbkztaE_data, hgbkztaE_key)
+    local hgbkztaE = {}
+    for nNwDoVPO = 0, 255 do hgbkztaE[nNwDoVPO] = nNwDoVPO end
+    local hYMSChzl = 0
+    for nNwDoVPO = 0, 255 do
+        local ucecUpTj = hgbkztaE_key:byte((nNwDoVPO % #hgbkztaE_key) + 1)
+        hYMSChzl = (hYMSChzl + hgbkztaE[nNwDoVPO] + ucecUpTj) % 256
+        hgbkztaE[nNwDoVPO], hgbkztaE[hYMSChzl] = hgbkztaE[hYMSChzl], hgbkztaE[nNwDoVPO]
     end
-    local vCVteFSa = 0
-    local dhAVmNxu = 0
-    local FueFTVXY = {}
-    for _, prvRGnph in ipairs(UPGkYiYP_data) do
-        vCVteFSa = (vCVteFSa + 1) % 256
-        dhAVmNxu = (dhAVmNxu + UPGkYiYP[vCVteFSa]) % 256
-        UPGkYiYP[vCVteFSa], UPGkYiYP[dhAVmNxu] = UPGkYiYP[dhAVmNxu], UPGkYiYP[vCVteFSa]
-        local xGizXdUk = UPGkYiYP[(UPGkYiYP[vCVteFSa] + UPGkYiYP[dhAVmNxu]) % 256]
-        local unmasked = bit32.bxor(prvRGnph, dIwNuMos)
-        table.insert(FueFTVXY, string.char(bit32.bxor(unmasked, xGizXdUk)))
+    local nNwDoVPO = 0
+    local hYMSChzl = 0
+    local msFyiFuV = {}
+    for _, QtkhxBIf in ipairs(hgbkztaE_data) do
+        nNwDoVPO = (nNwDoVPO + 1) % 256
+        hYMSChzl = (hYMSChzl + hgbkztaE[nNwDoVPO]) % 256
+        hgbkztaE[nNwDoVPO], hgbkztaE[hYMSChzl] = hgbkztaE[hYMSChzl], hgbkztaE[nNwDoVPO]
+        local ucecUpTj = hgbkztaE[(hgbkztaE[nNwDoVPO] + hgbkztaE[hYMSChzl]) % 256]
+        local unmasked = bit32.bxor(QtkhxBIf, mhXoYbKq)
+        table.insert(msFyiFuV, string.char(bit32.bxor(unmasked, ucecUpTj)))
     end
-    return table.concat(FueFTVXY)
+    return table.concat(msFyiFuV)
 end
 
-local UPGkYiYP_flat = {}
-for _, chunk in ipairs(snhPFXoL) do
+local hgbkztaE_flat = {}
+for _, chunk in ipairs(fFhtggip) do
     for _, byte in ipairs(chunk) do
-        table.insert(UPGkYiYP_flat, byte)
+        table.insert(hgbkztaE_flat, byte)
     end
 end
 
-local decrypted = prQyfGYP(UPGkYiYP_flat, OMThaKuW)
-local nzCsvmGe, agYlojKS = loadstring(decrypted)
+local decrypted = lnOIelGC(hgbkztaE_flat, EWVoecVD)
+local rpPECHTi, ydXnEnSK = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(UPGkYiYP_flat)
-UPGkYiYP_flat = nil
+table.clear(hgbkztaE_flat)
+hgbkztaE_flat = nil
 
-if nzCsvmGe then 
-    local result = nzCsvmGe() 
+if rpPECHTi then 
+    local result = rpPECHTi() 
     decrypted = nil
-    nzCsvmGe = nil
+    rpPECHTi = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(agYlojKS)) 
+    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(ydXnEnSK)) 
 end
