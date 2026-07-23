@@ -1,54 +1,54 @@
 -- Protected Segment (ui_themes)
-local nUkDxOQr = 103
-local VAaEpeAu = {
-{126,96,214,107,241,144,250,34,146,132,234,3,164,202,155,228,11,173,37,109,165,70,31,212,223,80,183,139,75,49,10,47,129,212,15,71,126,108,59,136,216,66,7,158,167,19,27,48,87,76,228,168,202,223,204,2,177,147,214,61},{179,109,66,78,70,170,93,243,249,55,113,243,101,192,136,203,192,250,122,60,229,185,9,125,238,200,252,56,245,22,103,189,17,210,90,12,237,252,177,74,49,159,221,159,178,19,169,174,195,128,234,110,133,174,198,122,135,11,242,20},{202,240,53,87,58,125,81,167,109,27,111,19,137,245,51,253,214,157,28,81,154}
+local YhFiQdhJ = 42
+local YrGjilEg = {
+{148,74,212,203,129,23,240,129,111,117,126,188,191,5,235,47,114,234,92,4,167,242,93,88,78,203,34,232,43,33,36,209,159,248,72,12,167,162,249,189,70,226,160,155,205,75,79,234,32,213,216,166,162,194,85,86,181,46,133,221},{22,198,222,131,250,23,236,174,186,206,34,155,3,239,233,183,185,10,171,237,130,98,66,146,178,18,144,128,232,20,108,24,183,160,82,82,142,142,210,16,36,218,80,98,47,116,212,181,236,105,108,195,208,164,28,143,98,79,50,5},{72,194,246,239,196,134,15,248,11,250,180,251,46,119,131,245,205,59,210,89,58}
 }
-local klKbantD = "mwTqXPWwuGzfhbFf"
+local HqexMyPb = "sxyxCLVxijRimJrz"
 
-local function TAufVBJy(igvZdkIH_data, igvZdkIH_key)
-    if type(igvZdkIH_key) ~= "string" or #igvZdkIH_key == 0 then return "" end
-    local igvZdkIH = {}
-    for HmlDlYaJ = 0, 255 do igvZdkIH[HmlDlYaJ] = HmlDlYaJ end
-    local dXvMdkdT = 0
-    for HmlDlYaJ = 0, 255 do
-        local XvGvxtOd = igvZdkIH_key:byte((HmlDlYaJ % #igvZdkIH_key) + 1)
-        dXvMdkdT = (dXvMdkdT + igvZdkIH[HmlDlYaJ] + XvGvxtOd) % 256
-        igvZdkIH[HmlDlYaJ], igvZdkIH[dXvMdkdT] = igvZdkIH[dXvMdkdT], igvZdkIH[HmlDlYaJ]
+local function UloPxFVj(PHZpkiCr_data, PHZpkiCr_key)
+    if type(PHZpkiCr_key) ~= "string" or #PHZpkiCr_key == 0 then return "" end
+    local PHZpkiCr = {}
+    for uCQbgjHD = 0, 255 do PHZpkiCr[uCQbgjHD] = uCQbgjHD end
+    local UitCDczX = 0
+    for uCQbgjHD = 0, 255 do
+        local QRDwnkwD = PHZpkiCr_key:byte((uCQbgjHD % #PHZpkiCr_key) + 1)
+        UitCDczX = (UitCDczX + PHZpkiCr[uCQbgjHD] + QRDwnkwD) % 256
+        PHZpkiCr[uCQbgjHD], PHZpkiCr[UitCDczX] = PHZpkiCr[UitCDczX], PHZpkiCr[uCQbgjHD]
     end
-    local HmlDlYaJ = 0
-    local dXvMdkdT = 0
-    local FFajdAvK = {}
-    for _, NpiCIrjq in ipairs(igvZdkIH_data) do
-        HmlDlYaJ = (HmlDlYaJ + 1) % 256
-        dXvMdkdT = (dXvMdkdT + igvZdkIH[HmlDlYaJ]) % 256
-        igvZdkIH[HmlDlYaJ], igvZdkIH[dXvMdkdT] = igvZdkIH[dXvMdkdT], igvZdkIH[HmlDlYaJ]
-        local XvGvxtOd = igvZdkIH[(igvZdkIH[HmlDlYaJ] + igvZdkIH[dXvMdkdT]) % 256]
-        local unmasked = bit32.bxor(NpiCIrjq, nUkDxOQr)
-        table.insert(FFajdAvK, string.char(bit32.bxor(unmasked, XvGvxtOd)))
+    local uCQbgjHD = 0
+    local UitCDczX = 0
+    local ODwcybuA = {}
+    for _, ivpGqkyp in ipairs(PHZpkiCr_data) do
+        uCQbgjHD = (uCQbgjHD + 1) % 256
+        UitCDczX = (UitCDczX + PHZpkiCr[uCQbgjHD]) % 256
+        PHZpkiCr[uCQbgjHD], PHZpkiCr[UitCDczX] = PHZpkiCr[UitCDczX], PHZpkiCr[uCQbgjHD]
+        local QRDwnkwD = PHZpkiCr[(PHZpkiCr[uCQbgjHD] + PHZpkiCr[UitCDczX]) % 256]
+        local unmasked = bit32.bxor(ivpGqkyp, YhFiQdhJ)
+        table.insert(ODwcybuA, string.char(bit32.bxor(unmasked, QRDwnkwD)))
     end
-    return table.concat(FFajdAvK)
+    return table.concat(ODwcybuA)
 end
 
-local igvZdkIH_flat = {}
-for _, chunk in ipairs(VAaEpeAu) do
+local PHZpkiCr_flat = {}
+for _, chunk in ipairs(YrGjilEg) do
     for _, byte in ipairs(chunk) do
-        table.insert(igvZdkIH_flat, byte)
+        table.insert(PHZpkiCr_flat, byte)
     end
 end
 
-local decrypted = TAufVBJy(igvZdkIH_flat, klKbantD)
-local HoVNPJoq, jCPCOwni = loadstring(decrypted)
+local decrypted = UloPxFVj(PHZpkiCr_flat, HqexMyPb)
+local qiTqrxhl, ZUypBsoQ = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(igvZdkIH_flat)
-igvZdkIH_flat = nil
+table.clear(PHZpkiCr_flat)
+PHZpkiCr_flat = nil
 
-if HoVNPJoq then 
-    local result = HoVNPJoq() 
+if qiTqrxhl then 
+    local result = qiTqrxhl() 
     decrypted = nil
-    HoVNPJoq = nil
+    qiTqrxhl = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(jCPCOwni)) 
+    warn("[ecco] Boot Error (" .. "ui_themes" .. "): " .. tostring(ZUypBsoQ)) 
 end
