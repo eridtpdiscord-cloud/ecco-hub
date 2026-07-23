@@ -1,54 +1,54 @@
 -- Protected Segment (cache_invalidation)
-local fLigFpIH = 119
-local gkhRnDXU = {
-{223,200,231,83,136,226,185,97,156,24,60,24,87,51,55,65,124,194,44,104,131,13,34,58,158,232,165,105,48,137,128,119,126,193,165,195,214,235,147,253,210,15,85,42,180,84,237,25,72,103,32,252,103,28,10,222,14,29,240,111},{120,47,104,192,65,34,85,50,129,11,244,101,9,9,10,227,240,30,130,84,116,130,172,57,112,35,81,22,135,177,199,244,66,169,114,99,51,8,172,122,2,76,22,147,244,26,27,249,137,36,21,40,37,57,209,247,15,221,61,197},{2,218,42,127,64,119,151,207,218,200,150,122,103,221,21,183,228,73,124,174,207,65,137,157,72,196,61,248,98,150}
+local vujPfbKj = 61
+local ITjKFUMZ = {
+{136,114,205,179,118,72,96,54,207,47,96,68,172,141,5,85,35,34,63,224,26,228,139,118,189,247,0,54,132,250,52,18,203,253,164,45,252,112,137,46,31,45,220,245,129,176,46,130,7,254,151,161,210,230,201,12,138,1,92,28},{164,77,53,118,146,173,52,187,29,154,174,201,139,142,186,205,137,89,21,61,156,224,33,41,92,232,57,163,130,129,170,163,57,74,83,202,74,18,89,240,155,206,208,119,217,33,80,145,222,101,130,241,235,67,37,68,227,176,78,83},{152,127,50,115,162,21,4,158,25,59,90,203,36,58,208,166,42,24,73,88,181,209,201,150,139,107,109,210,79,242}
 }
-local khFuULVJ = "fOhdniCGJtiBaxog"
+local YnlUzcsV = "omFUJFPqgxJgNyxP"
 
-local function aayUWQwU(GhUPcSYf_data, GhUPcSYf_key)
-    if type(GhUPcSYf_key) ~= "string" or #GhUPcSYf_key == 0 then return "" end
-    local GhUPcSYf = {}
-    for NNwOTbGl = 0, 255 do GhUPcSYf[NNwOTbGl] = NNwOTbGl end
-    local cadwrsEJ = 0
-    for NNwOTbGl = 0, 255 do
-        local KZHbtaYB = GhUPcSYf_key:byte((NNwOTbGl % #GhUPcSYf_key) + 1)
-        cadwrsEJ = (cadwrsEJ + GhUPcSYf[NNwOTbGl] + KZHbtaYB) % 256
-        GhUPcSYf[NNwOTbGl], GhUPcSYf[cadwrsEJ] = GhUPcSYf[cadwrsEJ], GhUPcSYf[NNwOTbGl]
+local function gwFAKnCT(ZibUnEsY_data, ZibUnEsY_key)
+    if type(ZibUnEsY_key) ~= "string" or #ZibUnEsY_key == 0 then return "" end
+    local ZibUnEsY = {}
+    for uEGHAKYV = 0, 255 do ZibUnEsY[uEGHAKYV] = uEGHAKYV end
+    local HsjJYJXY = 0
+    for uEGHAKYV = 0, 255 do
+        local bDohHDkd = ZibUnEsY_key:byte((uEGHAKYV % #ZibUnEsY_key) + 1)
+        HsjJYJXY = (HsjJYJXY + ZibUnEsY[uEGHAKYV] + bDohHDkd) % 256
+        ZibUnEsY[uEGHAKYV], ZibUnEsY[HsjJYJXY] = ZibUnEsY[HsjJYJXY], ZibUnEsY[uEGHAKYV]
     end
-    local NNwOTbGl = 0
-    local cadwrsEJ = 0
-    local TAzixDGK = {}
-    for _, SJJloiXM in ipairs(GhUPcSYf_data) do
-        NNwOTbGl = (NNwOTbGl + 1) % 256
-        cadwrsEJ = (cadwrsEJ + GhUPcSYf[NNwOTbGl]) % 256
-        GhUPcSYf[NNwOTbGl], GhUPcSYf[cadwrsEJ] = GhUPcSYf[cadwrsEJ], GhUPcSYf[NNwOTbGl]
-        local KZHbtaYB = GhUPcSYf[(GhUPcSYf[NNwOTbGl] + GhUPcSYf[cadwrsEJ]) % 256]
-        local unmasked = bit32.bxor(SJJloiXM, fLigFpIH)
-        table.insert(TAzixDGK, string.char(bit32.bxor(unmasked, KZHbtaYB)))
+    local uEGHAKYV = 0
+    local HsjJYJXY = 0
+    local suvfLuXC = {}
+    for _, sLcWjcQi in ipairs(ZibUnEsY_data) do
+        uEGHAKYV = (uEGHAKYV + 1) % 256
+        HsjJYJXY = (HsjJYJXY + ZibUnEsY[uEGHAKYV]) % 256
+        ZibUnEsY[uEGHAKYV], ZibUnEsY[HsjJYJXY] = ZibUnEsY[HsjJYJXY], ZibUnEsY[uEGHAKYV]
+        local bDohHDkd = ZibUnEsY[(ZibUnEsY[uEGHAKYV] + ZibUnEsY[HsjJYJXY]) % 256]
+        local unmasked = bit32.bxor(sLcWjcQi, vujPfbKj)
+        table.insert(suvfLuXC, string.char(bit32.bxor(unmasked, bDohHDkd)))
     end
-    return table.concat(TAzixDGK)
+    return table.concat(suvfLuXC)
 end
 
-local GhUPcSYf_flat = {}
-for _, chunk in ipairs(gkhRnDXU) do
+local ZibUnEsY_flat = {}
+for _, chunk in ipairs(ITjKFUMZ) do
     for _, byte in ipairs(chunk) do
-        table.insert(GhUPcSYf_flat, byte)
+        table.insert(ZibUnEsY_flat, byte)
     end
 end
 
-local decrypted = aayUWQwU(GhUPcSYf_flat, khFuULVJ)
-local dajMQZqp, bFACAvKP = loadstring(decrypted)
+local decrypted = gwFAKnCT(ZibUnEsY_flat, YnlUzcsV)
+local NCwlARwa, lclYovxQ = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(GhUPcSYf_flat)
-GhUPcSYf_flat = nil
+table.clear(ZibUnEsY_flat)
+ZibUnEsY_flat = nil
 
-if dajMQZqp then 
-    local result = dajMQZqp() 
+if NCwlARwa then 
+    local result = NCwlARwa() 
     decrypted = nil
-    dajMQZqp = nil
+    NCwlARwa = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(bFACAvKP)) 
+    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(lclYovxQ)) 
 end
