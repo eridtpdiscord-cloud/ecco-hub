@@ -1,54 +1,54 @@
 -- Protected Segment (utility_helper)
-local UFcJjVBB = 84
-local DsYaoYrR = {
-{65,195,105,88,7,204,12,162,171,170,163,45,8,146,112,89,37,180,97,171,7,199,173,152,62,136,114,223,184,38,67,43,40,123,195,56,4,16,167,142,168,86,117,227,212,3,122,212,123,141,141,121,37,238,189,161,88,60,75,17},{38,64,142,36,88,45,94,193,134,30,73,86,142,4,175,177,107,181,112,166,42,158,100,74,15,202,158,33,115,251,175,120,167,91,140,181,242,26,84,244,21,180,150,44,162,181,47,175,212,78,93,49,73,215,8,138,60,177,238,100},{202,3,72,147,200,231,188,217,188,211,15,0,34,59,22,153,119,14,168,74,127,115,242,222,225,233}
+local dVXaBlxn = 126
+local rVfIBCSr = {
+{212,27,55,84,156,160,19,204,74,106,253,192,123,236,46,122,187,19,126,105,22,51,148,15,203,187,205,141,127,80,64,69,192,134,111,222,3,44,134,233,161,209,8,250,167,1,157,75,15,169,100,186,29,151,244,36,243,217,74,124},{213,145,185,6,74,216,212,209,252,2,182,5,214,47,233,197,83,134,36,112,164,49,51,174,215,93,14,211,120,174,49,238,39,193,71,109,79,103,219,135,249,197,157,76,78,24,95,170,137,165,90,37,124,72,248,91,83,89,223,84},{111,17,43,219,50,63,227,209,22,162,103,134,61,113,164,235,134,17,193,18,198,30,89,210,0,227}
 }
-local ZInzctbX = "PsrdYcasrxxBxbsw"
+local qgGZKTnd = "RewIdyRtWSbgjhrT"
 
-local function SiTaMmxY(COSCSrDg_data, COSCSrDg_key)
-    if type(COSCSrDg_key) ~= "string" or #COSCSrDg_key == 0 then return "" end
-    local COSCSrDg = {}
-    for OmEjugin = 0, 255 do COSCSrDg[OmEjugin] = OmEjugin end
-    local RRashBvz = 0
-    for OmEjugin = 0, 255 do
-        local ceFMHkGj = COSCSrDg_key:byte((OmEjugin % #COSCSrDg_key) + 1)
-        RRashBvz = (RRashBvz + COSCSrDg[OmEjugin] + ceFMHkGj) % 256
-        COSCSrDg[OmEjugin], COSCSrDg[RRashBvz] = COSCSrDg[RRashBvz], COSCSrDg[OmEjugin]
+local function YhRWylbl(cXQPlytD_data, cXQPlytD_key)
+    if type(cXQPlytD_key) ~= "string" or #cXQPlytD_key == 0 then return "" end
+    local cXQPlytD = {}
+    for cEEPlyRO = 0, 255 do cXQPlytD[cEEPlyRO] = cEEPlyRO end
+    local UEYLLNkb = 0
+    for cEEPlyRO = 0, 255 do
+        local JTRFsaxT = cXQPlytD_key:byte((cEEPlyRO % #cXQPlytD_key) + 1)
+        UEYLLNkb = (UEYLLNkb + cXQPlytD[cEEPlyRO] + JTRFsaxT) % 256
+        cXQPlytD[cEEPlyRO], cXQPlytD[UEYLLNkb] = cXQPlytD[UEYLLNkb], cXQPlytD[cEEPlyRO]
     end
-    local OmEjugin = 0
-    local RRashBvz = 0
-    local oAIFpqMO = {}
-    for _, IcDOVfhL in ipairs(COSCSrDg_data) do
-        OmEjugin = (OmEjugin + 1) % 256
-        RRashBvz = (RRashBvz + COSCSrDg[OmEjugin]) % 256
-        COSCSrDg[OmEjugin], COSCSrDg[RRashBvz] = COSCSrDg[RRashBvz], COSCSrDg[OmEjugin]
-        local ceFMHkGj = COSCSrDg[(COSCSrDg[OmEjugin] + COSCSrDg[RRashBvz]) % 256]
-        local unmasked = bit32.bxor(IcDOVfhL, UFcJjVBB)
-        table.insert(oAIFpqMO, string.char(bit32.bxor(unmasked, ceFMHkGj)))
+    local cEEPlyRO = 0
+    local UEYLLNkb = 0
+    local jtHjzzyk = {}
+    for _, xSBWIkRs in ipairs(cXQPlytD_data) do
+        cEEPlyRO = (cEEPlyRO + 1) % 256
+        UEYLLNkb = (UEYLLNkb + cXQPlytD[cEEPlyRO]) % 256
+        cXQPlytD[cEEPlyRO], cXQPlytD[UEYLLNkb] = cXQPlytD[UEYLLNkb], cXQPlytD[cEEPlyRO]
+        local JTRFsaxT = cXQPlytD[(cXQPlytD[cEEPlyRO] + cXQPlytD[UEYLLNkb]) % 256]
+        local unmasked = bit32.bxor(xSBWIkRs, dVXaBlxn)
+        table.insert(jtHjzzyk, string.char(bit32.bxor(unmasked, JTRFsaxT)))
     end
-    return table.concat(oAIFpqMO)
+    return table.concat(jtHjzzyk)
 end
 
-local COSCSrDg_flat = {}
-for _, chunk in ipairs(DsYaoYrR) do
+local cXQPlytD_flat = {}
+for _, chunk in ipairs(rVfIBCSr) do
     for _, byte in ipairs(chunk) do
-        table.insert(COSCSrDg_flat, byte)
+        table.insert(cXQPlytD_flat, byte)
     end
 end
 
-local decrypted = SiTaMmxY(COSCSrDg_flat, ZInzctbX)
-local FjxuvlYp, jTLklZpu = loadstring(decrypted)
+local decrypted = YhRWylbl(cXQPlytD_flat, qgGZKTnd)
+local PNOawSlP, ZdJLIcqR = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(COSCSrDg_flat)
-COSCSrDg_flat = nil
+table.clear(cXQPlytD_flat)
+cXQPlytD_flat = nil
 
-if FjxuvlYp then 
-    local result = FjxuvlYp() 
+if PNOawSlP then 
+    local result = PNOawSlP() 
     decrypted = nil
-    FjxuvlYp = nil
+    PNOawSlP = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(jTLklZpu)) 
+    warn("[ecco] Boot Error (" .. "utility_helper" .. "): " .. tostring(ZdJLIcqR)) 
 end
