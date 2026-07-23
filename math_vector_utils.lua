@@ -1,54 +1,54 @@
 -- Protected Segment (math_vector_utils)
-local juQCblwg = 84
-local awvpHCbo = {
-{170,30,187,113,26,56,179,113,87,105,214,22,176,74,12,139,113,230,166,165,222,113,96,192,219,143,122,252,37,214,6,116,158,33,30,60,133,197,203,137,169,153,153,21,67,243,3,29,162,119,140,247,221,191,158,43,152,71,226,139},{3,19,148,226,251,174,150,181,33,80,188,245,159,180,156,192,96,200,239,105,231,248,74,218,13,173,207,29,20,60,239,158,65,146,235,166,27,85,177,209,147,11,111,19,164,248,147,8,55,209,169,251,166,168,173,24,106,77,81,68},{22,95,22,151,84,107,209,29,91,37,120,206,231,84,209,195,84,148,149,131,187,51,95,39,255,154,145,104,126}
+local qWcPrTUX = 45
+local zKTXeFhu = {
+{157,232,202,132,171,169,29,102,25,65,63,10,157,221,184,121,91,56,208,40,212,231,209,57,184,147,181,33,110,21,152,55,129,28,131,156,239,46,251,124,250,21,229,39,96,147,250,44,105,98,234,226,121,5,167,72,129,69,237,226},{199,49,88,10,163,69,87,105,215,135,204,6,99,216,24,5,139,142,27,216,82,62,65,123,214,79,127,127,114,29,185,128,96,207,140,6,92,49,110,64,12,127,9,153,184,224,45,70,108,42,138,157,70,56,228,17,46,179,250,212},{35,124,23,136,20,239,249,24,83,42,234,205,74,63,90,158,225,156,13,92,97,191,137,211,16,230,90,208,99}
 }
-local eBcynfvF = "BZkhjoXZoSeZZYGI"
+local kUbPoUSZ = "cBYPVblJdQbBDnTN"
 
-local function dxQBSuts(fsLIvaaC_data, fsLIvaaC_key)
-    if type(fsLIvaaC_key) ~= "string" or #fsLIvaaC_key == 0 then return "" end
-    local fsLIvaaC = {}
-    for NQDBJiJC = 0, 255 do fsLIvaaC[NQDBJiJC] = NQDBJiJC end
-    local YQKCItVl = 0
-    for NQDBJiJC = 0, 255 do
-        local XleTbbOy = fsLIvaaC_key:byte((NQDBJiJC % #fsLIvaaC_key) + 1)
-        YQKCItVl = (YQKCItVl + fsLIvaaC[NQDBJiJC] + XleTbbOy) % 256
-        fsLIvaaC[NQDBJiJC], fsLIvaaC[YQKCItVl] = fsLIvaaC[YQKCItVl], fsLIvaaC[NQDBJiJC]
+local function rAzDYzwd(SPmZYItj_data, SPmZYItj_key)
+    if type(SPmZYItj_key) ~= "string" or #SPmZYItj_key == 0 then return "" end
+    local SPmZYItj = {}
+    for GSwHxLkl = 0, 255 do SPmZYItj[GSwHxLkl] = GSwHxLkl end
+    local KGuKzcci = 0
+    for GSwHxLkl = 0, 255 do
+        local ebqfOqdf = SPmZYItj_key:byte((GSwHxLkl % #SPmZYItj_key) + 1)
+        KGuKzcci = (KGuKzcci + SPmZYItj[GSwHxLkl] + ebqfOqdf) % 256
+        SPmZYItj[GSwHxLkl], SPmZYItj[KGuKzcci] = SPmZYItj[KGuKzcci], SPmZYItj[GSwHxLkl]
     end
-    local NQDBJiJC = 0
-    local YQKCItVl = 0
-    local rDteQmca = {}
-    for _, zmvtOkgq in ipairs(fsLIvaaC_data) do
-        NQDBJiJC = (NQDBJiJC + 1) % 256
-        YQKCItVl = (YQKCItVl + fsLIvaaC[NQDBJiJC]) % 256
-        fsLIvaaC[NQDBJiJC], fsLIvaaC[YQKCItVl] = fsLIvaaC[YQKCItVl], fsLIvaaC[NQDBJiJC]
-        local XleTbbOy = fsLIvaaC[(fsLIvaaC[NQDBJiJC] + fsLIvaaC[YQKCItVl]) % 256]
-        local unmasked = bit32.bxor(zmvtOkgq, juQCblwg)
-        table.insert(rDteQmca, string.char(bit32.bxor(unmasked, XleTbbOy)))
+    local GSwHxLkl = 0
+    local KGuKzcci = 0
+    local SihUVPDX = {}
+    for _, WFkHVDbt in ipairs(SPmZYItj_data) do
+        GSwHxLkl = (GSwHxLkl + 1) % 256
+        KGuKzcci = (KGuKzcci + SPmZYItj[GSwHxLkl]) % 256
+        SPmZYItj[GSwHxLkl], SPmZYItj[KGuKzcci] = SPmZYItj[KGuKzcci], SPmZYItj[GSwHxLkl]
+        local ebqfOqdf = SPmZYItj[(SPmZYItj[GSwHxLkl] + SPmZYItj[KGuKzcci]) % 256]
+        local unmasked = bit32.bxor(WFkHVDbt, qWcPrTUX)
+        table.insert(SihUVPDX, string.char(bit32.bxor(unmasked, ebqfOqdf)))
     end
-    return table.concat(rDteQmca)
+    return table.concat(SihUVPDX)
 end
 
-local fsLIvaaC_flat = {}
-for _, chunk in ipairs(awvpHCbo) do
+local SPmZYItj_flat = {}
+for _, chunk in ipairs(zKTXeFhu) do
     for _, byte in ipairs(chunk) do
-        table.insert(fsLIvaaC_flat, byte)
+        table.insert(SPmZYItj_flat, byte)
     end
 end
 
-local decrypted = dxQBSuts(fsLIvaaC_flat, eBcynfvF)
-local rauFIvpr, qHxRlbKm = loadstring(decrypted)
+local decrypted = rAzDYzwd(SPmZYItj_flat, kUbPoUSZ)
+local oCfsJMlL, jFNofkHX = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(fsLIvaaC_flat)
-fsLIvaaC_flat = nil
+table.clear(SPmZYItj_flat)
+SPmZYItj_flat = nil
 
-if rauFIvpr then 
-    local result = rauFIvpr() 
+if oCfsJMlL then 
+    local result = oCfsJMlL() 
     decrypted = nil
-    rauFIvpr = nil
+    oCfsJMlL = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(qHxRlbKm)) 
+    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(jFNofkHX)) 
 end
