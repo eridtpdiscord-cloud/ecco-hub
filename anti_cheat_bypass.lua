@@ -1,54 +1,54 @@
 -- Protected Segment (anti_cheat_bypass)
-local oaDgouhY = 91
-local iPJJTeBm = {
-{155,38,156,2,91,225,82,106,16,123,169,192,42,5,38,85,80,43,45,40,87,181,223,223,85,45,198,195,118,51,70,155,59,247,114,166,233,248,90,220,20,40,241,211,75,82,19,201,56,212,178,121,62,119,146,147,23,26,85,45},{1,97,205,79,139,117,215,56,205,32,67,94,153,87,82,167,177,0,124,204,126,100,7,190,255,55,63,254,135,111,69,81,15,122,9,136,156,35,253,28,58,87,7,69,86,233,251,66,195,172,194,223,58,215,131,19,29,134,130,216},{153,116,8,127,186,208,66,83,46,178,46,242,176,231,21,237,207,137,203,243,250,192,170,245,87,26,213,231,247}
+local oJsVFsoe = 29
+local tbunupvn = {
+{96,39,112,205,116,11,63,186,120,12,139,129,88,3,85,3,29,47,252,244,228,80,209,17,169,43,193,220,44,62,26,202,54,169,150,88,221,6,168,16,238,194,137,81,126,254,128,231,136,19,242,61,17,217,248,120,151,161,16,37},{11,254,224,19,171,241,87,149,106,122,219,246,115,219,180,194,97,159,170,104,137,14,134,35,172,14,119,178,219,162,240,26,241,96,188,45,113,69,209,168,165,219,177,74,122,220,38,221,183,201,169,244,12,211,104,165,171,94,17,134},{229,72,252,103,38,171,171,222,32,186,37,133,167,144,124,157,216,234,129,176,90,151,83,2,178,214,246,20,126}
 }
-local dSlyUwsy = "yJwACUseFFEFDtLU"
+local zVqssonZ = "EPqWiYdwioUkyEBO"
 
-local function JRrgTLfn(LyUKzzNT_data, LyUKzzNT_key)
-    if type(LyUKzzNT_key) ~= "string" or #LyUKzzNT_key == 0 then return "" end
-    local LyUKzzNT = {}
-    for OGeSRKSd = 0, 255 do LyUKzzNT[OGeSRKSd] = OGeSRKSd end
-    local XVlJgPrk = 0
-    for OGeSRKSd = 0, 255 do
-        local sbUlosvk = LyUKzzNT_key:byte((OGeSRKSd % #LyUKzzNT_key) + 1)
-        XVlJgPrk = (XVlJgPrk + LyUKzzNT[OGeSRKSd] + sbUlosvk) % 256
-        LyUKzzNT[OGeSRKSd], LyUKzzNT[XVlJgPrk] = LyUKzzNT[XVlJgPrk], LyUKzzNT[OGeSRKSd]
+local function wXRHgXzB(HTyIBaBe_data, HTyIBaBe_key)
+    if type(HTyIBaBe_key) ~= "string" or #HTyIBaBe_key == 0 then return "" end
+    local HTyIBaBe = {}
+    for veXmJNmo = 0, 255 do HTyIBaBe[veXmJNmo] = veXmJNmo end
+    local tdTEEdYB = 0
+    for veXmJNmo = 0, 255 do
+        local EyBsSvab = HTyIBaBe_key:byte((veXmJNmo % #HTyIBaBe_key) + 1)
+        tdTEEdYB = (tdTEEdYB + HTyIBaBe[veXmJNmo] + EyBsSvab) % 256
+        HTyIBaBe[veXmJNmo], HTyIBaBe[tdTEEdYB] = HTyIBaBe[tdTEEdYB], HTyIBaBe[veXmJNmo]
     end
-    local OGeSRKSd = 0
-    local XVlJgPrk = 0
-    local uCITAuhw = {}
-    for _, xMxUvILj in ipairs(LyUKzzNT_data) do
-        OGeSRKSd = (OGeSRKSd + 1) % 256
-        XVlJgPrk = (XVlJgPrk + LyUKzzNT[OGeSRKSd]) % 256
-        LyUKzzNT[OGeSRKSd], LyUKzzNT[XVlJgPrk] = LyUKzzNT[XVlJgPrk], LyUKzzNT[OGeSRKSd]
-        local sbUlosvk = LyUKzzNT[(LyUKzzNT[OGeSRKSd] + LyUKzzNT[XVlJgPrk]) % 256]
-        local unmasked = bit32.bxor(xMxUvILj, oaDgouhY)
-        table.insert(uCITAuhw, string.char(bit32.bxor(unmasked, sbUlosvk)))
+    local veXmJNmo = 0
+    local tdTEEdYB = 0
+    local BHOWUbUG = {}
+    for _, EUvLYOhw in ipairs(HTyIBaBe_data) do
+        veXmJNmo = (veXmJNmo + 1) % 256
+        tdTEEdYB = (tdTEEdYB + HTyIBaBe[veXmJNmo]) % 256
+        HTyIBaBe[veXmJNmo], HTyIBaBe[tdTEEdYB] = HTyIBaBe[tdTEEdYB], HTyIBaBe[veXmJNmo]
+        local EyBsSvab = HTyIBaBe[(HTyIBaBe[veXmJNmo] + HTyIBaBe[tdTEEdYB]) % 256]
+        local unmasked = bit32.bxor(EUvLYOhw, oJsVFsoe)
+        table.insert(BHOWUbUG, string.char(bit32.bxor(unmasked, EyBsSvab)))
     end
-    return table.concat(uCITAuhw)
+    return table.concat(BHOWUbUG)
 end
 
-local LyUKzzNT_flat = {}
-for _, chunk in ipairs(iPJJTeBm) do
+local HTyIBaBe_flat = {}
+for _, chunk in ipairs(tbunupvn) do
     for _, byte in ipairs(chunk) do
-        table.insert(LyUKzzNT_flat, byte)
+        table.insert(HTyIBaBe_flat, byte)
     end
 end
 
-local decrypted = JRrgTLfn(LyUKzzNT_flat, dSlyUwsy)
-local unHQagwU, SOZVbQVG = loadstring(decrypted)
+local decrypted = wXRHgXzB(HTyIBaBe_flat, zVqssonZ)
+local bpmDawUU, cpPgrkuN = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(LyUKzzNT_flat)
-LyUKzzNT_flat = nil
+table.clear(HTyIBaBe_flat)
+HTyIBaBe_flat = nil
 
-if unHQagwU then 
-    local result = unHQagwU() 
+if bpmDawUU then 
+    local result = bpmDawUU() 
     decrypted = nil
-    unHQagwU = nil
+    bpmDawUU = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "anti_cheat_bypass" .. "): " .. tostring(SOZVbQVG)) 
+    warn("[ecco] Boot Error (" .. "anti_cheat_bypass" .. "): " .. tostring(cpPgrkuN)) 
 end
