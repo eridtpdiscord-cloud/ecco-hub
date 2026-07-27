@@ -1,54 +1,54 @@
 -- Protected Segment (anti_cheat_bypass)
-local nrRAMOAh = 43
-local GgXPXyta = {
-{255,141,100,221,58,95,31,181,5,73,251,64,185,75,202,108,166,39,72,226,10,35,108,34,59,114,130,227,148,150,92,93,135,211,99,189,186,13,172,139,106,185,120,188,50,109,90,126,206,38,126,167,102,56,123,221,177,246,148,169},{116,173,224,112,26,250,216,175,145,150,138,151,105,32,183,252,111,199,162,171,9,4,116,124,238,125,0,141,60,17,146,184,198,51,147,120,241,195,232,50,206,45,200,134,161,45,90,48,44,75,44,255,133,194,238,203,213,125,62,69},{195,179,227,129,132,35,191,100,246,28,42,76,92,7,107,247,214,46,174,120,194,136,195,86,231,143,62,2,120}
+local ZKmGbLmU = 36
+local MDWyqAEl = {
+{48,158,220,232,161,14,228,195,206,140,146,110,184,64,72,138,94,200,178,254,111,155,23,76,166,57,71,31,35,128,50,53,20,203,167,165,129,175,248,74,188,29,135,135,229,7,167,209,43,236,63,182,254,100,191,119,139,79,17,165},{78,217,202,10,26,234,168,241,46,93,111,76,148,132,130,243,89,176,167,225,168,4,178,131,17,97,243,215,121,47,40,148,32,4,194,33,136,127,82,41,195,35,48,192,119,140,205,54,126,149,230,6,203,25,0,55,238,6,242,144},{39,205,0,143,128,142,70,98,29,166,181,242,230,122,38,73,247,234,162,22,112,59,62,55,187,132,164,46,11}
 }
-local qxNYbTtR = "EnZrBgZPIXrLBHib"
+local cfeVGNwb = "zOKDOldrVteZnBiY"
 
-local function aGpniLtD(fdlWyYZz_data, fdlWyYZz_key)
-    if type(fdlWyYZz_key) ~= "string" or #fdlWyYZz_key == 0 then return "" end
-    local fdlWyYZz = {}
-    for NHpByfBS = 0, 255 do fdlWyYZz[NHpByfBS] = NHpByfBS end
-    local qDsaLHhu = 0
-    for NHpByfBS = 0, 255 do
-        local KSnqnvPS = fdlWyYZz_key:byte((NHpByfBS % #fdlWyYZz_key) + 1)
-        qDsaLHhu = (qDsaLHhu + fdlWyYZz[NHpByfBS] + KSnqnvPS) % 256
-        fdlWyYZz[NHpByfBS], fdlWyYZz[qDsaLHhu] = fdlWyYZz[qDsaLHhu], fdlWyYZz[NHpByfBS]
+local function KHzwMdTM(GFthqLPG_data, GFthqLPG_key)
+    if type(GFthqLPG_key) ~= "string" or #GFthqLPG_key == 0 then return "" end
+    local GFthqLPG = {}
+    for dODqebyA = 0, 255 do GFthqLPG[dODqebyA] = dODqebyA end
+    local LWLfuhDY = 0
+    for dODqebyA = 0, 255 do
+        local MhLUjtyB = GFthqLPG_key:byte((dODqebyA % #GFthqLPG_key) + 1)
+        LWLfuhDY = (LWLfuhDY + GFthqLPG[dODqebyA] + MhLUjtyB) % 256
+        GFthqLPG[dODqebyA], GFthqLPG[LWLfuhDY] = GFthqLPG[LWLfuhDY], GFthqLPG[dODqebyA]
     end
-    local NHpByfBS = 0
-    local qDsaLHhu = 0
-    local iLaIVrhn = {}
-    for _, thwEalXc in ipairs(fdlWyYZz_data) do
-        NHpByfBS = (NHpByfBS + 1) % 256
-        qDsaLHhu = (qDsaLHhu + fdlWyYZz[NHpByfBS]) % 256
-        fdlWyYZz[NHpByfBS], fdlWyYZz[qDsaLHhu] = fdlWyYZz[qDsaLHhu], fdlWyYZz[NHpByfBS]
-        local KSnqnvPS = fdlWyYZz[(fdlWyYZz[NHpByfBS] + fdlWyYZz[qDsaLHhu]) % 256]
-        local unmasked = bit32.bxor(thwEalXc, nrRAMOAh)
-        table.insert(iLaIVrhn, string.char(bit32.bxor(unmasked, KSnqnvPS)))
+    local dODqebyA = 0
+    local LWLfuhDY = 0
+    local hDKpFrjl = {}
+    for _, SgBEOLQE in ipairs(GFthqLPG_data) do
+        dODqebyA = (dODqebyA + 1) % 256
+        LWLfuhDY = (LWLfuhDY + GFthqLPG[dODqebyA]) % 256
+        GFthqLPG[dODqebyA], GFthqLPG[LWLfuhDY] = GFthqLPG[LWLfuhDY], GFthqLPG[dODqebyA]
+        local MhLUjtyB = GFthqLPG[(GFthqLPG[dODqebyA] + GFthqLPG[LWLfuhDY]) % 256]
+        local unmasked = bit32.bxor(SgBEOLQE, ZKmGbLmU)
+        table.insert(hDKpFrjl, string.char(bit32.bxor(unmasked, MhLUjtyB)))
     end
-    return table.concat(iLaIVrhn)
+    return table.concat(hDKpFrjl)
 end
 
-local fdlWyYZz_flat = {}
-for _, chunk in ipairs(GgXPXyta) do
+local GFthqLPG_flat = {}
+for _, chunk in ipairs(MDWyqAEl) do
     for _, byte in ipairs(chunk) do
-        table.insert(fdlWyYZz_flat, byte)
+        table.insert(GFthqLPG_flat, byte)
     end
 end
 
-local decrypted = aGpniLtD(fdlWyYZz_flat, qxNYbTtR)
-local CmodBUpZ, hcTQRIue = loadstring(decrypted)
+local decrypted = KHzwMdTM(GFthqLPG_flat, cfeVGNwb)
+local GHvfgdLp, yZYvrglH = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(fdlWyYZz_flat)
-fdlWyYZz_flat = nil
+table.clear(GFthqLPG_flat)
+GFthqLPG_flat = nil
 
-if CmodBUpZ then 
-    local result = CmodBUpZ() 
+if GHvfgdLp then 
+    local result = GHvfgdLp() 
     decrypted = nil
-    CmodBUpZ = nil
+    GHvfgdLp = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "anti_cheat_bypass" .. "): " .. tostring(hcTQRIue)) 
+    warn("[ecco] Boot Error (" .. "anti_cheat_bypass" .. "): " .. tostring(yZYvrglH)) 
 end
