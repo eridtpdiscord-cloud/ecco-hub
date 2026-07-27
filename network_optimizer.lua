@@ -1,54 +1,54 @@
 -- Protected Segment (network_optimizer)
-local XpmvEzBB = 99
-local jScMifBT = {
-{39,134,133,151,140,114,233,162,164,88,199,114,81,159,221,172,50,239,130,199,71,45,123,190,85,122,141,143,150,138,56,147,62,147,59,83,123,153,187,52,30,142,220,206,189,84,161,124,193,40,66,67,242,62,141,128,64,8,180,191},{218,162,14,73,254,29,29,200,124,18,238,77,16,128,167,20,15,245,154,216,89,227,185,84,142,171,145,233,126,222,94,12,87,206,192,86,46,93,196,197,95,173,203,151,200,78,102,147,88,190,6,66,193,255,3,248,10,143,85,158},{113,16,113,20,42,252,2,188,146,8,169,208,194,131,18,196,236,246,210,203,233,14,40,59,18,41,18,186,206}
+local CIljisFZ = 67
+local RSqxeFOS = {
+{75,82,185,219,9,100,151,231,149,126,183,246,72,94,197,12,60,68,97,197,113,38,142,150,20,82,45,44,74,62,250,192,139,162,223,77,58,212,181,138,36,19,93,132,133,243,55,111,33,30,23,3,32,26,168,167,207,67,149,171},{117,81,244,155,98,133,26,241,249,13,166,132,230,17,193,241,163,19,40,62,26,190,250,222,227,67,103,199,23,83,144,105,184,40,35,223,100,112,232,45,237,158,217,117,53,226,76,136,246,167,180,15,156,54,197,49,232,36,57,89},{1,69,244,254,68,181,121,37,14,51,88,69,162,91,211,183,111,122,171,187,21,106,89,110,234,157,170,20,193}
 }
-local lFOyPqgS = "nFuShJTAOgpmhbvR"
+local XyCryLSC = "ePvLbiucCqnAflOZ"
 
-local function tlamBjQn(HNukhtGt_data, HNukhtGt_key)
-    if type(HNukhtGt_key) ~= "string" or #HNukhtGt_key == 0 then return "" end
-    local HNukhtGt = {}
-    for wDbZDpAA = 0, 255 do HNukhtGt[wDbZDpAA] = wDbZDpAA end
-    local icRlCJeZ = 0
-    for wDbZDpAA = 0, 255 do
-        local rZnWYBiy = HNukhtGt_key:byte((wDbZDpAA % #HNukhtGt_key) + 1)
-        icRlCJeZ = (icRlCJeZ + HNukhtGt[wDbZDpAA] + rZnWYBiy) % 256
-        HNukhtGt[wDbZDpAA], HNukhtGt[icRlCJeZ] = HNukhtGt[icRlCJeZ], HNukhtGt[wDbZDpAA]
+local function kgNphrwb(GrzLAuCk_data, GrzLAuCk_key)
+    if type(GrzLAuCk_key) ~= "string" or #GrzLAuCk_key == 0 then return "" end
+    local GrzLAuCk = {}
+    for EynBEyqw = 0, 255 do GrzLAuCk[EynBEyqw] = EynBEyqw end
+    local xntuGJCq = 0
+    for EynBEyqw = 0, 255 do
+        local ZvdIQiFa = GrzLAuCk_key:byte((EynBEyqw % #GrzLAuCk_key) + 1)
+        xntuGJCq = (xntuGJCq + GrzLAuCk[EynBEyqw] + ZvdIQiFa) % 256
+        GrzLAuCk[EynBEyqw], GrzLAuCk[xntuGJCq] = GrzLAuCk[xntuGJCq], GrzLAuCk[EynBEyqw]
     end
-    local wDbZDpAA = 0
-    local icRlCJeZ = 0
-    local OrgUCALi = {}
-    for _, rggzzXts in ipairs(HNukhtGt_data) do
-        wDbZDpAA = (wDbZDpAA + 1) % 256
-        icRlCJeZ = (icRlCJeZ + HNukhtGt[wDbZDpAA]) % 256
-        HNukhtGt[wDbZDpAA], HNukhtGt[icRlCJeZ] = HNukhtGt[icRlCJeZ], HNukhtGt[wDbZDpAA]
-        local rZnWYBiy = HNukhtGt[(HNukhtGt[wDbZDpAA] + HNukhtGt[icRlCJeZ]) % 256]
-        local unmasked = bit32.bxor(rggzzXts, XpmvEzBB)
-        table.insert(OrgUCALi, string.char(bit32.bxor(unmasked, rZnWYBiy)))
+    local EynBEyqw = 0
+    local xntuGJCq = 0
+    local hcMxYPHN = {}
+    for _, WwXPiIWD in ipairs(GrzLAuCk_data) do
+        EynBEyqw = (EynBEyqw + 1) % 256
+        xntuGJCq = (xntuGJCq + GrzLAuCk[EynBEyqw]) % 256
+        GrzLAuCk[EynBEyqw], GrzLAuCk[xntuGJCq] = GrzLAuCk[xntuGJCq], GrzLAuCk[EynBEyqw]
+        local ZvdIQiFa = GrzLAuCk[(GrzLAuCk[EynBEyqw] + GrzLAuCk[xntuGJCq]) % 256]
+        local unmasked = bit32.bxor(WwXPiIWD, CIljisFZ)
+        table.insert(hcMxYPHN, string.char(bit32.bxor(unmasked, ZvdIQiFa)))
     end
-    return table.concat(OrgUCALi)
+    return table.concat(hcMxYPHN)
 end
 
-local HNukhtGt_flat = {}
-for _, chunk in ipairs(jScMifBT) do
+local GrzLAuCk_flat = {}
+for _, chunk in ipairs(RSqxeFOS) do
     for _, byte in ipairs(chunk) do
-        table.insert(HNukhtGt_flat, byte)
+        table.insert(GrzLAuCk_flat, byte)
     end
 end
 
-local decrypted = tlamBjQn(HNukhtGt_flat, lFOyPqgS)
-local xonUlvjb, hStymZYU = loadstring(decrypted)
+local decrypted = kgNphrwb(GrzLAuCk_flat, XyCryLSC)
+local nzHwHtvV, sWGUXMFp = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(HNukhtGt_flat)
-HNukhtGt_flat = nil
+table.clear(GrzLAuCk_flat)
+GrzLAuCk_flat = nil
 
-if xonUlvjb then 
-    local result = xonUlvjb() 
+if nzHwHtvV then 
+    local result = nzHwHtvV() 
     decrypted = nil
-    xonUlvjb = nil
+    nzHwHtvV = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "network_optimizer" .. "): " .. tostring(hStymZYU)) 
+    warn("[ecco] Boot Error (" .. "network_optimizer" .. "): " .. tostring(sWGUXMFp)) 
 end
