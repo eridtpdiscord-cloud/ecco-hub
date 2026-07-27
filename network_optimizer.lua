@@ -1,54 +1,54 @@
 -- Protected Segment (network_optimizer)
-local QUrORhXU = 251
-local aTrDVhiE = {
-{189,228,217,209,154,221,42,164,58,138,195,71,62,213,54,106,158,161,29,97,80,197,105,73,139,65,247,240,49,49,248,222,126,198,30,222,170,255,253,103,111,93,192,25,10,110,87,92,112,244,177,205,187,178,97,132,21,122,251,78},{140,29,252,43,230,191,195,86,191,46,95,177,201,165,50,136,211,20,231,93,63,199,247,92,180,64,41,161,242,169,230,97,99,223,135,183,165,147,59,166,95,8,202,26,147,213,49,40,8,251,238,136,192,239,221,150,92,200,69,221},{90,102,85,66,116,177,73,105,200,254,110,10,130,62,197,175,24,41,121,146,29,242,110,89,233,250,107,224,232}
+local GgEsfIxV = 144
+local OolapJKB = {
+{54,4,157,125,111,74,251,55,94,222,245,25,151,77,255,69,210,49,87,172,136,194,228,120,37,106,67,26,241,116,222,80,141,139,52,241,126,149,2,238,128,231,141,144,167,190,54,32,111,208,52,2,182,240,211,196,53,205,178,187},{218,134,111,233,247,223,22,216,76,3,248,179,199,247,175,192,214,251,117,112,78,243,140,183,159,154,34,120,18,58,97,215,56,165,83,127,18,219,220,188,78,159,97,143,184,223,29,202,70,20,31,18,172,80,84,105,42,181,158,89},{11,163,178,28,155,53,8,128,234,184,166,6,111,44,246,243,181,75,249,229,173,2,220,178,191,241,44,203,161}
 }
-local fSiLkpSM = "tskAvTVszhsqAqbt"
+local ZwBqsrgB = "lUvDZlekCfXAhSKz"
 
-local function cGMwioOq(ATzYCZtj_data, ATzYCZtj_key)
-    if type(ATzYCZtj_key) ~= "string" or #ATzYCZtj_key == 0 then return "" end
-    local ATzYCZtj = {}
-    for vUrBAUxN = 0, 255 do ATzYCZtj[vUrBAUxN] = vUrBAUxN end
-    local uVFUZClh = 0
-    for vUrBAUxN = 0, 255 do
-        local ZWIiTjrQ = ATzYCZtj_key:byte((vUrBAUxN % #ATzYCZtj_key) + 1)
-        uVFUZClh = (uVFUZClh + ATzYCZtj[vUrBAUxN] + ZWIiTjrQ) % 256
-        ATzYCZtj[vUrBAUxN], ATzYCZtj[uVFUZClh] = ATzYCZtj[uVFUZClh], ATzYCZtj[vUrBAUxN]
+local function zbNFfnlK(ZYQcPiAS_data, ZYQcPiAS_key)
+    if type(ZYQcPiAS_key) ~= "string" or #ZYQcPiAS_key == 0 then return "" end
+    local ZYQcPiAS = {}
+    for CKWrYYaC = 0, 255 do ZYQcPiAS[CKWrYYaC] = CKWrYYaC end
+    local rWraFgIt = 0
+    for CKWrYYaC = 0, 255 do
+        local QixEHFJP = ZYQcPiAS_key:byte((CKWrYYaC % #ZYQcPiAS_key) + 1)
+        rWraFgIt = (rWraFgIt + ZYQcPiAS[CKWrYYaC] + QixEHFJP) % 256
+        ZYQcPiAS[CKWrYYaC], ZYQcPiAS[rWraFgIt] = ZYQcPiAS[rWraFgIt], ZYQcPiAS[CKWrYYaC]
     end
-    local vUrBAUxN = 0
-    local uVFUZClh = 0
-    local YNgmbFgV = {}
-    for _, VgiIedak in ipairs(ATzYCZtj_data) do
-        vUrBAUxN = (vUrBAUxN + 1) % 256
-        uVFUZClh = (uVFUZClh + ATzYCZtj[vUrBAUxN]) % 256
-        ATzYCZtj[vUrBAUxN], ATzYCZtj[uVFUZClh] = ATzYCZtj[uVFUZClh], ATzYCZtj[vUrBAUxN]
-        local ZWIiTjrQ = ATzYCZtj[(ATzYCZtj[vUrBAUxN] + ATzYCZtj[uVFUZClh]) % 256]
-        local unmasked = bit32.bxor(VgiIedak, QUrORhXU)
-        table.insert(YNgmbFgV, string.char(bit32.bxor(unmasked, ZWIiTjrQ)))
+    local CKWrYYaC = 0
+    local rWraFgIt = 0
+    local oyYMfJvb = {}
+    for _, ymznimKU in ipairs(ZYQcPiAS_data) do
+        CKWrYYaC = (CKWrYYaC + 1) % 256
+        rWraFgIt = (rWraFgIt + ZYQcPiAS[CKWrYYaC]) % 256
+        ZYQcPiAS[CKWrYYaC], ZYQcPiAS[rWraFgIt] = ZYQcPiAS[rWraFgIt], ZYQcPiAS[CKWrYYaC]
+        local QixEHFJP = ZYQcPiAS[(ZYQcPiAS[CKWrYYaC] + ZYQcPiAS[rWraFgIt]) % 256]
+        local unmasked = bit32.bxor(ymznimKU, GgEsfIxV)
+        table.insert(oyYMfJvb, string.char(bit32.bxor(unmasked, QixEHFJP)))
     end
-    return table.concat(YNgmbFgV)
+    return table.concat(oyYMfJvb)
 end
 
-local ATzYCZtj_flat = {}
-for _, chunk in ipairs(aTrDVhiE) do
+local ZYQcPiAS_flat = {}
+for _, chunk in ipairs(OolapJKB) do
     for _, byte in ipairs(chunk) do
-        table.insert(ATzYCZtj_flat, byte)
+        table.insert(ZYQcPiAS_flat, byte)
     end
 end
 
-local decrypted = cGMwioOq(ATzYCZtj_flat, fSiLkpSM)
-local NkGJhqmQ, HawRMiNF = loadstring(decrypted)
+local decrypted = zbNFfnlK(ZYQcPiAS_flat, ZwBqsrgB)
+local HOKELlWU, cntTDAQp = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(ATzYCZtj_flat)
-ATzYCZtj_flat = nil
+table.clear(ZYQcPiAS_flat)
+ZYQcPiAS_flat = nil
 
-if NkGJhqmQ then 
-    local result = NkGJhqmQ() 
+if HOKELlWU then 
+    local result = HOKELlWU() 
     decrypted = nil
-    NkGJhqmQ = nil
+    HOKELlWU = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "network_optimizer" .. "): " .. tostring(HawRMiNF)) 
+    warn("[ecco] Boot Error (" .. "network_optimizer" .. "): " .. tostring(cntTDAQp)) 
 end
