@@ -1,54 +1,54 @@
 -- Protected Segment (math_vector_utils)
-local BeUCyToh = 240
-local rvpAVOnn = {
-{116,27,162,165,188,55,37,194,69,216,35,68,27,134,158,98,58,119,30,99,108,135,209,23,3,6,45,168,232,61,99,184,247,42,196,81,152,117,99,159,130,7,44,217,50,130,63,95,184,247,194,1,218,148,24,195,176,169,151,178},{228,228,53,179,235,84,75,104,234,99,62,183,67,215,24,3,62,134,112,217,165,189,12,230,107,47,94,69,50,197,118,44,87,215,0,171,109,120,193,235,203,37,71,181,4,72,17,139,73,61,34,70,71,81,162,211,161,133,157,65},{55,29,165,25,179,144,250,16,175,188,205,48,51,216,94,192,69,162,90,39,151,121,134,185,230,176,177,151,60}
+local LiLFfOkV = 185
+local JQoPmkFn = {
+{167,64,85,223,175,33,85,131,141,23,246,145,22,114,185,96,75,216,56,17,56,88,186,133,118,76,55,74,58,78,67,206,101,157,102,80,86,234,214,114,248,52,133,113,84,29,186,108,221,76,244,216,242,143,23,208,128,16,144,1},{2,30,200,48,159,30,207,56,14,25,53,209,238,53,255,186,40,57,243,72,141,255,220,47,225,105,96,160,84,152,232,29,99,100,58,13,141,30,33,159,239,206,145,61,168,211,246,152,218,20,225,32,191,88,34,6,89,96,23,30},{188,221,204,194,188,13,55,204,68,42,158,6,37,220,203,90,70,211,99,199,248,211,9,182,184,162,138,97,205}
 }
-local HaVQVypa = "WcMUCsKylCVAVilj"
+local cMfTykhk = "fupIaljVOuyTFKHz"
 
-local function MOhvowvu(KOAmtoSg_data, KOAmtoSg_key)
-    if type(KOAmtoSg_key) ~= "string" or #KOAmtoSg_key == 0 then return "" end
-    local KOAmtoSg = {}
-    for hCqiVbKx = 0, 255 do KOAmtoSg[hCqiVbKx] = hCqiVbKx end
-    local NFEAqodM = 0
-    for hCqiVbKx = 0, 255 do
-        local sUOoIwFP = KOAmtoSg_key:byte((hCqiVbKx % #KOAmtoSg_key) + 1)
-        NFEAqodM = (NFEAqodM + KOAmtoSg[hCqiVbKx] + sUOoIwFP) % 256
-        KOAmtoSg[hCqiVbKx], KOAmtoSg[NFEAqodM] = KOAmtoSg[NFEAqodM], KOAmtoSg[hCqiVbKx]
+local function KKpuMKWq(wYgmavKI_data, wYgmavKI_key)
+    if type(wYgmavKI_key) ~= "string" or #wYgmavKI_key == 0 then return "" end
+    local wYgmavKI = {}
+    for OxgHpCzu = 0, 255 do wYgmavKI[OxgHpCzu] = OxgHpCzu end
+    local WPTVslXW = 0
+    for OxgHpCzu = 0, 255 do
+        local GKjzGMCi = wYgmavKI_key:byte((OxgHpCzu % #wYgmavKI_key) + 1)
+        WPTVslXW = (WPTVslXW + wYgmavKI[OxgHpCzu] + GKjzGMCi) % 256
+        wYgmavKI[OxgHpCzu], wYgmavKI[WPTVslXW] = wYgmavKI[WPTVslXW], wYgmavKI[OxgHpCzu]
     end
-    local hCqiVbKx = 0
-    local NFEAqodM = 0
-    local ICLTBrZp = {}
-    for _, zuUNEUnQ in ipairs(KOAmtoSg_data) do
-        hCqiVbKx = (hCqiVbKx + 1) % 256
-        NFEAqodM = (NFEAqodM + KOAmtoSg[hCqiVbKx]) % 256
-        KOAmtoSg[hCqiVbKx], KOAmtoSg[NFEAqodM] = KOAmtoSg[NFEAqodM], KOAmtoSg[hCqiVbKx]
-        local sUOoIwFP = KOAmtoSg[(KOAmtoSg[hCqiVbKx] + KOAmtoSg[NFEAqodM]) % 256]
-        local unmasked = bit32.bxor(zuUNEUnQ, BeUCyToh)
-        table.insert(ICLTBrZp, string.char(bit32.bxor(unmasked, sUOoIwFP)))
+    local OxgHpCzu = 0
+    local WPTVslXW = 0
+    local zyQMZkNw = {}
+    for _, DpoZzYad in ipairs(wYgmavKI_data) do
+        OxgHpCzu = (OxgHpCzu + 1) % 256
+        WPTVslXW = (WPTVslXW + wYgmavKI[OxgHpCzu]) % 256
+        wYgmavKI[OxgHpCzu], wYgmavKI[WPTVslXW] = wYgmavKI[WPTVslXW], wYgmavKI[OxgHpCzu]
+        local GKjzGMCi = wYgmavKI[(wYgmavKI[OxgHpCzu] + wYgmavKI[WPTVslXW]) % 256]
+        local unmasked = bit32.bxor(DpoZzYad, LiLFfOkV)
+        table.insert(zyQMZkNw, string.char(bit32.bxor(unmasked, GKjzGMCi)))
     end
-    return table.concat(ICLTBrZp)
+    return table.concat(zyQMZkNw)
 end
 
-local KOAmtoSg_flat = {}
-for _, chunk in ipairs(rvpAVOnn) do
+local wYgmavKI_flat = {}
+for _, chunk in ipairs(JQoPmkFn) do
     for _, byte in ipairs(chunk) do
-        table.insert(KOAmtoSg_flat, byte)
+        table.insert(wYgmavKI_flat, byte)
     end
 end
 
-local decrypted = MOhvowvu(KOAmtoSg_flat, HaVQVypa)
-local amZImSTA, IaVjAFDb = loadstring(decrypted)
+local decrypted = KKpuMKWq(wYgmavKI_flat, cMfTykhk)
+local NkgADeao, eqiAfVZc = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(KOAmtoSg_flat)
-KOAmtoSg_flat = nil
+table.clear(wYgmavKI_flat)
+wYgmavKI_flat = nil
 
-if amZImSTA then 
-    local result = amZImSTA() 
+if NkgADeao then 
+    local result = NkgADeao() 
     decrypted = nil
-    amZImSTA = nil
+    NkgADeao = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(IaVjAFDb)) 
+    warn("[ecco] Boot Error (" .. "math_vector_utils" .. "): " .. tostring(eqiAfVZc)) 
 end
