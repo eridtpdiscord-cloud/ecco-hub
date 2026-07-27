@@ -1,54 +1,54 @@
 -- Protected Segment (cache_invalidation)
-local xcJGqVIH = 9
-local aFzImoWe = {
-{134,88,239,230,47,204,240,216,16,139,74,97,56,48,58,13,160,228,162,225,181,180,46,65,63,235,48,246,107,93,236,214,192,213,198,249,139,7,1,123,199,3,252,221,211,174,115,132,183,205,77,179,201,219,134,80,251,73,92,167},{251,141,54,98,227,83,166,244,59,42,100,228,221,89,46,43,44,41,98,202,58,228,178,41,211,21,54,50,46,193,112,222,255,92,253,129,59,131,101,90,18,33,56,130,223,22,195,136,134,193,227,81,218,245,178,29,173,106,235,192},{42,73,204,222,203,230,183,55,174,141,3,211,37,163,2,91,152,169,198,249,103,143,211,26,143,7,5,58,223,57}
+local BmDApgsj = 166
+local NUXEEDnC = {
+{143,31,102,112,183,213,126,154,110,107,31,76,57,170,60,104,14,203,148,44,70,131,38,234,234,205,52,17,24,203,29,146,245,94,183,77,87,190,125,244,184,123,17,234,238,64,80,115,77,27,96,212,151,70,29,181,183,26,151,79},{77,252,129,221,226,166,249,76,80,17,99,223,213,142,52,22,217,136,121,169,132,75,155,170,181,171,245,66,240,169,70,30,84,103,186,162,185,193,225,162,186,120,24,58,141,239,79,186,188,2,219,168,78,54,122,159,26,159,104,24},{176,198,149,172,84,127,170,8,217,159,164,168,27,48,173,177,240,199,152,216,155,105,240,69,132,167,26,246,243,57}
 }
-local IATXzEPH = "hgAJmDuIqfZDXdRC"
+local GPPDygZn = "frXhiulIFApHSfev"
 
-local function GrKEMffi(BngfCGSP_data, BngfCGSP_key)
-    if type(BngfCGSP_key) ~= "string" or #BngfCGSP_key == 0 then return "" end
-    local BngfCGSP = {}
-    for yMMHTgvH = 0, 255 do BngfCGSP[yMMHTgvH] = yMMHTgvH end
-    local rqDwyJom = 0
-    for yMMHTgvH = 0, 255 do
-        local HmAUbLor = BngfCGSP_key:byte((yMMHTgvH % #BngfCGSP_key) + 1)
-        rqDwyJom = (rqDwyJom + BngfCGSP[yMMHTgvH] + HmAUbLor) % 256
-        BngfCGSP[yMMHTgvH], BngfCGSP[rqDwyJom] = BngfCGSP[rqDwyJom], BngfCGSP[yMMHTgvH]
+local function OVVqQLul(xglIGejC_data, xglIGejC_key)
+    if type(xglIGejC_key) ~= "string" or #xglIGejC_key == 0 then return "" end
+    local xglIGejC = {}
+    for eDlRBElk = 0, 255 do xglIGejC[eDlRBElk] = eDlRBElk end
+    local tgQKCVwO = 0
+    for eDlRBElk = 0, 255 do
+        local mBFEtiZZ = xglIGejC_key:byte((eDlRBElk % #xglIGejC_key) + 1)
+        tgQKCVwO = (tgQKCVwO + xglIGejC[eDlRBElk] + mBFEtiZZ) % 256
+        xglIGejC[eDlRBElk], xglIGejC[tgQKCVwO] = xglIGejC[tgQKCVwO], xglIGejC[eDlRBElk]
     end
-    local yMMHTgvH = 0
-    local rqDwyJom = 0
-    local aUtTckzW = {}
-    for _, skpulElJ in ipairs(BngfCGSP_data) do
-        yMMHTgvH = (yMMHTgvH + 1) % 256
-        rqDwyJom = (rqDwyJom + BngfCGSP[yMMHTgvH]) % 256
-        BngfCGSP[yMMHTgvH], BngfCGSP[rqDwyJom] = BngfCGSP[rqDwyJom], BngfCGSP[yMMHTgvH]
-        local HmAUbLor = BngfCGSP[(BngfCGSP[yMMHTgvH] + BngfCGSP[rqDwyJom]) % 256]
-        local unmasked = bit32.bxor(skpulElJ, xcJGqVIH)
-        table.insert(aUtTckzW, string.char(bit32.bxor(unmasked, HmAUbLor)))
+    local eDlRBElk = 0
+    local tgQKCVwO = 0
+    local ZJSQVmGm = {}
+    for _, khmmpKPg in ipairs(xglIGejC_data) do
+        eDlRBElk = (eDlRBElk + 1) % 256
+        tgQKCVwO = (tgQKCVwO + xglIGejC[eDlRBElk]) % 256
+        xglIGejC[eDlRBElk], xglIGejC[tgQKCVwO] = xglIGejC[tgQKCVwO], xglIGejC[eDlRBElk]
+        local mBFEtiZZ = xglIGejC[(xglIGejC[eDlRBElk] + xglIGejC[tgQKCVwO]) % 256]
+        local unmasked = bit32.bxor(khmmpKPg, BmDApgsj)
+        table.insert(ZJSQVmGm, string.char(bit32.bxor(unmasked, mBFEtiZZ)))
     end
-    return table.concat(aUtTckzW)
+    return table.concat(ZJSQVmGm)
 end
 
-local BngfCGSP_flat = {}
-for _, chunk in ipairs(aFzImoWe) do
+local xglIGejC_flat = {}
+for _, chunk in ipairs(NUXEEDnC) do
     for _, byte in ipairs(chunk) do
-        table.insert(BngfCGSP_flat, byte)
+        table.insert(xglIGejC_flat, byte)
     end
 end
 
-local decrypted = GrKEMffi(BngfCGSP_flat, IATXzEPH)
-local rMSsRjqL, RbDXmuKz = loadstring(decrypted)
+local decrypted = OVVqQLul(xglIGejC_flat, GPPDygZn)
+local aTPrhquN, bONMFOps = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(BngfCGSP_flat)
-BngfCGSP_flat = nil
+table.clear(xglIGejC_flat)
+xglIGejC_flat = nil
 
-if rMSsRjqL then 
-    local result = rMSsRjqL() 
+if aTPrhquN then 
+    local result = aTPrhquN() 
     decrypted = nil
-    rMSsRjqL = nil
+    aTPrhquN = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(RbDXmuKz)) 
+    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(bONMFOps)) 
 end
