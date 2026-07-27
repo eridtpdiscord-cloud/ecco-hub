@@ -1,54 +1,54 @@
 -- Protected Segment (cache_invalidation)
-local yGcaFoBR = 202
-local QxITpHQM = {
-{50,55,89,190,58,197,117,33,140,184,96,58,46,169,124,106,225,248,207,223,237,117,123,4,29,226,214,233,99,31,169,53,0,103,171,162,81,246,54,7,44,208,25,207,59,59,240,109,230,53,186,120,231,100,142,201,204,1,165,155},{171,0,146,176,137,135,246,181,207,3,94,125,103,113,9,182,229,245,124,88,48,173,223,255,32,228,182,13,104,85,193,77,15,97,170,71,217,115,86,73,206,191,150,70,241,135,228,181,56,160,68,85,88,53,190,73,31,40,195,171},{169,40,23,225,176,135,229,182,11,224,129,89,233,198,141,223,130,69,106,110,55,215,225,29,145,15,238,166,165,13}
+local IMSkNGWW = 216
+local zJvRvHPO = {
+{181,20,149,59,199,239,210,154,142,3,215,203,224,74,24,107,137,195,209,77,91,122,218,245,121,138,66,55,201,34,56,252,44,180,13,171,175,203,84,171,163,204,85,13,254,82,184,167,255,108,218,243,210,90,68,247,43,211,1,102},{116,170,222,142,98,65,215,201,130,147,174,198,33,33,215,55,166,69,246,63,113,168,132,189,32,111,110,153,31,15,79,156,30,176,242,196,77,163,77,114,146,97,186,114,147,176,0,144,91,179,163,203,204,221,37,181,20,81,7,138},{140,28,90,212,234,136,231,56,63,179,28,63,175,62,35,27,134,139,254,97,10,122,36,223,94,20,36,255,60,170}
 }
-local aRIfLKeL = "uubSyiFCDztTcSjz"
+local DtBHotzh = "KtOTqvwCOnFGjCqa"
 
-local function SiBZGmdz(DWSRWljM_data, DWSRWljM_key)
-    if type(DWSRWljM_key) ~= "string" or #DWSRWljM_key == 0 then return "" end
-    local DWSRWljM = {}
-    for mOZYXWfH = 0, 255 do DWSRWljM[mOZYXWfH] = mOZYXWfH end
-    local GECrxMPj = 0
-    for mOZYXWfH = 0, 255 do
-        local OVhTSRTr = DWSRWljM_key:byte((mOZYXWfH % #DWSRWljM_key) + 1)
-        GECrxMPj = (GECrxMPj + DWSRWljM[mOZYXWfH] + OVhTSRTr) % 256
-        DWSRWljM[mOZYXWfH], DWSRWljM[GECrxMPj] = DWSRWljM[GECrxMPj], DWSRWljM[mOZYXWfH]
+local function QpvwnHKX(MpyPFrEh_data, MpyPFrEh_key)
+    if type(MpyPFrEh_key) ~= "string" or #MpyPFrEh_key == 0 then return "" end
+    local MpyPFrEh = {}
+    for NpeIuIpt = 0, 255 do MpyPFrEh[NpeIuIpt] = NpeIuIpt end
+    local dMUexSDb = 0
+    for NpeIuIpt = 0, 255 do
+        local rlHLFlMH = MpyPFrEh_key:byte((NpeIuIpt % #MpyPFrEh_key) + 1)
+        dMUexSDb = (dMUexSDb + MpyPFrEh[NpeIuIpt] + rlHLFlMH) % 256
+        MpyPFrEh[NpeIuIpt], MpyPFrEh[dMUexSDb] = MpyPFrEh[dMUexSDb], MpyPFrEh[NpeIuIpt]
     end
-    local mOZYXWfH = 0
-    local GECrxMPj = 0
-    local mRKtbPSr = {}
-    for _, XZtBAuow in ipairs(DWSRWljM_data) do
-        mOZYXWfH = (mOZYXWfH + 1) % 256
-        GECrxMPj = (GECrxMPj + DWSRWljM[mOZYXWfH]) % 256
-        DWSRWljM[mOZYXWfH], DWSRWljM[GECrxMPj] = DWSRWljM[GECrxMPj], DWSRWljM[mOZYXWfH]
-        local OVhTSRTr = DWSRWljM[(DWSRWljM[mOZYXWfH] + DWSRWljM[GECrxMPj]) % 256]
-        local unmasked = bit32.bxor(XZtBAuow, yGcaFoBR)
-        table.insert(mRKtbPSr, string.char(bit32.bxor(unmasked, OVhTSRTr)))
+    local NpeIuIpt = 0
+    local dMUexSDb = 0
+    local PPGxoPIT = {}
+    for _, hdqtIPGk in ipairs(MpyPFrEh_data) do
+        NpeIuIpt = (NpeIuIpt + 1) % 256
+        dMUexSDb = (dMUexSDb + MpyPFrEh[NpeIuIpt]) % 256
+        MpyPFrEh[NpeIuIpt], MpyPFrEh[dMUexSDb] = MpyPFrEh[dMUexSDb], MpyPFrEh[NpeIuIpt]
+        local rlHLFlMH = MpyPFrEh[(MpyPFrEh[NpeIuIpt] + MpyPFrEh[dMUexSDb]) % 256]
+        local unmasked = bit32.bxor(hdqtIPGk, IMSkNGWW)
+        table.insert(PPGxoPIT, string.char(bit32.bxor(unmasked, rlHLFlMH)))
     end
-    return table.concat(mRKtbPSr)
+    return table.concat(PPGxoPIT)
 end
 
-local DWSRWljM_flat = {}
-for _, chunk in ipairs(QxITpHQM) do
+local MpyPFrEh_flat = {}
+for _, chunk in ipairs(zJvRvHPO) do
     for _, byte in ipairs(chunk) do
-        table.insert(DWSRWljM_flat, byte)
+        table.insert(MpyPFrEh_flat, byte)
     end
 end
 
-local decrypted = SiBZGmdz(DWSRWljM_flat, aRIfLKeL)
-local whSSihjN, kpzRFuUC = loadstring(decrypted)
+local decrypted = QpvwnHKX(MpyPFrEh_flat, DtBHotzh)
+local wbMQXwcT, ykhVeqfc = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(DWSRWljM_flat)
-DWSRWljM_flat = nil
+table.clear(MpyPFrEh_flat)
+MpyPFrEh_flat = nil
 
-if whSSihjN then 
-    local result = whSSihjN() 
+if wbMQXwcT then 
+    local result = wbMQXwcT() 
     decrypted = nil
-    whSSihjN = nil
+    wbMQXwcT = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(kpzRFuUC)) 
+    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(ykhVeqfc)) 
 end
