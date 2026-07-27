@@ -1,54 +1,54 @@
 -- Protected Segment (cache_invalidation)
-local PolhTrku = 75
-local dnQXaKYj = {
-{57,221,206,125,159,85,13,31,178,16,99,114,206,153,200,13,206,0,171,251,36,52,189,61,59,140,213,255,134,32,103,94,51,71,62,105,219,44,12,13,93,227,252,202,79,125,222,32,98,149,8,121,242,115,63,173,124,0,81,51},{60,215,251,3,194,88,150,155,75,84,153,136,112,157,9,189,164,119,196,136,223,241,131,184,24,193,30,229,120,70,105,194,129,116,150,163,56,42,102,4,242,144,103,250,52,80,243,137,17,118,87,57,198,253,234,65,69,58,127,123},{208,143,80,176,230,219,22,217,190,16,47,145,150,147,240,210,168,6,166,157,195,98,191,250,184,54,244,137,184,77}
+local xcJGqVIH = 9
+local aFzImoWe = {
+{134,88,239,230,47,204,240,216,16,139,74,97,56,48,58,13,160,228,162,225,181,180,46,65,63,235,48,246,107,93,236,214,192,213,198,249,139,7,1,123,199,3,252,221,211,174,115,132,183,205,77,179,201,219,134,80,251,73,92,167},{251,141,54,98,227,83,166,244,59,42,100,228,221,89,46,43,44,41,98,202,58,228,178,41,211,21,54,50,46,193,112,222,255,92,253,129,59,131,101,90,18,33,56,130,223,22,195,136,134,193,227,81,218,245,178,29,173,106,235,192},{42,73,204,222,203,230,183,55,174,141,3,211,37,163,2,91,152,169,198,249,103,143,211,26,143,7,5,58,223,57}
 }
-local KOaxNAOG = "KUHIcPUJfYdvwYTz"
+local IATXzEPH = "hgAJmDuIqfZDXdRC"
 
-local function RJiJBrTt(DqAWXrsP_data, DqAWXrsP_key)
-    if type(DqAWXrsP_key) ~= "string" or #DqAWXrsP_key == 0 then return "" end
-    local DqAWXrsP = {}
-    for FxlckNiR = 0, 255 do DqAWXrsP[FxlckNiR] = FxlckNiR end
-    local ZIXBIoGf = 0
-    for FxlckNiR = 0, 255 do
-        local DurcLkkE = DqAWXrsP_key:byte((FxlckNiR % #DqAWXrsP_key) + 1)
-        ZIXBIoGf = (ZIXBIoGf + DqAWXrsP[FxlckNiR] + DurcLkkE) % 256
-        DqAWXrsP[FxlckNiR], DqAWXrsP[ZIXBIoGf] = DqAWXrsP[ZIXBIoGf], DqAWXrsP[FxlckNiR]
+local function GrKEMffi(BngfCGSP_data, BngfCGSP_key)
+    if type(BngfCGSP_key) ~= "string" or #BngfCGSP_key == 0 then return "" end
+    local BngfCGSP = {}
+    for yMMHTgvH = 0, 255 do BngfCGSP[yMMHTgvH] = yMMHTgvH end
+    local rqDwyJom = 0
+    for yMMHTgvH = 0, 255 do
+        local HmAUbLor = BngfCGSP_key:byte((yMMHTgvH % #BngfCGSP_key) + 1)
+        rqDwyJom = (rqDwyJom + BngfCGSP[yMMHTgvH] + HmAUbLor) % 256
+        BngfCGSP[yMMHTgvH], BngfCGSP[rqDwyJom] = BngfCGSP[rqDwyJom], BngfCGSP[yMMHTgvH]
     end
-    local FxlckNiR = 0
-    local ZIXBIoGf = 0
-    local OFpGTSNO = {}
-    for _, SGMxIsMi in ipairs(DqAWXrsP_data) do
-        FxlckNiR = (FxlckNiR + 1) % 256
-        ZIXBIoGf = (ZIXBIoGf + DqAWXrsP[FxlckNiR]) % 256
-        DqAWXrsP[FxlckNiR], DqAWXrsP[ZIXBIoGf] = DqAWXrsP[ZIXBIoGf], DqAWXrsP[FxlckNiR]
-        local DurcLkkE = DqAWXrsP[(DqAWXrsP[FxlckNiR] + DqAWXrsP[ZIXBIoGf]) % 256]
-        local unmasked = bit32.bxor(SGMxIsMi, PolhTrku)
-        table.insert(OFpGTSNO, string.char(bit32.bxor(unmasked, DurcLkkE)))
+    local yMMHTgvH = 0
+    local rqDwyJom = 0
+    local aUtTckzW = {}
+    for _, skpulElJ in ipairs(BngfCGSP_data) do
+        yMMHTgvH = (yMMHTgvH + 1) % 256
+        rqDwyJom = (rqDwyJom + BngfCGSP[yMMHTgvH]) % 256
+        BngfCGSP[yMMHTgvH], BngfCGSP[rqDwyJom] = BngfCGSP[rqDwyJom], BngfCGSP[yMMHTgvH]
+        local HmAUbLor = BngfCGSP[(BngfCGSP[yMMHTgvH] + BngfCGSP[rqDwyJom]) % 256]
+        local unmasked = bit32.bxor(skpulElJ, xcJGqVIH)
+        table.insert(aUtTckzW, string.char(bit32.bxor(unmasked, HmAUbLor)))
     end
-    return table.concat(OFpGTSNO)
+    return table.concat(aUtTckzW)
 end
 
-local DqAWXrsP_flat = {}
-for _, chunk in ipairs(dnQXaKYj) do
+local BngfCGSP_flat = {}
+for _, chunk in ipairs(aFzImoWe) do
     for _, byte in ipairs(chunk) do
-        table.insert(DqAWXrsP_flat, byte)
+        table.insert(BngfCGSP_flat, byte)
     end
 end
 
-local decrypted = RJiJBrTt(DqAWXrsP_flat, KOaxNAOG)
-local GZSsstfF, UchEtGpX = loadstring(decrypted)
+local decrypted = GrKEMffi(BngfCGSP_flat, IATXzEPH)
+local rMSsRjqL, RbDXmuKz = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(DqAWXrsP_flat)
-DqAWXrsP_flat = nil
+table.clear(BngfCGSP_flat)
+BngfCGSP_flat = nil
 
-if GZSsstfF then 
-    local result = GZSsstfF() 
+if rMSsRjqL then 
+    local result = rMSsRjqL() 
     decrypted = nil
-    GZSsstfF = nil
+    rMSsRjqL = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(UchEtGpX)) 
+    warn("[ecco] Boot Error (" .. "cache_invalidation" .. "): " .. tostring(RbDXmuKz)) 
 end
