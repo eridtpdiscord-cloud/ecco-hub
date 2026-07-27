@@ -1,54 +1,54 @@
 -- Protected Segment (teleport_handler)
-local bRcCUfti = 99
-local wrpQGiKM = {
-{207,86,77,8,113,244,65,141,157,74,156,110,4,51,242,98,188,189,45,187,78,255,187,114,207,7,127,164,66,2,21,94,67,189,15,34,99,103,236,225,179,65,131,233,21,213,185,171,202,26,88,247,76,193,22,12,33,16,34,64},{56,45,168,69,83,55,254,23,163,154,5,98,180,109,127,74,151,231,18,225,118,22,255,223,158,159,134,216,203,161,116,198,10,240,59,177,5,195,243,20,89,228,41,64,173,25,6,43,193,247,184,129,99,143,9,253,234,66,56,20},{122,50,215,249,172,34,2,218,3,22,121,226,129,181,210,129,237,252,202,222,122,97,181,92,202,48,164,27}
+local kKxRaoFS = 60
+local aNdMAyVD = {
+{61,107,64,190,76,168,212,216,91,87,26,149,233,196,67,141,121,23,55,132,147,53,20,154,31,152,155,11,88,176,239,252,11,209,121,170,13,200,155,143,79,133,201,182,159,148,146,102,108,82,130,190,226,176,17,201,11,165,167,43},{252,64,58,248,145,117,110,59,67,170,119,7,147,28,120,187,81,47,164,6,19,12,83,35,138,46,158,119,131,110,238,227,128,188,123,45,171,168,144,198,58,253,28,99,72,5,244,246,76,0,84,226,21,197,58,109,196,110,213,172},{74,161,49,67,119,60,246,189,8,31,64,131,237,14,177,179,36,55,95,97,71,119,171,56,255,161,252,70}
 }
-local otNAWUiL = "wXRJUzAvquCYgliZ"
+local WfsRAAoW = "TRgMKWqwkyAKCFFL"
 
-local function RpAQWMWX(ZSgeZoyE_data, ZSgeZoyE_key)
-    if type(ZSgeZoyE_key) ~= "string" or #ZSgeZoyE_key == 0 then return "" end
-    local ZSgeZoyE = {}
-    for XkvvzGzT = 0, 255 do ZSgeZoyE[XkvvzGzT] = XkvvzGzT end
-    local rOauNgYC = 0
-    for XkvvzGzT = 0, 255 do
-        local HHCPCFsW = ZSgeZoyE_key:byte((XkvvzGzT % #ZSgeZoyE_key) + 1)
-        rOauNgYC = (rOauNgYC + ZSgeZoyE[XkvvzGzT] + HHCPCFsW) % 256
-        ZSgeZoyE[XkvvzGzT], ZSgeZoyE[rOauNgYC] = ZSgeZoyE[rOauNgYC], ZSgeZoyE[XkvvzGzT]
+local function TfTRWmrM(FinFesJj_data, FinFesJj_key)
+    if type(FinFesJj_key) ~= "string" or #FinFesJj_key == 0 then return "" end
+    local FinFesJj = {}
+    for xcWajBFN = 0, 255 do FinFesJj[xcWajBFN] = xcWajBFN end
+    local YtSeZRRk = 0
+    for xcWajBFN = 0, 255 do
+        local DXRUGuus = FinFesJj_key:byte((xcWajBFN % #FinFesJj_key) + 1)
+        YtSeZRRk = (YtSeZRRk + FinFesJj[xcWajBFN] + DXRUGuus) % 256
+        FinFesJj[xcWajBFN], FinFesJj[YtSeZRRk] = FinFesJj[YtSeZRRk], FinFesJj[xcWajBFN]
     end
-    local XkvvzGzT = 0
-    local rOauNgYC = 0
-    local SXwqNiOx = {}
-    for _, JKjhMwpr in ipairs(ZSgeZoyE_data) do
-        XkvvzGzT = (XkvvzGzT + 1) % 256
-        rOauNgYC = (rOauNgYC + ZSgeZoyE[XkvvzGzT]) % 256
-        ZSgeZoyE[XkvvzGzT], ZSgeZoyE[rOauNgYC] = ZSgeZoyE[rOauNgYC], ZSgeZoyE[XkvvzGzT]
-        local HHCPCFsW = ZSgeZoyE[(ZSgeZoyE[XkvvzGzT] + ZSgeZoyE[rOauNgYC]) % 256]
-        local unmasked = bit32.bxor(JKjhMwpr, bRcCUfti)
-        table.insert(SXwqNiOx, string.char(bit32.bxor(unmasked, HHCPCFsW)))
+    local xcWajBFN = 0
+    local YtSeZRRk = 0
+    local LZNzzMRZ = {}
+    for _, CKeMJBWq in ipairs(FinFesJj_data) do
+        xcWajBFN = (xcWajBFN + 1) % 256
+        YtSeZRRk = (YtSeZRRk + FinFesJj[xcWajBFN]) % 256
+        FinFesJj[xcWajBFN], FinFesJj[YtSeZRRk] = FinFesJj[YtSeZRRk], FinFesJj[xcWajBFN]
+        local DXRUGuus = FinFesJj[(FinFesJj[xcWajBFN] + FinFesJj[YtSeZRRk]) % 256]
+        local unmasked = bit32.bxor(CKeMJBWq, kKxRaoFS)
+        table.insert(LZNzzMRZ, string.char(bit32.bxor(unmasked, DXRUGuus)))
     end
-    return table.concat(SXwqNiOx)
+    return table.concat(LZNzzMRZ)
 end
 
-local ZSgeZoyE_flat = {}
-for _, chunk in ipairs(wrpQGiKM) do
+local FinFesJj_flat = {}
+for _, chunk in ipairs(aNdMAyVD) do
     for _, byte in ipairs(chunk) do
-        table.insert(ZSgeZoyE_flat, byte)
+        table.insert(FinFesJj_flat, byte)
     end
 end
 
-local decrypted = RpAQWMWX(ZSgeZoyE_flat, otNAWUiL)
-local WyEQYpev, jEfaHvgM = loadstring(decrypted)
+local decrypted = TfTRWmrM(FinFesJj_flat, WfsRAAoW)
+local DQEZvinV, mvAsMaHm = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(ZSgeZoyE_flat)
-ZSgeZoyE_flat = nil
+table.clear(FinFesJj_flat)
+FinFesJj_flat = nil
 
-if WyEQYpev then 
-    local result = WyEQYpev() 
+if DQEZvinV then 
+    local result = DQEZvinV() 
     decrypted = nil
-    WyEQYpev = nil
+    DQEZvinV = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "teleport_handler" .. "): " .. tostring(jEfaHvgM)) 
+    warn("[ecco] Boot Error (" .. "teleport_handler" .. "): " .. tostring(mvAsMaHm)) 
 end
