@@ -1,54 +1,54 @@
 -- Protected Segment (teleport_handler)
-local nCjeCbuR = 219
-local EBmdEnJb = {
-{153,167,107,252,78,218,42,190,118,45,147,231,254,84,59,128,143,142,56,108,95,223,203,252,83,138,235,140,218,214,31,103,112,175,248,24,187,146,8,94,185,122,145,254,185,115,130,144,2,26,84,146,61,11,199,224,110,163,64,253},{110,1,153,232,100,153,170,41,83,120,74,76,156,10,116,187,63,219,176,211,185,27,214,148,116,82,10,53,214,66,116,96,26,153,137,55,221,52,58,210,237,187,59,28,68,24,91,127,126,247,206,58,197,149,124,46,231,242,108,183},{125,130,68,140,174,174,255,48,150,193,4,46,30,110,194,238,165,121,76,161,145,104,254,90,9,36,208,226}
+local cZbSHAgv = 237
+local MDCImrPB = {
+{49,86,129,79,94,1,127,172,201,166,98,114,66,43,88,39,52,141,58,56,94,66,124,118,100,75,148,80,125,97,221,130,216,55,173,207,88,153,250,239,24,220,36,169,157,158,97,212,190,230,87,88,248,161,172,231,122,153,173,64},{134,28,72,1,66,154,2,149,45,31,210,19,212,114,158,93,187,242,212,143,94,22,164,66,23,179,100,252,149,225,114,254,49,115,224,187,247,236,162,194,18,154,12,179,178,108,208,191,115,213,2,58,73,38,247,35,197,207,130,27},{80,171,152,250,29,94,223,180,65,94,151,26,115,171,121,193,39,204,174,210,53,230,87,129,122,103,240,120}
 }
-local tYcDpDwc = "PLnYkAPbuEVcjkBU"
+local TKFeAJJP = "EfoASVDJrTsviWIT"
 
-local function IoJQuiyw(qJmeSbYT_data, qJmeSbYT_key)
-    if type(qJmeSbYT_key) ~= "string" or #qJmeSbYT_key == 0 then return "" end
-    local qJmeSbYT = {}
-    for cfCXorHD = 0, 255 do qJmeSbYT[cfCXorHD] = cfCXorHD end
-    local gfMHJCVw = 0
-    for cfCXorHD = 0, 255 do
-        local LECrLiYK = qJmeSbYT_key:byte((cfCXorHD % #qJmeSbYT_key) + 1)
-        gfMHJCVw = (gfMHJCVw + qJmeSbYT[cfCXorHD] + LECrLiYK) % 256
-        qJmeSbYT[cfCXorHD], qJmeSbYT[gfMHJCVw] = qJmeSbYT[gfMHJCVw], qJmeSbYT[cfCXorHD]
+local function NsQFtdIl(nexthbns_data, nexthbns_key)
+    if type(nexthbns_key) ~= "string" or #nexthbns_key == 0 then return "" end
+    local nexthbns = {}
+    for MarpoFjh = 0, 255 do nexthbns[MarpoFjh] = MarpoFjh end
+    local htXtUTtm = 0
+    for MarpoFjh = 0, 255 do
+        local AtZWTbTH = nexthbns_key:byte((MarpoFjh % #nexthbns_key) + 1)
+        htXtUTtm = (htXtUTtm + nexthbns[MarpoFjh] + AtZWTbTH) % 256
+        nexthbns[MarpoFjh], nexthbns[htXtUTtm] = nexthbns[htXtUTtm], nexthbns[MarpoFjh]
     end
-    local cfCXorHD = 0
-    local gfMHJCVw = 0
-    local jzCJwvNd = {}
-    for _, dpjOuQrK in ipairs(qJmeSbYT_data) do
-        cfCXorHD = (cfCXorHD + 1) % 256
-        gfMHJCVw = (gfMHJCVw + qJmeSbYT[cfCXorHD]) % 256
-        qJmeSbYT[cfCXorHD], qJmeSbYT[gfMHJCVw] = qJmeSbYT[gfMHJCVw], qJmeSbYT[cfCXorHD]
-        local LECrLiYK = qJmeSbYT[(qJmeSbYT[cfCXorHD] + qJmeSbYT[gfMHJCVw]) % 256]
-        local unmasked = bit32.bxor(dpjOuQrK, nCjeCbuR)
-        table.insert(jzCJwvNd, string.char(bit32.bxor(unmasked, LECrLiYK)))
+    local MarpoFjh = 0
+    local htXtUTtm = 0
+    local tVUMBtyU = {}
+    for _, vbugBQex in ipairs(nexthbns_data) do
+        MarpoFjh = (MarpoFjh + 1) % 256
+        htXtUTtm = (htXtUTtm + nexthbns[MarpoFjh]) % 256
+        nexthbns[MarpoFjh], nexthbns[htXtUTtm] = nexthbns[htXtUTtm], nexthbns[MarpoFjh]
+        local AtZWTbTH = nexthbns[(nexthbns[MarpoFjh] + nexthbns[htXtUTtm]) % 256]
+        local unmasked = bit32.bxor(vbugBQex, cZbSHAgv)
+        table.insert(tVUMBtyU, string.char(bit32.bxor(unmasked, AtZWTbTH)))
     end
-    return table.concat(jzCJwvNd)
+    return table.concat(tVUMBtyU)
 end
 
-local qJmeSbYT_flat = {}
-for _, chunk in ipairs(EBmdEnJb) do
+local nexthbns_flat = {}
+for _, chunk in ipairs(MDCImrPB) do
     for _, byte in ipairs(chunk) do
-        table.insert(qJmeSbYT_flat, byte)
+        table.insert(nexthbns_flat, byte)
     end
 end
 
-local decrypted = IoJQuiyw(qJmeSbYT_flat, tYcDpDwc)
-local hLMdCFCi, gbOGfdnI = loadstring(decrypted)
+local decrypted = NsQFtdIl(nexthbns_flat, TKFeAJJP)
+local TclJMpII, sjogvTxY = loadstring(decrypted)
 
 -- Immediate Memory Sanitation: Overwrite decrypted variables
-table.clear(qJmeSbYT_flat)
-qJmeSbYT_flat = nil
+table.clear(nexthbns_flat)
+nexthbns_flat = nil
 
-if hLMdCFCi then 
-    local result = hLMdCFCi() 
+if TclJMpII then 
+    local result = TclJMpII() 
     decrypted = nil
-    hLMdCFCi = nil
+    TclJMpII = nil
     return result
 else 
     decrypted = nil
-    warn("[ecco] Boot Error (" .. "teleport_handler" .. "): " .. tostring(gbOGfdnI)) 
+    warn("[ecco] Boot Error (" .. "teleport_handler" .. "): " .. tostring(sjogvTxY)) 
 end
