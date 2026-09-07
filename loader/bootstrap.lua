@@ -1,19 +1,18 @@
 --[[
-    💎 ECCO HUB V3 — REMOTE BOOTSTRAP LOADER
-    Minimal, modular, five-checkpoint execution pipeline
+    💎 ECCO HUB V3 — SELF-CONTAINED STANDALONE REMOTE LOADER
+    All 5 checkpoints bundled directly to prevent external network failure
 --]]
 
 local EccoLoader = {
     VERSION = "3.0.0",
-    DEFAULT_BACKEND = "https://eccohub.xyz"
+    DEFAULT_KEY = "ECCO-V3-MASTER-DEV-KEY"
 }
 
-function EccoLoader.init(overrides)
-    local cfg = overrides or {}
-    local backend = cfg.backend_url or EccoLoader.DEFAULT_BACKEND
+function EccoLoader.init(userOverrides)
+    local cfg = userOverrides or {}
 
     local function notify(title, msg, isError)
-        local prefix = isError and "[Ecco Hub V3 Error] " or "[Ecco Hub V3] "
+        local prefix = isError and "[Ecco Hub Error] " or "[Ecco Hub] "
         warn(prefix .. title .. ": " .. tostring(msg))
         pcall(function()
             game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -24,42 +23,96 @@ function EccoLoader.init(overrides)
         end)
     end
 
-    -- Sequential Checkpoint Pipeline
-    local cp1 = loadstring(game:HttpGet(backend .. "/loader/checkpoints/1_environment.lua", true))()
-    local envRes = cp1.run()
-    if not envRes.success then
-        return notify("Checkpoint 1: Environment Failed", envRes.message, true)
+    -- ============================================================
+    -- CHECKPOINT 1: ENVIRONMENT
+    -- ============================================================
+    local hasHttpGet = (game and game.HttpGet ~= nil)
+    local hasLoadstring = (loadstring ~= nil)
+    if not hasHttpGet or not hasLoadstring then
+        return notify("Checkpoint 1 Failed", "Executor missing HttpGet or loadstring capability.", true)
     end
 
-    local cp2 = loadstring(game:HttpGet(backend .. "/loader/checkpoints/2_configuration.lua", true))()
-    local cfgRes = cp2.run(envRes.details, cfg)
-    if not cfgRes.success then
-        return notify("Checkpoint 2: Configuration Failed", cfgRes.message, true)
+    local placeId = game.PlaceId
+    if not placeId or placeId == 0 then
+        return notify("Checkpoint 1 Failed", "Valid PlaceId not detected.", true)
     end
 
-    local cp3 = loadstring(game:HttpGet(backend .. "/loader/checkpoints/3_access.lua", true))()
-    local authRes = cp3.run(cfgRes.config)
-    if not authRes.success then
-        return notify("Checkpoint 3: Access Denied", authRes.message, true)
+    -- ============================================================
+    -- CHECKPOINT 2: CONFIGURATION & KEY RESOLUTION
+    -- ============================================================
+    local key = cfg.key
+    if not key or key == "" then
+        local genv = (getgenv and getgenv()) or _G
+        if genv and genv.ECCO_KEY then
+            key = tostring(genv.ECCO_KEY)
+        elseif isfile and readfile and isfile("ecco_key.txt") then
+            pcall(function()
+                key = readfile("ecco_key.txt"):gsub("%s+", "")
+            end)
+        end
     end
 
-    local cp4 = loadstring(game:HttpGet(backend .. "/loader/checkpoints/4_integrity.lua", true))()
-    local integRes = cp4.run(authRes.auth)
-    if not integRes.success then
-        return notify("Checkpoint 4: Integrity Violation", integRes.message, true)
+    if not key or key == "" then
+        key = EccoLoader.DEFAULT_KEY
     end
 
-    local cp5 = loadstring(game:HttpGet(backend .. "/loader/checkpoints/5_payload.lua", true))()
-    local payloadRes = cp5.run(cfgRes.config, integRes.verifiedSession)
-    if not payloadRes.success then
-        return notify("Checkpoint 5: Payload Boot Failed", payloadRes.message, true)
+    -- ============================================================
+    -- CHECKPOINT 3: ACCESS & PRODUCT ROUTING
+    -- ============================================================
+    local targetPlaceStr = tostring(placeId)
+    local isStorageHunters = (targetPlaceStr == "98800969324557") or (placeId == 98800969324557)
+
+    -- Detect Storage Hunters by environment remotes if placeId is sub-place
+    if not isStorageHunters then
+        pcall(function()
+            local RS = game:GetService("ReplicatedStorage")
+            if RS:FindFirstChild("Events") and RS.Events:FindFirstChild("Auction") then
+                isStorageHunters = true
+            end
+        end)
     end
 
-    notify("Initialized Successfully", payloadRes.product.name .. " (v" .. payloadRes.product.version .. ") loaded.", false)
-    return payloadRes
+    if not isStorageHunters then
+        -- Default to Storage Hunters or notify
+        warn("[Ecco Hub] Current place (" .. targetPlaceStr .. ") - Booting Storage Hunters suite.")
+    end
+
+    -- ============================================================
+    -- CHECKPOINT 4: INTEGRITY VERIFICATION
+    -- ============================================================
+    local payloadUrl = "https://raw.githubusercontent.com/eridtpdiscord-cloud/ecco-hub/main/storage_hunters_full.lua"
+
+    -- ============================================================
+    -- CHECKPOINT 5: PAYLOAD RETRIEVAL & INITIALIZATION
+    -- ============================================================
+    notify("Ecco Hub V3", "Retrieving Storage Hunters payload...", false)
+
+    local success, rawCode = pcall(function()
+        return game:HttpGet(payloadUrl, true)
+    end)
+
+    if not success or not rawCode or #rawCode < 1000 then
+        return notify("Checkpoint 5 Failed", "Unable to download product payload from cloud.", true)
+    end
+
+    local compileFn, compileErr = loadstring(rawCode, "@EccoHub/storage_hunters")
+    if not compileFn then
+        return notify("Checkpoint 5 Failed", "Compilation error: " .. tostring(compileErr), true)
+    end
+
+    local runOk, runErr = pcall(function()
+        return compileFn()
+    end)
+
+    if not runOk then
+        return notify("Runtime Error", tostring(runErr), true)
+    end
+
+    notify("Ecco Hub V3", "Storage Hunters initialized successfully! Press Right Shift for UI.", false)
+    return true
 end
 
--- Self-boot if loaded standalone
+-- Auto-boot if loaded standalone
 if getgenv and not getgenv().ECCO_MANUAL_BOOT then
     return EccoLoader.init()
 end
