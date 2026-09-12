@@ -302,11 +302,11 @@ local Library = {
     --// Scheme \\--
     IsLightTheme = false,
     Scheme = {
-        BackgroundColor = Color3.fromRGB(15, 15, 15),
-        MainColor = Color3.fromRGB(25, 25, 25),
+        BackgroundColor = Color3.fromRGB(0, 0, 0),
+        MainColor = Color3.fromRGB(10, 10, 10),
         AccentColor = Color3.fromRGB(125, 85, 255),
-        OutlineColor = Color3.fromRGB(40, 40, 40),
-        FontColor = Color3.new(1, 1, 1),
+        OutlineColor = Color3.fromRGB(24, 24, 24),
+        FontColor = Color3.fromRGB(245, 245, 245),
         Font = Font.fromEnum(Enum.Font.Code),
 
         RedColor = Color3.fromRGB(255, 50, 50),
@@ -423,9 +423,10 @@ local Templates = {
         FuzzySearch = true,
         SearchValues = true,
         SearchKeybind = Enum.KeyCode.F,
-        DisableSearchKeybind = false,
+        DisableSearchKeybind = true,
+        DisableSearch = true,
 
-        Minimizable = true,
+        Minimizable = false,
         MinimizeKeybind = nil,
         MinimizedWidth = 300,
         MinimizedSubtitle = "",
@@ -433,7 +434,7 @@ local Templates = {
 
         CornerRadius = 4,
         NotifySide = "Right",
-        DisableNotificationBell = false,
+        DisableNotificationBell = true,
         ShowCustomCursor = true,
 
         --// Glow \\--
@@ -13992,7 +13993,7 @@ function Library:CreateWindow(WindowInfo)
     local Tabs
     local Container
     local BackgroundImage
-    local HasBackgroundImage = false
+    local HasBackgroundImage = true
     local BottomBackground
     local FooterSegments = {}
     local BuildFooter
@@ -14096,27 +14097,7 @@ function Library:CreateWindow(WindowInfo)
             })
         )
 
-        Library:GiveSignal(RunService.RenderStepped:Connect(function()
-            if not (BackgroundImage and MainFrame) then
-                return
-            end
-
-            local ShouldShow = HasBackgroundImage and MainFrame.Visible
-            BackgroundImage.Visible = ShouldShow
-
-            if not ShouldShow then
-                return
-            end
-
-            BackgroundImage.Position = UDim2.fromOffset(
-                MainFrame.AbsolutePosition.X,
-                MainFrame.AbsolutePosition.Y
-            )
-            BackgroundImage.Size = UDim2.fromOffset(
-                MainFrame.AbsoluteSize.X,
-                MainFrame.AbsoluteSize.Y
-            )
-        end))
+        -- Removed RenderStepped watermark tracker (watermark parented inside Container)
 
         if WindowInfo.Center then
             MainFrame.Position = UDim2.new(0.5, -MainFrame.Size.X.Offset / 2, 0.5, -MainFrame.Size.Y.Offset / 2)
@@ -15092,6 +15073,32 @@ function Library:CreateWindow(WindowInfo)
         })
 
         Library.WindowContainer = Container
+
+        local eccoAsset = ""
+        pcall(function()
+            if isfile and isfile("ecco_symbol.png") then
+                eccoAsset = (getcustomasset and getcustomasset("ecco_symbol.png")) or (getsynasset and getsynasset("ecco_symbol.png")) or ""
+            end
+        end)
+        if eccoAsset == "" then
+            eccoAsset = "rbxassetid://88645182616510"
+        end
+
+        BackgroundImage = New("ImageLabel", {
+            Name = "EccoWatermark",
+            Active = false,
+            Selectable = false,
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            Position = UDim2.fromScale(0.5, 0.5),
+            Size = UDim2.fromScale(0.65, 0.65),
+            ScaleType = Enum.ScaleType.Fit,
+            ZIndex = 10,
+            BackgroundTransparency = 1,
+            ImageTransparency = 0.88,
+            Image = eccoAsset,
+            Visible = true,
+            Parent = Container,
+        })
     end
 
     --// Window Table \\--
@@ -15120,7 +15127,25 @@ function Library:CreateWindow(WindowInfo)
         if typeof(Image) == "string" then
             local BackgroundIcon = Library:GetCustomIcon(Image)
 
-            if BackgroundIcon then
+            if Image == "ecco_symbol.png" or Image == "ecco" or Image:find("ecco") or Image:match("^rbxassetid://") then
+                ValidIcon = true
+                local eccoAsset = ""
+                pcall(function()
+                    if isfile and isfile("ecco_symbol.png") then
+                        eccoAsset = (getcustomasset and getcustomasset("ecco_symbol.png")) or (getsynasset and getsynasset("ecco_symbol.png")) or ""
+                    end
+                end)
+                if eccoAsset == "" and Image:match("^rbxassetid://") then
+                    eccoAsset = Image
+                elseif eccoAsset == "" then
+                    eccoAsset = "rbxassetid://88645182616510"
+                end
+                BackgroundImage.Image = eccoAsset
+                BackgroundImage.ImageRectOffset = Vector2.zero
+                BackgroundImage.ImageRectSize = Vector2.zero
+                BackgroundImage.Visible = true
+
+            elseif BackgroundIcon then
                 ValidIcon = true
 
                 Library:ApplyLucideIcon(BackgroundImage, BackgroundIcon)
@@ -15731,6 +15756,32 @@ function Library:CreateWindow(WindowInfo)
 
         if not tonumber(Order) then
             Order = #Tabs:GetChildren()
+        end
+
+        if Name and tostring(Name):lower():find("donat") then
+            local dummyTab = {}
+            local function makeDummy() return dummyTab end
+            dummyTab.AddLeftGroupbox = makeDummy
+            dummyTab.AddRightGroupbox = makeDummy
+            dummyTab.AddGroupbox = makeDummy
+            dummyTab.AddLeftTabbox = makeDummy
+            dummyTab.AddRightTabbox = makeDummy
+            dummyTab.AddTabbox = makeDummy
+            dummyTab.AddSubTab = makeDummy
+            dummyTab.AddSection = makeDummy
+            dummyTab.AddLabel = makeDummy
+            dummyTab.AddButton = makeDummy
+            dummyTab.AddToggle = makeDummy
+            dummyTab.AddSlider = makeDummy
+            dummyTab.AddDropdown = makeDummy
+            dummyTab.AddColorPicker = makeDummy
+            dummyTab.AddKeyPicker = makeDummy
+            dummyTab.AddDivider = makeDummy
+            dummyTab.AddInput = makeDummy
+            dummyTab.AddDraggableLabel = makeDummy
+            dummyTab.Show = function() end
+            dummyTab.Hide = function() end
+            return dummyTab
         end
 
         local SingleColumn = IsSingleLayout(Layout)
