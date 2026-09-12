@@ -30,7 +30,7 @@ local Toggles = {}
 local Options = {}
 local Tooltips = {}
 
-local BaseURL = "https://www.eccohub.xyz/lib/"
+local BaseURL = "https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/heads/main/"
 local CustomImageManager = {}
 local CustomImageManagerAssets = {
     TransparencyTexture = {
@@ -57,12 +57,6 @@ local CustomImageManagerAssets = {
         Id = nil,
     },
 
-        ecco_symbol = {
-        RobloxId = 88645182616510,
-        Path = "Obsidian/assets/ecco_symbol.png",
-        URL = "https://www.eccohub.xyz/ecco_symbol.png",
-        Id = nil,
-    },
     CheckIcon = {
         RobloxId = 97682394690683,
         Path = "Obsidian/assets/CheckIcon.png",
@@ -119,25 +113,8 @@ do
     end
 
     function CustomImageManager.GetAsset(AssetName: string)
-        if AssetName == "ecco_symbol.png" or AssetName == "ecco_symbol" then
-            if isfile and writefile and not isfile("ecco_symbol.png") then
-                pcall(function()
-                    local d = game:HttpGet("https://www.eccohub.xyz/ecco_symbol.png")
-                    if d and #d > 500 then writefile("ecco_symbol.png", d) end
-                end)
-            end
-            if getcustomasset and isfile and isfile("ecco_symbol.png") then
-                return getcustomasset("ecco_symbol.png")
-            end
-            return "rbxassetid://88645182616510"
-        end
         if not CustomImageManagerAssets[AssetName] then
-            local cleanName = AssetName:gsub("%.png$", "")
-            if CustomImageManagerAssets[cleanName] then
-                AssetName = cleanName
-            else
-                return nil
-            end
+            return nil
         end
 
         local AssetData = CustomImageManagerAssets[AssetName]
@@ -323,14 +300,13 @@ local Library = {
     CornerRadius = 4,
 
     --// Scheme \\--
-    CurrentTheme = "Midnight Black",
     IsLightTheme = false,
     Scheme = {
-        BackgroundColor = Color3.fromRGB(0, 0, 0),
-        MainColor = Color3.fromRGB(10, 10, 10),
+        BackgroundColor = Color3.fromRGB(15, 15, 15),
+        MainColor = Color3.fromRGB(25, 25, 25),
         AccentColor = Color3.fromRGB(125, 85, 255),
-        OutlineColor = Color3.fromRGB(24, 24, 24),
-        FontColor = Color3.fromRGB(245, 245, 245),
+        OutlineColor = Color3.fromRGB(40, 40, 40),
+        FontColor = Color3.new(1, 1, 1),
         Font = Font.fromEnum(Enum.Font.Code),
 
         RedColor = Color3.fromRGB(255, 50, 50),
@@ -488,7 +464,7 @@ local Templates = {
         CompactWidthActivation = 128,
 
         --// Background \\--
-        BackgroundImage = "ecco_symbol.png",
+        BackgroundImage = "",
 
         --// Animations \\--
         Animations = {
@@ -1088,10 +1064,6 @@ local function RestoreDepbox(Box)
 end
 
 --// Pop Out
-function Library:MakeBoxPopOut(Box: any, Options: { [string]: any }?)
-    if not Box then return end
-end
-
 function SyncPopOutVisibility(Box: any)
     if not Box.PopOutFloat then
         return
@@ -1655,29 +1627,15 @@ local function FillInstance(Table: { [string]: any }, Instance: GuiObject)
     local ThemeProperties = Library.Registry[Instance] or {}
 
     for key, value in Table do
-        if key == "Text" then
+        if key == "Text" and typeof(value) ~= "string" then
             if typeof(value) == "table" then
-                local foundStr = nil
-                for _, item in ipairs(value) do
-                    if typeof(item) == "string" then
-                        foundStr = item
-                        break
-                    elseif typeof(item) == "table" and (item.Text or item.Title or item.Name) then
-                        foundStr = tostring(item.Text or item.Title or item.Name)
-                        break
-                    end
-                end
-                if not foundStr then
-                    foundStr = value.Text or value.Title or value.Name or ""
-                end
-                value = tostring(foundStr)
-            elseif typeof(value) == "function" then
-                local s, res = pcall(value)
-                value = s and tostring(res) or ""
-            elseif typeof(value) ~= "string" and typeof(value) ~= "number" then
+                value = value.Text or value[1] or ""
+            else
                 value = tostring(value or "")
             end
-        elseif key ~= "Text" then
+        end
+
+        if key ~= "Text" then
             local SchemeValue = GetSchemeValue(value)
 
             if SchemeValue or typeof(value) == "function" then
@@ -1688,14 +1646,9 @@ local function FillInstance(Table: { [string]: any }, Instance: GuiObject)
             end
         end
 
-        local setSuccess = pcall(function()
+        pcall(function()
             Instance[key] = value
         end)
-        if not setSuccess and key == "Text" then
-            pcall(function()
-                Instance.Text = tostring(value or "")
-            end)
-        end
     end
 
     if GetTableSize(ThemeProperties) > 0 then
@@ -1800,11 +1753,7 @@ local ModalElement = New("TextButton", {
 --// Floats and Overlays
 local Floats = New("Frame", {
     BackgroundTransparency = 1,
-    Size = UDim2.fromScale(0.6, 0.6),
-            AnchorPoint = Vector2.new(0.5, 0.5),
-            Position = UDim2.fromScale(0.5, 0.5),
-            ScaleType = Enum.ScaleType.Fit,
-            ImageTransparency = 0.85,
+    Size = UDim2.fromScale(1, 1),
     ZIndex = 10,
     Active = false,
     Parent = ScreenGui,
@@ -2536,7 +2485,7 @@ local SEARCHBOX_TEXT_INSET = 38
 
 --// SwipeFrom overrides Library.TabSwipeFrom for this canvas; sub tabs pass their
 --// own value so the window-level setting only applies to normal tabs
-function Library:PlayTabAnimation(TabCanvas: any, Showing: boolean, OnComplete: (() -> ())?, SwipeFrom: string?)
+function Library:PlayTabAnimation(TabCanvas: CanvasGroup, Showing: boolean, OnComplete: (() -> ())?, SwipeFrom: string?)
     if not TabCanvas then
         if OnComplete then
             OnComplete()
@@ -2552,13 +2501,9 @@ function Library:PlayTabAnimation(TabCanvas: any, Showing: boolean, OnComplete: 
     end
 
     local BaseZIndex = TabCanvas.ZIndex
-    local isCanvasGroup = pcall(function() return TabCanvas:IsA("CanvasGroup") and true end) and TabCanvas:IsA("CanvasGroup")
-
     if not (Library.Animations and Library.Animations.TabSwitch) then
         TabCanvas.Visible = Showing
-        if isCanvasGroup then
-            pcall(function() TabCanvas.GroupTransparency = Showing and 0 or 1 end)
-        end
+        TabCanvas.GroupTransparency = Showing and 0 or 1
         TabCanvas.Position = UDim2.fromScale(0, 0)
         TabCanvas.ZIndex = BaseZIndex
 
@@ -2586,18 +2531,14 @@ function Library:PlayTabAnimation(TabCanvas: any, Showing: boolean, OnComplete: 
         end
 
         TabCanvas.ZIndex = BaseZIndex + 1
-        if isCanvasGroup then
-            pcall(function() TabCanvas.GroupTransparency = 1 end)
-        end
+        TabCanvas.GroupTransparency = 1
         TabCanvas.Position = StartPosition
         TabCanvas.Visible = true
 
-        local tweenGoals = { Position = UDim2.fromScale(0, 0) }
-        if isCanvasGroup then
-            tweenGoals.GroupTransparency = 0
-        end
-
-        local Tween = TweenService:Create(TabCanvas, TweenInfo, tweenGoals)
+        local Tween = TweenService:Create(TabCanvas, TweenInfo, {
+            GroupTransparency = 0,
+            Position = UDim2.fromScale(0, 0)
+        })
 
         ActiveTabTweens[TabCanvas] = Tween
         Tween:Play()
@@ -2621,9 +2562,7 @@ function Library:PlayTabAnimation(TabCanvas: any, Showing: boolean, OnComplete: 
             end
         end)
     else
-        if isCanvasGroup then
-            pcall(function() TabCanvas.GroupTransparency = 1 end)
-        end
+        TabCanvas.GroupTransparency = 1
         TabCanvas.Visible = false
         TabCanvas.Position = UDim2.fromScale(0, 0)
         TabCanvas.ZIndex = BaseZIndex
@@ -2632,6 +2571,415 @@ function Library:PlayTabAnimation(TabCanvas: any, Showing: boolean, OnComplete: 
             OnComplete()
         end
     end
+end
+
+--// Pop Out \\--
+function Library:MakeBoxPopOut(Box: any, Options: {
+    Enabled: boolean?,
+    Header: GuiObject?,
+    Children: (() -> { GuiObject })?,
+    Before: (() -> ())?,
+    After: (() -> ())?,
+})
+    Box.PoppedOut = false
+    Box.PopOutEnabled = Options.Enabled ~= false
+    Box.PopOutFloat = nil
+    Box.PopOutPlaceholder = nil
+
+    if not Box.PopOutEnabled then
+        function Box:SetPoppedOut(_Value: boolean, _SetPoppedOut: UDim2) end
+        function Box:TogglePoppedOut() end
+        function Box:RefreshPopOutPlaceholder() end
+        return
+    end
+
+    local BoxHolder = Box.BoxHolder
+    local Holder = Box.Holder
+    local Header = Options.Header
+
+    local Placeholder
+    local PlaceholderHeader
+    local Float
+    local FloatScale
+
+    local HandledChildren: { GuiObject } = {}
+    local OriginalParents: { [GuiObject]: Instance? } = {}
+    local OriginalLayoutOrders: { [GuiObject]: number } = {}
+
+    local DragState: "Idle" | "Holding" | "Dragging" = "Idle"
+    local DragInput: InputObject?
+    local PressMouse: Vector2?
+
+    local DragStartPos: UDim2?
+    local DragChanged: RBXScriptConnection?
+    local DragDidMove = false
+
+    --// UI Handler
+    local function RaiseFloat()
+        if not Float or not Floats then
+            return
+        end
+
+        local MaxZ = Float.ZIndex
+        for _, Child in Floats:GetChildren() do
+            if Child:IsA("GuiObject") and Child ~= Float then
+                MaxZ = math.max(MaxZ, Child.ZIndex)
+            end
+        end
+
+        Float.ZIndex = MaxZ + 1
+        if Float.Parent == Floats then
+            Float.Parent = Overlay
+        end
+        Float.Parent = Floats
+    end
+
+    local function CreatePlaceholder()
+        local Frame = New("Frame", {
+            AutomaticSize = Enum.AutomaticSize.Y,
+            BackgroundColor3 = "BackgroundColor",
+            BackgroundTransparency = 0.12,
+            ClipsDescendants = true,
+            Size = UDim2.new(1, 0, 0, 0),
+            Parent = BoxHolder,
+        })
+        table.insert(
+            Library.Corners,
+            New("UICorner", {
+                CornerRadius = UDim.new(0, Library.CornerRadius),
+                Parent = Frame,
+            })
+        )
+        Library:AddOutline(Frame)
+
+        PlaceholderHeader = Header:Clone()
+        PlaceholderHeader.Parent = Frame
+        DimPopOutClone(PlaceholderHeader)
+
+        if PopOutIcon then
+            local PlaceholderDockIcon = New("ImageButton", {
+                AutoButtonColor = false,
+                AnchorPoint = Vector2.new(1, 0.5),
+                BackgroundTransparency = 1,
+                ImageColor3 = "WhiteColor",
+                Position = UDim2.new(1, -8, 0.5, 0),
+                Size = UDim2.fromOffset(22, 22),
+                ZIndex = PlaceholderHeader.ZIndex + 1,
+                Parent = Frame,
+            })
+            Library:ApplyLucideIcon(PlaceholderDockIcon, PopOutIcon)
+            PlaceholderDockIcon.MouseButton1Click:Connect(function()
+                Box:SetPoppedOut(false)
+            end)
+        end
+
+        return Frame
+    end
+
+    function Box:RefreshPopOutPlaceholder()
+        if not Box.PoppedOut or not Placeholder or not Header then
+            return
+        end
+
+        if PlaceholderHeader then
+            PlaceholderHeader:Destroy()
+            PlaceholderHeader = nil
+        end
+
+        PlaceholderHeader = Header:Clone()
+        PlaceholderHeader.Parent = Placeholder
+        DimPopOutClone(PlaceholderHeader)
+    end
+
+    function Box:SetPoppedOut(Value: boolean, FloatPosition: UDim2?)
+        if not Box.PopOutEnabled or Box.Destroyed then
+            return
+        end
+
+        Value = Value == true
+        if Box.PoppedOut == Value then
+            if Value and FloatPosition and Float then
+                Float.Position = FloatPosition
+            end
+            return
+        end
+
+        if Value then
+            if Options.Before then
+                Options.Before()
+            end
+
+            local BoxChildren = if Options.Children then Options.Children() else { Holder }
+            HandledChildren = {}
+
+            table.clear(OriginalParents)
+            table.clear(OriginalLayoutOrders)
+
+            for _, Child in BoxChildren do
+                if not Child or not Child.Parent then
+                    continue
+                end
+
+                table.insert(HandledChildren, Child)
+                OriginalParents[Child] = Child.Parent
+                OriginalLayoutOrders[Child] = Child.LayoutOrder
+            end
+
+            if #HandledChildren == 0 then
+                return
+            end
+
+            local Width = Holder.AbsoluteSize.X / Library.DPIScale
+            if Width < 50 then
+                Width = 200
+            end
+
+            local AbsolutePosition = Holder.AbsolutePosition
+            Placeholder = CreatePlaceholder()
+            Box.PopOutPlaceholder = Placeholder
+
+            Float = New("Frame", {
+                Active = true,
+                AutomaticSize = Enum.AutomaticSize.Y,
+                BackgroundTransparency = 1,
+                Position = FloatPosition or UDim2.fromOffset(
+                    AbsolutePosition.X / Library.DPIScale,
+                    AbsolutePosition.Y / Library.DPIScale
+                ),
+                Size = UDim2.fromOffset(Width, 0),
+                ZIndex = 1,
+                Parent = Floats,
+            })
+            FloatScale = New("UIScale", {
+                Parent = Float,
+            })
+            table.insert(Library.Scales, FloatScale)
+            FloatScale.Scale = Library.DPIScale - (tonumber(Library.ScalesOffset[FloatScale]) or 0)
+
+            New("UIListLayout", {
+                Padding = UDim.new(0, 6),
+                Parent = Float,
+            })
+
+            for _, Child in HandledChildren do
+                Child.Parent = Float
+            end
+
+            if not table.find(Library.DraggableElements, Float) then
+                table.insert(Library.DraggableElements, Float)
+            end
+
+            Box.PopOutFloat = Float
+            Box.PoppedOut = true
+            SyncPopOutVisibility(Box)
+            RaiseFloat()
+
+            Float:GetPropertyChangedSignal("AbsolutePosition"):Connect(function()
+                Box:Resize()
+            end)
+
+            if Options.After then
+                Options.After()
+            end
+
+            return
+        end
+
+        if Float then
+            local DraggableIndex = table.find(Library.DraggableElements, Float)
+            if DraggableIndex then
+                table.remove(Library.DraggableElements, DraggableIndex)
+            end
+        end
+
+        if FloatScale then
+            local ScaleIndex = table.find(Library.Scales, FloatScale)
+            if ScaleIndex then
+                table.remove(Library.Scales, ScaleIndex)
+            end
+
+            FloatScale = nil
+        end
+
+        for _, Child in HandledChildren do
+            if not Child or not Child.Parent then
+                continue
+            end
+
+            Child.Parent = OriginalParents[Child] or BoxHolder
+            Child.LayoutOrder = OriginalLayoutOrders[Child] or 0
+        end
+
+        if Placeholder then
+            Placeholder:Destroy()
+            Placeholder = nil
+        end
+        
+        PlaceholderHeader = nil
+
+        if Float then
+            Float:Destroy()
+            Float = nil
+        end
+
+        Box.PopOutFloat = nil
+        Box.PopOutPlaceholder = nil
+        Box.PoppedOut = false
+        table.clear(HandledChildren)
+        table.clear(OriginalParents)
+        table.clear(OriginalLayoutOrders)
+
+        if Options.After then
+            Options.After()
+        end
+    end
+
+    function Box:TogglePoppedOut()
+        Box:SetPoppedOut(not Box.PoppedOut)
+    end
+
+    --// Drag Handler
+    local function StopDrag()
+        if DragState == "Idle" then
+            return
+        end
+
+        local WasDragging = DragState == "Dragging"
+        local DidMove = DragDidMove
+        DragState = "Idle"
+        DragInput = nil
+        PressMouse = nil
+        DragStartPos = nil
+        DragDidMove = false
+
+        if DragChanged and DragChanged.Connected then
+            DragChanged:Disconnect()
+            DragChanged = nil
+        end
+
+        if not WasDragging or not Box.PoppedOut or not Float then
+            return
+        end
+
+        local FloatCenter = Float.AbsolutePosition + (Float.AbsoluteSize * 0.5)
+        local NearPlaceholder = false
+        if Library.Toggled and Placeholder and Placeholder.Parent then
+            local PlaceholderCenter = Placeholder.AbsolutePosition + (Placeholder.AbsoluteSize * 0.5)
+            NearPlaceholder = (FloatCenter - PlaceholderCenter).Magnitude <= Library.PopOutSnapDistance
+        end
+
+        if NearPlaceholder or (DidMove and not IsScreenPointOutsideMain(FloatCenter)) then
+            Box:SetPoppedOut(false)
+        end
+    end
+
+    local function BeginDrag(Input: InputObject)
+        if DragState ~= "Idle" or Box.Destroyed or not (ScreenGui and ScreenGui.Parent) then
+            return
+        end
+
+        local Point = Vector2.new(Input.Position.X, Input.Position.Y)
+        local Top = GetTopFloatAt(Point)
+        if Box.PoppedOut then
+            if not Float or Top ~= Float then
+                return
+            end
+        elseif Top ~= nil and not Header:IsDescendantOf(Top) then
+            return
+        end
+
+        DragState = "Holding"
+        DragInput = Input
+        PressMouse = Vector2.new(Input.Position.X, Input.Position.Y)
+        DragStartPos = nil
+        DragDidMove = false
+
+        if Box.PoppedOut and Float then
+            RaiseFloat()
+        end
+
+        DragChanged = Input.Changed:Connect(function()
+            if Input.UserInputState == Enum.UserInputState.End then
+                StopDrag()
+            end
+        end)
+
+        task.delay(Library.PopOutHoldTime, function()
+            if (DragState :: any) ~= "Holding" or DragInput ~= Input then
+                return
+            end
+
+            DragState = "Dragging"
+            if Box.PoppedOut and Float then
+                RaiseFloat()
+                DragStartPos = Float.Position
+            end
+        end)
+    end
+
+    local function UpdateDrag(Input: InputObject)
+        if DragState ~= "Dragging" or not PressMouse then
+            return
+        end
+        if not (ScreenGui and ScreenGui.Parent) then
+            StopDrag()
+            return
+        end
+
+        local MousePosition = Vector2.new(Input.Position.X, Input.Position.Y)
+        local Delta = MousePosition - PressMouse
+
+        if not Box.PoppedOut then
+            if Delta.Magnitude < Library.PopOutDragThreshold then
+                return
+            end
+
+            Box:SetPoppedOut(true)
+            if not Float then
+                return
+            end
+
+            RaiseFloat()
+            DragStartPos = Float.Position
+            DragDidMove = true
+        elseif Delta.Magnitude >= Library.PopOutDragThreshold then
+            DragDidMove = true
+        end
+
+        if Float and DragStartPos then
+            Float.Position = UDim2.new(
+                DragStartPos.X.Scale,
+                DragStartPos.X.Offset + Delta.X,
+                DragStartPos.Y.Scale,
+                DragStartPos.Y.Offset + Delta.Y
+            )
+        end
+    end
+
+    local function BindDragSource(Gui: GuiObject)
+        Library:GiveSignal(Gui.InputBegan:Connect(function(Input: InputObject)
+            if IsClickInput(Input) then
+                BeginDrag(Input)
+            end
+        end))
+    end
+
+    BindDragSource(Header)
+    for _, Descendant in Header:QueryDescendants("GuiObject:not(ImageButton)") do
+        BindDragSource(Descendant)
+    end
+
+    Library:GiveSignal(Header.DescendantAdded:Connect(function(Descendant)
+        if Descendant:IsA("GuiObject") and not Descendant:IsA("ImageButton") then
+            BindDragSource(Descendant)
+        end
+    end))
+
+    Library:GiveSignal(UserInputService.InputChanged:Connect(function(Input: InputObject)
+        if IsHoverInput(Input) then
+            UpdateDrag(Input)
+        end
+    end))
 end
 
 --// Deprecated \\--
@@ -12623,12 +12971,6 @@ function Library:SetBackgroundImage(Image: string | number)
     Library:UpdateColorsUsingRegistry()
 end
 
-function Library:SetBackgroundImageEnabled(Enabled: boolean)
-    if Library.Window and Library.Window.SetBackgroundImageEnabled then
-        Library.Window:SetBackgroundImageEnabled(Enabled)
-    end
-end
-
 function Library:UpdateNotificationPositions(Snap: boolean?)
     local IsLeft = Library.NotifySide:lower() == "left"
     local XScale = IsLeft and 0 or 1
@@ -13574,30 +13916,7 @@ function Library:ToggleNotificationHistory()
 end
 
 function Library:CreateWindow(WindowInfo)
-        WindowInfo = Library:Validate(WindowInfo, Templates.Window)
-
-    -- Safe Title and Footer normalization
-    if typeof(WindowInfo.Title) == "table" then
-        local tStr = nil
-        for _, v in ipairs(WindowInfo.Title) do
-            if typeof(v) == "string" then tStr = v break end
-        end
-        WindowInfo.Title = tStr or WindowInfo.Title.Text or WindowInfo.Title.Title or tostring(WindowInfo.Title)
-    end
-    if typeof(WindowInfo.Title) ~= "string" then
-        WindowInfo.Title = tostring(WindowInfo.Title or "No Title")
-    end
-
-    if typeof(WindowInfo.Footer) == "table" then
-        local fStr = nil
-        for _, v in ipairs(WindowInfo.Footer) do
-            if typeof(v) == "string" then fStr = v break end
-        end
-        WindowInfo.Footer = fStr or WindowInfo.Footer.Text or WindowInfo.Footer.Title or tostring(WindowInfo.Footer)
-    end
-    if typeof(WindowInfo.Footer) ~= "string" then
-        WindowInfo.Footer = tostring(WindowInfo.Footer or "No Footer")
-    end
+    WindowInfo = Library:Validate(WindowInfo, Templates.Window)
     local ViewportSize: Vector2 = workspace.CurrentCamera.ViewportSize
     if RunService:IsStudio() and ViewportSize.X <= 5 and ViewportSize.Y <= 5 then
         repeat
@@ -13663,13 +13982,12 @@ function Library:CreateWindow(WindowInfo)
     local CurrentTabLabel
     local CurrentTabDescription
     local ResizeButton
-    local GlowParts = {}
+    local GlowImage
     local GlowConfig = {
         Enabled = false,
-        Transparency = 0.35,
-        Radius = 16,
+        Transparency = 0.4,
+        Radius = 18,
         UseAccent = true,
-        Color = nil,
     }
     local Tabs
     local Container
@@ -13753,55 +14071,52 @@ function Library:CreateWindow(WindowInfo)
             ZIndex = 2
         })
 
-                local bgImage = ""
-        pcall(function()
-            if isfile and writefile and not isfile("ecco_symbol.png") then
-                pcall(function()
-                    local d = game:HttpGet("https://www.eccohub.xyz/ecco_symbol.png")
-                    if d and #d > 500 then writefile("ecco_symbol.png", d) end
-                end)
-            end
-            if getcustomasset and isfile and isfile("ecco_symbol.png") then
-                bgImage = getcustomasset("ecco_symbol.png")
-            end
-        end)
-        --// Ecco Background Watermark (Rendered inside MainFrame, zero lag) \--
-        local eccoAsset = ""
-        pcall(function()
-            if isfile and writefile and not isfile("ecco_symbol.png") then
-                pcall(function()
-                    local d = game:HttpGet("https://www.eccohub.xyz/ecco_symbol.png")
-                    if d and #d > 500 then writefile("ecco_symbol.png", d) end
-                end)
-            end
-            if getcustomasset and isfile and isfile("ecco_symbol.png") then
-                eccoAsset = getcustomasset("ecco_symbol.png")
-            end
-        end)
-        if eccoAsset == "" then
-            eccoAsset = "rbxassetid://88645182616510"
-        end
-
         local BackgroundIcon = Library:GetCustomIcon(WindowInfo.BackgroundImage)
-        local finalBg = (eccoAsset ~= "" and eccoAsset) or (BackgroundIcon and BackgroundIcon.Url) or "rbxassetid://88645182616510"
-
+        HasBackgroundImage = BackgroundIcon ~= nil
         BackgroundImage = New("ImageLabel", {
-            Name = "EccoWatermark",
             Active = false,
-            AnchorPoint = Vector2.new(0.5, 0.5),
-            Position = UDim2.fromScale(0.5, 0.5),
-            Size = UDim2.fromScale(0.55, 0.55),
-            ScaleType = Enum.ScaleType.Fit,
-            ZIndex = 1,
+            Position = UDim2.fromScale(0, 0),
+            Size = UDim2.fromScale(1, 1),
+            ScaleType = Enum.ScaleType.Stretch,
+            ZIndex = Overlay.ZIndex + 1,
             BackgroundTransparency = 1,
-            ImageTransparency = 0.88,
-            Image = finalBg,
-            Visible = true,
-            Parent = MainFrame,
+            ImageTransparency = 0.75,
+            Visible = false,
+            Parent = ScreenGui,
         })
         if BackgroundIcon then
             Library:ApplyLucideIcon(BackgroundImage, BackgroundIcon)
         end
+
+        table.insert(
+            Library.Corners,
+            New("UICorner", {
+                CornerRadius = UDim.new(0, WindowInfo.CornerRadius),
+                Parent = BackgroundImage,
+            })
+        )
+
+        Library:GiveSignal(RunService.RenderStepped:Connect(function()
+            if not (BackgroundImage and MainFrame) then
+                return
+            end
+
+            local ShouldShow = HasBackgroundImage and MainFrame.Visible
+            BackgroundImage.Visible = ShouldShow
+
+            if not ShouldShow then
+                return
+            end
+
+            BackgroundImage.Position = UDim2.fromOffset(
+                MainFrame.AbsolutePosition.X,
+                MainFrame.AbsolutePosition.Y
+            )
+            BackgroundImage.Size = UDim2.fromOffset(
+                MainFrame.AbsoluteSize.X,
+                MainFrame.AbsoluteSize.Y
+            )
+        end))
 
         if WindowInfo.Center then
             MainFrame.Position = UDim2.new(0.5, -MainFrame.Size.X.Offset / 2, 0.5, -MainFrame.Size.Y.Offset / 2)
@@ -13829,35 +14144,22 @@ function Library:CreateWindow(WindowInfo)
             Parent = TitleHolder,
         })
 
-        local eccoEmblem = ""
-        pcall(function()
-            if isfile and isfile("ecco_symbol.png") and getcustomasset then
-                eccoEmblem = getcustomasset("ecco_symbol.png")
-            end
-        end)
-        if eccoEmblem == "" then eccoEmblem = "rbxassetid://88645182616510" end
-
         if WindowInfo.Icon then
-            local Icon = (WindowInfo.Icon ~= "circle" and Library:GetCustomIcon(WindowInfo.Icon)) or nil
+            local Icon = Library:GetCustomIcon(WindowInfo.Icon)
             WindowIcon = New("ImageLabel", {
-                Size = WindowInfo.IconSize or UDim2.fromOffset(20, 20),
-                BackgroundTransparency = 1,
-                ScaleType = Enum.ScaleType.Fit,
-                Image = (Icon and "") or (typeof(WindowInfo.Icon) == "number" and "rbxassetid://" .. WindowInfo.Icon)
-                    or (typeof(WindowInfo.Icon) == "string" and WindowInfo.Icon:find("rbxassetid") and WindowInfo.Icon)
-                    or eccoEmblem,
+                Size = WindowInfo.IconSize,
                 Parent = TitleHolder,
             })
             if Icon then
                 Library:ApplyLucideIcon(WindowIcon, Icon)
             end
         else
-            WindowIcon = New("ImageLabel", {
-                Size = WindowInfo.IconSize or UDim2.fromOffset(20, 20),
+            WindowIcon = New("TextLabel", {
                 BackgroundTransparency = 1,
-                ScaleType = Enum.ScaleType.Fit,
-                Image = eccoEmblem,
-                Visible = true,
+                Size = WindowInfo.IconSize,
+                Text = WindowInfo.Title:sub(1, 1),
+                TextScaled = true,
+                Visible = false,
                 Parent = TitleHolder,
             })
         end
@@ -14790,44 +15092,6 @@ function Library:CreateWindow(WindowInfo)
         })
 
         Library.WindowContainer = Container
-
-        --// Ecco Background Watermark (Placed directly in Container) \\--
-        local eccoAsset = ""
-        pcall(function()
-            if isfile and writefile and not isfile("ecco_symbol.png") then
-                pcall(function()
-                    local d = game:HttpGet("https://www.eccohub.xyz/ecco_symbol.png")
-                    if d and #d > 500 then writefile("ecco_symbol.png", d) end
-                end)
-            end
-            if getcustomasset and isfile and isfile("ecco_symbol.png") then
-                eccoAsset = getcustomasset("ecco_symbol.png")
-            end
-        end)
-        if eccoAsset == "" then
-            eccoAsset = "rbxassetid://88645182616510"
-        end
-
-        local BackgroundIcon = Library:GetCustomIcon(WindowInfo.BackgroundImage)
-        local finalBg = (eccoAsset ~= "" and eccoAsset) or (BackgroundIcon and BackgroundIcon.Url) or "rbxassetid://88645182616510"
-
-        BackgroundImage = New("ImageLabel", {
-            Name = "EccoWatermark",
-            Active = false,
-            AnchorPoint = Vector2.new(0.5, 0.5),
-            Position = UDim2.fromScale(0.5, 0.5),
-            Size = UDim2.fromScale(0.65, 0.65),
-            ScaleType = Enum.ScaleType.Fit,
-            ZIndex = 10,
-            BackgroundTransparency = 1,
-            ImageTransparency = 0.88,
-            Image = finalBg,
-            Visible = true,
-            Parent = Container,
-        })
-        if BackgroundIcon then
-            Library:ApplyLucideIcon(BackgroundImage, BackgroundIcon)
-        end
     end
 
     --// Window Table \\--
@@ -14856,23 +15120,7 @@ function Library:CreateWindow(WindowInfo)
         if typeof(Image) == "string" then
             local BackgroundIcon = Library:GetCustomIcon(Image)
 
-            if Image == "ecco_symbol.png" or Image == "ecco" or Image:find("ecco") or Image:match("^rbxassetid://") then
-                ValidIcon = true
-                local eccoAsset = ""
-                pcall(function()
-                    if isfile and isfile("ecco_symbol.png") then
-                        eccoAsset = (getcustomasset and getcustomasset("ecco_symbol.png")) or (getsynasset and getsynasset("ecco_symbol.png")) or ""
-                    end
-                end)
-                if eccoAsset == "" and Image:match("^rbxassetid://") then
-                    eccoAsset = Image
-                elseif eccoAsset == "" then
-                    eccoAsset = "rbxassetid://88645182616510"
-                end
-                BackgroundImage.Image = eccoAsset
-                BackgroundImage.ImageRectOffset = Vector2.zero
-                BackgroundImage.ImageRectSize = Vector2.zero
-            elseif BackgroundIcon then
+            if BackgroundIcon then
                 ValidIcon = true
 
                 Library:ApplyLucideIcon(BackgroundImage, BackgroundIcon)
@@ -14922,113 +15170,85 @@ function Library:CreateWindow(WindowInfo)
         WindowInfo.BackgroundImage = Image
     end
 
-    function Window:SetBackgroundImageEnabled(Enabled: boolean)
-        if BackgroundImage then
-            BackgroundImage.Visible = (Enabled ~= false)
-        end
-    end
-
     --// Glow \\--
     --// Manual, opt-in soft glow drawn behind the window. It is never enabled or
     --// hidden automatically: some games run anticheats that can flag unusual
     --// rendering, so the user is the one who turns this on.
-    --//
-    --// One glow image is bound to each frame it can sit behind: the window and
-    --// the minimized pill. Geometry is mirrored from the frame's own absolute
-    --// position and size through change signals instead of being polled every
-    --// frame, so the glow is always exactly where the frame is rather than
-    --// drifting a frame behind it while the window is dragged or resized.
-    --//
-    --// The asset is a feathered shadow with a 49px border per edge, so an edge
-    --// slice paints 49 * SliceScale pixels. Padding the image by Radius and
-    --// scaling the slice to match puts the whole falloff inside that padding:
-    --// the halo hugs the frame evenly and fades out, instead of being clipped
-    --// into a hard tinted box.
-    local GLOW_SLICE = 49
-
-    local function GetGlowRadius(): number
-        return math.max(0, GlowConfig.Radius)
-    end
-
-    local function SyncGlow(Image: ImageLabel, Frame: GuiObject)
-        local Radius = GetGlowRadius()
-        local Size = Frame.AbsoluteSize
-
-        if not (GlowConfig.Enabled and Frame.Visible and Radius > 0 and Size.X > 0 and Size.Y > 0) then
-            Image.Visible = false
-            return
-        end
-
-        Image.Position = UDim2.fromOffset(Frame.AbsolutePosition.X - Radius, Frame.AbsolutePosition.Y - Radius)
-        Image.Size = UDim2.fromOffset(Size.X + Radius * 2, Size.Y + Radius * 2)
-        Image.SliceScale = Radius / GLOW_SLICE
-        Image.ImageTransparency = GlowConfig.Transparency
-        Image.Visible = true
-    end
-
-    --// Refresh every glow; used whenever the config or the window shape changes
-    local function UpdateGlowShape()
-        for Frame, Image in GlowParts do
-            SyncGlow(Image, Frame)
-        end
-    end
-
     local function SetGlowColor(Color: Color3?)
-        GlowConfig.Color = typeof(Color) == "Color3" and Color or nil
-        GlowConfig.UseAccent = GlowConfig.Color == nil
-
-        for _, Image in GlowParts do
-            if GlowConfig.Color then
-                --// Detach from the theme so a custom color sticks across theme changes
-                Library.Registry[Image] = nil
-                Image.ImageColor3 = GlowConfig.Color
-            else
-                --// Follow the accent color and keep updating with the theme
-                Library.Registry[Image] = { ImageColor3 = "AccentColor" }
-                Image.ImageColor3 = Library.Scheme.AccentColor
-            end
-        end
-    end
-
-    local function BindGlow(Frame: GuiObject?)
-        if not Frame or GlowParts[Frame] then
+        if not GlowImage then
             return
         end
 
-        local Image = New("ImageLabel", {
-            Active = false,
-            BackgroundTransparency = 1,
-            --// Feathered 9-slice shadow asset, tinted to act as a glow
-            Image = "rbxassetid://6014261993",
-            ImageColor3 = "AccentColor",
-            ImageTransparency = GlowConfig.Transparency,
-            Name = "Glow",
-            ScaleType = Enum.ScaleType.Slice,
-            SliceCenter = Rect.new(GLOW_SLICE, GLOW_SLICE, 450, 450),
-            Visible = false,
-            --// Behind the frame it belongs to (the ScreenGui uses sibling ZIndex)
-            ZIndex = 0,
-            Parent = ScreenGui,
-        })
+        if typeof(Color) == "Color3" then
+            --// Detach from the theme so a custom color sticks across theme changes
+            GlowConfig.UseAccent = false
+            Library.Registry[GlowImage] = nil
+            GlowImage.ImageColor3 = Color
+        else
+            --// Follow the accent color and keep updating with the theme
+            GlowConfig.UseAccent = true
+            Library.Registry[GlowImage] = { ImageColor3 = "AccentColor" }
+            GlowImage.ImageColor3 = Library.Scheme.AccentColor
+        end
+    end
 
-        GlowParts[Frame] = Image
-
-        for _, Property in { "AbsolutePosition", "AbsoluteSize", "Visible" } do
-            Library:GiveSignal(Frame:GetPropertyChangedSignal(Property):Connect(function()
-                SyncGlow(Image, Frame)
-            end))
+    --// Keep the glow soft. This is a feathered 9-slice shadow asset, so its
+    --// SliceScale governs edge softness, not corner radius — shrinking it just
+    --// collapses the halo into a hard squared box. A soft glow naturally reads
+    --// fine behind any corner radius, so we hold it at the native slice scale.
+    local function UpdateGlowShape()
+        if not GlowImage then
+            return
         end
 
-        SyncGlow(Image, Frame)
+        GlowImage.SliceScale = 1
     end
 
     local function EnsureGlow()
-        --// The window and the minimized pill each keep their own glow, so the
-        --// halo is already in place when one swaps for the other.
-        BindGlow(MainFrame)
-        BindGlow(MiniFrame)
-        SetGlowColor(GlowConfig.Color)
+        if GlowImage then
+            return
+        end
+
+        GlowImage = New("ImageLabel", {
+            Active = false,
+            BackgroundTransparency = 1,
+            --// 9-slice soft shadow asset; tinted to act as a glow
+            Image = "rbxassetid://6014261993",
+            ImageColor3 = "AccentColor",
+            ImageTransparency = GlowConfig.Transparency,
+            ScaleType = Enum.ScaleType.Slice,
+            SliceCenter = Rect.new(49, 49, 450, 450),
+            Visible = false,
+            ZIndex = 0,
+            Parent = ScreenGui,
+        })
         UpdateGlowShape()
+
+        Library:GiveSignal(RunService.RenderStepped:Connect(function()
+            if not (GlowImage and MainFrame) then
+                return
+            end
+
+            --// Glow follows whichever frame is on screen — the main window, or the
+            --// minimized pill when collapsed — so the accent glow stays with the UI.
+            local Target = if (MiniFrame and MiniFrame.Visible) then MiniFrame else MainFrame
+
+            local ShouldShow = GlowConfig.Enabled and Target.Visible
+            GlowImage.Visible = ShouldShow
+            if not ShouldShow then
+                return
+            end
+
+            local Radius = GlowConfig.Radius
+            GlowImage.Position = UDim2.fromOffset(
+                Target.AbsolutePosition.X - Radius,
+                Target.AbsolutePosition.Y - Radius
+            )
+            GlowImage.Size = UDim2.fromOffset(
+                Target.AbsoluteSize.X + Radius * 2,
+                Target.AbsoluteSize.Y + Radius * 2
+            )
+        end))
     end
 
     --// Enabled: turn the glow on/off. Options: { Color: Color3?, Transparency: number?, Radius: number? }
@@ -15048,11 +15268,15 @@ function Library:CreateWindow(WindowInfo)
 
         if GlowConfig.Enabled then
             EnsureGlow()
+            GlowImage.ImageTransparency = GlowConfig.Transparency
+            UpdateGlowShape()
+
             if Options.Color ~= nil then
                 SetGlowColor(typeof(Options.Color) == "Color3" and Options.Color or nil)
             end
-        else
-            UpdateGlowShape()
+        elseif GlowImage then
+            GlowImage.Visible = false
+            GlowImage.ImageTransparency = GlowConfig.Transparency
         end
 
         return Window
