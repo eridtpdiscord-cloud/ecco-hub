@@ -38,32 +38,42 @@ end
 
 -- Central State Configuration
 local State = {
+    -- Auto-Farm Settings
     AutoFarmApples = false,
     AutoSellApples = false,
     SellThreshold = 3,
     FarmMode = "Stealth",
     FarmDelay = 0.35,
+    SafeSellOnly = true,
+    AlwaysAnchorRoof = true,
+    SafetyClearance = 45,
+
     AutoBuyTrees = true,
     AutoBuyGarden = true,
     AutoBuyAppleUpgrades = false,
     AutoBuyWeapons = false,
     AutoBuyAmmo = false,
 
+    -- Defense & Survival
     AntiJumpscare = true,
-    MonsterEvasion = false,
-    EvasionDistance = 18,
+    MonsterEvasion = true,
+    EvasionDistance = 25,
+    EvasionLockout = 6,
     InfiniteStamina = true,
     NoFallDamage = true,
     AutoRevive = false,
 
+    -- ESP & Visuals
     MonsterESP = true,
     PlayerESP = true,
     AppleESP = true,
     Fullbright = true,
 
+    -- Movement & Physics
     WalkSpeedMult = 1,
     Noclip = false,
 
+    -- Safe Teleport Anchors
     SafeAnchorCFrame = CFrame.new(-430, 68, 320)
 }
 
@@ -116,6 +126,9 @@ local cleanAllESP
 local getRoot
 local getHumanoid
 local getCharacter
+local isMonsterNear
+local canSellSafely
+local canHarvestSafely
 
 -- Character Helpers
 function getCharacter()
@@ -130,6 +143,48 @@ end
 function getHumanoid()
     local char = getCharacter()
     return char and char:FindFirstChildOfClass("Humanoid")
+end
+
+-- ==============================================================================
+-- THREAT SENSORS & SAFETY EVALUATION
+-- ==============================================================================
+function isMonsterNear(pos, radius)
+    if not pos then return false end
+    local activeMonsters = workspace:FindFirstChild("ActiveMonsters")
+    if not activeMonsters then return false end
+    for _, m in ipairs(activeMonsters:GetChildren()) do
+        local mRoot = m:FindFirstChild("HumanoidRootPart") or m:FindFirstChildWhichIsA("BasePart")
+        if mRoot and (mRoot.Position - pos).Magnitude <= radius then
+            return true
+        end
+    end
+    return false
+end
+
+function canSellSafely()
+    local phase = workspace:GetAttribute("AA_Phase") or "DAY"
+    local shopClosed = workspace:GetAttribute("AA_ShopClosed")
+    if phase ~= "DAY" or shopClosed == true then
+        return false
+    end
+    local sellPart = workspace:FindFirstChild("AppleSell", true)
+    if not sellPart then return false end
+    if isMonsterNear(sellPart.Position, State.SafetyClearance) then
+        return false
+    end
+    local root = getRoot()
+    if root and isMonsterNear(root.Position, State.SafetyClearance) then
+        return false
+    end
+    return true
+end
+
+function canHarvestSafely(applePart)
+    if not applePart or not applePart.Parent then return false end
+    if isMonsterNear(applePart.Position, State.SafetyClearance) then
+        return false
+    end
+    return true
 end
 
 -- ==============================================================================
@@ -160,13 +215,13 @@ local Window = Library:CreateWindow({
 
 -- TAB 1: AUTO FARM & MONEY
 local TabFarm = Window:AddTab("Auto Farm")
-local LeftColFarm = TabFarm:AddLeftGroupbox("Apple Harvesting")
+local LeftColFarm = TabFarm:AddLeftGroupbox("Apple Harvesting & Safety")
 local RightColFarm = TabFarm:AddRightGroupbox("Auto Store & Upgrades")
 
 LeftColFarm:AddToggle("AutoCollectApples", {
     Text = "Auto Collect Apples",
     Default = false,
-    Tooltip = "Instantly gathers all spawned apples across trees and garden spots."
+    Tooltip = "Gathers spawned apples across trees. Skips any apple with monsters nearby."
 }):OnChanged(function(val)
     State.AutoFarmApples = val
 end)
@@ -174,19 +229,25 @@ end)
 LeftColFarm:AddToggle("AutoSellApples", {
     Text = "Auto Sell Apples",
     Default = false,
-    Tooltip = "Automatically sells gathered apples at the apple buyer stand during Day."
+    Tooltip = "Automatically sells gathered apples when threshold is reached."
 }):OnChanged(function(val)
     State.AutoSellApples = val
 end)
 
-LeftColFarm:AddDropdown("FarmMode", {
-    Text = "Movement Mode",
-    Values = { "Stealth", "AFK Anchor", "Legit Tween" },
-    Default = 1,
-    Multi = false,
-    Tooltip = "Stealth snaps back to your spot; AFK Anchor stays on the safe roof."
+LeftColFarm:AddToggle("SafeSellOnly", {
+    Text = "Safe Sell Only (Day / Monster Free)",
+    Default = true,
+    Tooltip = "NEVER teleports to the store at Night or if monsters are near the storefront."
 }):OnChanged(function(val)
-    State.FarmMode = val
+    State.SafeSellOnly = val
+end)
+
+LeftColFarm:AddToggle("AlwaysAnchorRoof", {
+    Text = "Anchor to Safe Roof",
+    Default = true,
+    Tooltip = "Immediately returns and anchors character to high roof after every harvest/sell."
+}):OnChanged(function(val)
+    State.AlwaysAnchorRoof = val
 end)
 
 LeftColFarm:AddSlider("SellThreshold", {
@@ -212,18 +273,18 @@ LeftColFarm:AddSlider("FarmDelay", {
 end)
 
 LeftColFarm:AddButton({
-    Text = "Instant Harvest & Cashout",
+    Text = "Instant Safe Harvest & Cashout",
     Func = function()
         if collectAvailableApples then collectAvailableApples() end
         if sellApplesRoutine then sellApplesRoutine() end
-        Library:Notify("Harvest cycle executed!", 2)
+        Library:Notify("Safe harvest cycle executed!", 2)
     end
 })
 
 RightColFarm:AddToggle("AutoBuyTrees", {
     Text = "Auto Buy Apple Trees",
     Default = true,
-    Tooltip = "Automatically purchases next apple tree when balance is sufficient."
+    Tooltip = "Purchases next tree from server remotes without moving your character."
 }):OnChanged(function(val)
     State.AutoBuyTrees = val
 end)
@@ -268,7 +329,7 @@ local RightColESP = TabESP:AddRightGroupbox("Environment Visuals")
 LeftColESP:AddToggle("MonsterESP", {
     Text = "Monster ESP (Chams & Distance)",
     Default = true,
-    Tooltip = "Highlights all active monsters through walls with distance trackers."
+    Tooltip = "Highlights all active monsters through walls with real-time distance trackers."
 }):OnChanged(function(val)
     State.MonsterESP = val
 end)
@@ -300,34 +361,56 @@ end)
 
 -- TAB 3: SURVIVAL & DEFENSE
 local TabSurv = Window:AddTab("Survival")
-local LeftColSurv = TabSurv:AddLeftGroupbox("Defensive Suite")
+local LeftColSurv = TabSurv:AddLeftGroupbox("Defensive Suite & Auto-Evasion")
 local RightColSurv = TabSurv:AddRightGroupbox("Movement & Utility")
 
-LeftColSurv:AddToggle("AntiJumpscare", {
-    Text = "Anti-Jumpscare Shield",
-    Default = true,
-    Tooltip = "Instantly cancels server jumpscares and destroys screamers."
-}):OnChanged(function(val)
-    State.AntiJumpscare = val
-end)
-
 LeftColSurv:AddToggle("MonsterEvasion", {
-    Text = "Auto Monster Evasion",
-    Default = false,
-    Tooltip = "Emergency teleports you to the safe roof when a monster gets within range."
+    Text = "Auto Monster Evasion (Roof Shield)",
+    Default = true,
+    Tooltip = "Priority 1 Shield: Teleports you to safe roof whenever a monster enters range."
 }):OnChanged(function(val)
     State.MonsterEvasion = val
 end)
 
 LeftColSurv:AddSlider("EvasionDistance", {
-    Text = "Evasion Trigger Distance",
-    Default = 18,
-    Min = 8,
-    Max = 35,
+    Text = "Evasion Trigger Range (Studs)",
+    Default = 25,
+    Min = 10,
+    Max = 60,
     Rounding = 0,
     Compact = false
 }):OnChanged(function(val)
     State.EvasionDistance = val
+end)
+
+LeftColSurv:AddSlider("SafetyClearance", {
+    Text = "Monster Danger Buffer (Studs)",
+    Default = 45,
+    Min = 20,
+    Max = 80,
+    Rounding = 0,
+    Compact = false
+}):OnChanged(function(val)
+    State.SafetyClearance = val
+end)
+
+LeftColSurv:AddSlider("EvasionLockout", {
+    Text = "Post-Evasion Lockout (Sec)",
+    Default = 6,
+    Min = 2,
+    Max = 15,
+    Rounding = 0,
+    Compact = false
+}):OnChanged(function(val)
+    State.EvasionLockout = val
+end)
+
+LeftColSurv:AddToggle("AntiJumpscare", {
+    Text = "Anti-Jumpscare Shield",
+    Default = true,
+    Tooltip = "Instantly cancels server jumpscares and destroys screamer overlays."
+}):OnChanged(function(val)
+    State.AntiJumpscare = val
 end)
 
 LeftColSurv:AddToggle("InfiniteStamina", {
@@ -362,6 +445,17 @@ local TabTP = Window:AddTab("Teleports")
 local ColTP = TabTP:AddLeftGroupbox("Map Anchors")
 
 ColTP:AddButton({
+    Text = "Teleport to Safe Roof (Anti-Monster)",
+    Func = function()
+        local root = getRoot()
+        if root then
+            root.CFrame = State.SafeAnchorCFrame
+            Library:Notify("Teleported to Safe Roof!", 2)
+        end
+    end
+})
+
+ColTP:AddButton({
     Text = "Teleport to Apple Buyer (Sell Stand)",
     Func = function()
         local root = getRoot()
@@ -382,17 +476,6 @@ ColTP:AddButton({
         if root then
             root.CFrame = CFrame.new(-514.06, 20.28, 369.31)
             Library:Notify("Teleported to Apple Garden!", 2)
-        end
-    end
-})
-
-ColTP:AddButton({
-    Text = "Teleport to Safe Roof (Anti-Monster)",
-    Func = function()
-        local root = getRoot()
-        if root then
-            root.CFrame = State.SafeAnchorCFrame
-            Library:Notify("Teleported to Safe Roof!", 2)
         end
     end
 })
@@ -435,8 +518,34 @@ getgenv().gethui = oldGethui
 -- CORE LOGIC HOOKS & CONNECTIONS
 -- ==============================================================================
 
-local NoclipConnection
-NoclipConnection = RunService.Stepped:Connect(function()
+local EvasionLockTime = 0
+
+local function checkMonsterEvasion()
+    if not State.MonsterEvasion then return end
+    local root = getRoot()
+    if not root then return end
+
+    local activeMonsters = workspace:FindFirstChild("ActiveMonsters")
+    local list = activeMonsters and activeMonsters:GetChildren() or {}
+    for _, m in ipairs(list) do
+        local mRoot = m:FindFirstChild("HumanoidRootPart") or m:FindFirstChildWhichIsA("BasePart")
+        if mRoot then
+            local dist = (mRoot.Position - root.Position).Magnitude
+            if dist <= State.EvasionDistance then
+                root.CFrame = State.SafeAnchorCFrame
+                EvasionLockTime = tick() + State.EvasionLockout
+                Library:Notify("Threat within " .. math.floor(dist) .. " studs! Evaded to Safe Roof.", 2.5)
+                break
+            end
+        end
+    end
+end
+
+local EvasionConnection = RunService.Heartbeat:Connect(function()
+    pcall(checkMonsterEvasion)
+end)
+
+local NoclipConnection = RunService.Stepped:Connect(function()
     if State.Noclip then
         local char = getCharacter()
         if char then
@@ -449,8 +558,7 @@ NoclipConnection = RunService.Stepped:Connect(function()
     end
 end)
 
-local SpeedConnection
-SpeedConnection = RunService.Heartbeat:Connect(function()
+local SpeedConnection = RunService.Heartbeat:Connect(function()
     if State.WalkSpeedMult > 1 then
         local hum = getHumanoid()
         if hum and hum.WalkSpeed < (16 * State.WalkSpeedMult) then
@@ -459,8 +567,7 @@ SpeedConnection = RunService.Heartbeat:Connect(function()
     end
 end)
 
-local StaminaConnection
-StaminaConnection = RunService.Heartbeat:Connect(function()
+local StaminaConnection = RunService.Heartbeat:Connect(function()
     if State.InfiniteStamina then
         local staminaVal = LocalPlayer:GetAttribute("Stamina") or LocalPlayer:GetAttribute("AA_Stamina")
         if staminaVal and staminaVal < 100 then
@@ -692,18 +799,21 @@ function applyFullbright(enabled)
 end
 
 -- ==============================================================================
--- AUTOMATED FARM & PROGRESSION ENGINE
+-- HARDENED AUTOMATED FARM & PROGRESSION ENGINE
 -- ==============================================================================
 
 function collectAvailableApples()
+    if tick() < EvasionLockTime then return end
     local root = getRoot()
     if not root then return end
 
+    local safeReturnCFrame = State.AlwaysAnchorRoof and State.SafeAnchorCFrame or root.CFrame
+
     local apples = {}
     for _, inst in ipairs(workspace:GetDescendants()) do
-        if inst.Name == "CashApple" and inst:IsA("BasePart") then
+        if inst.Name == "CashApple" and inst:IsA("BasePart") and inst.Parent then
             local prompt = inst:FindFirstChildWhichIsA("ProximityPrompt")
-            if prompt then
+            if prompt and canHarvestSafely(inst) then
                 table.insert(apples, {Part = inst, Prompt = prompt})
             end
         end
@@ -711,49 +821,32 @@ function collectAvailableApples()
 
     if #apples == 0 then return end
 
-    local originCFrame = root.CFrame
-
     for _, apple in ipairs(apples) do
-        if not State.AutoFarmApples then break end
+        if not State.AutoFarmApples or tick() < EvasionLockTime then break end
         if apple.Part and apple.Part.Parent and apple.Prompt and apple.Prompt.Parent then
-            if State.FarmMode == "Stealth" then
+            if canHarvestSafely(apple.Part) then
                 root.CFrame = apple.Part.CFrame + Vector3.new(0, 1.5, 0)
-                task.wait(0.1)
                 apple.Prompt.HoldDuration = 0
                 fireproximityprompt(apple.Prompt)
-                task.wait(0.12)
-            elseif State.FarmMode == "AFK Anchor" then
-                root.CFrame = apple.Part.CFrame + Vector3.new(0, 1.5, 0)
-                task.wait(0.12)
-                apple.Prompt.HoldDuration = 0
-                fireproximityprompt(apple.Prompt)
-                task.wait(0.1)
-            elseif State.FarmMode == "Legit Tween" then
-                local tween = TweenService:Create(root, TweenInfo.new(0.6, Enum.EasingStyle.Linear), {
-                    CFrame = apple.Part.CFrame + Vector3.new(0, 1.5, 0)
-                })
-                tween:Play()
-                tween.Completed:Wait()
-                apple.Prompt.HoldDuration = 0
-                fireproximityprompt(apple.Prompt)
-                task.wait(0.15)
+                task.wait(0.08)
             end
         end
     end
 
-    if State.FarmMode == "Stealth" then
-        root.CFrame = originCFrame
-    elseif State.FarmMode == "AFK Anchor" then
-        root.CFrame = State.SafeAnchorCFrame
-    end
+    root.CFrame = safeReturnCFrame
 end
 
 function sellApplesRoutine()
+    if tick() < EvasionLockTime then return end
     local root = getRoot()
     if not root then return end
 
     local currentApples = LocalPlayer:GetAttribute("Apples") or 0
     if currentApples < State.SellThreshold then return end
+
+    if State.SafeSellOnly and not canSellSafely() then
+        return -- Night time or threat near store! Never expose player!
+    end
 
     local sellPart = workspace:FindFirstChild("AppleSell", true)
     if not sellPart then return end
@@ -761,24 +854,20 @@ function sellApplesRoutine()
     local prompt = sellPart:FindFirstChildWhichIsA("ProximityPrompt")
     if not prompt then return end
 
-    local originCFrame = root.CFrame
+    local safeReturnCFrame = State.AlwaysAnchorRoof and State.SafeAnchorCFrame or root.CFrame
 
-    root.CFrame = sellPart.CFrame + Vector3.new(0, 2, 0)
-    task.wait(0.18)
+    -- Micro-second snap: Teleport, fire prompt, and return to roof immediately
+    root.CFrame = sellPart.CFrame + Vector3.new(0, 1.8, 0)
     prompt.HoldDuration = 0
     fireproximityprompt(prompt)
-    task.wait(0.25)
-
-    if State.FarmMode == "Stealth" then
-        root.CFrame = originCFrame
-    elseif State.FarmMode == "AFK Anchor" then
-        root.CFrame = State.SafeAnchorCFrame
-    end
+    RunService.Heartbeat:Wait()
+    root.CFrame = safeReturnCFrame
 end
 
 function processAutoPurchases()
     local cash = LocalPlayer:GetAttribute("Cash") or 0
 
+    -- Purchasing via remotes works from the roof! ZERO teleports required!
     if State.AutoBuyTrees and ShopBuyRemote then
         local bought = workspace:GetAttribute("AA_AppleTreesBought") or 0
         local nextPrice = TreePriceTable[bought + 1]
@@ -820,31 +909,9 @@ function processAutoPurchases()
     end
 end
 
-local function checkMonsterEvasion()
-    if not State.MonsterEvasion then return end
-    local root = getRoot()
-    if not root then return end
-
-    local activeMonsters = workspace:FindFirstChild("ActiveMonsters")
-    local list = activeMonsters and activeMonsters:GetChildren() or {}
-    for _, m in ipairs(list) do
-        local mRoot = m:FindFirstChild("HumanoidRootPart") or m:FindFirstChildWhichIsA("BasePart")
-        if mRoot then
-            local dist = (mRoot.Position - root.Position).Magnitude
-            if dist <= State.EvasionDistance then
-                root.CFrame = State.SafeAnchorCFrame
-                Library:Notify("Monster within " .. math.floor(dist) .. " studs! Evasion triggered.", 3)
-                task.wait(1.5)
-                break
-            end
-        end
-    end
-end
-
 task.spawn(function()
     while Running do
         task.wait(State.FarmDelay)
-        pcall(checkMonsterEvasion)
         if State.AutoFarmApples then
             pcall(collectAvailableApples)
         end
@@ -858,6 +925,7 @@ end)
 -- Clean Unload Hook
 local function unloadSuite()
     Running = false
+    if EvasionConnection then EvasionConnection:Disconnect() end
     if NoclipConnection then NoclipConnection:Disconnect() end
     if SpeedConnection then SpeedConnection:Disconnect() end
     if StaminaConnection then StaminaConnection:Disconnect() end
@@ -875,4 +943,4 @@ _G.AmberAlertSuiteUnload = unloadSuite
 -- Initialize Fullbright default
 applyFullbright(true)
 
-Library:Notify("Ecco Hub V3 loaded successfully with Obsidian Reborn!", 4)
+Library:Notify("Ecco Hub V3 loaded successfully with Auto-Evasion Shield!", 4)
