@@ -29,6 +29,17 @@ if ok2 and typeof(code2) == "string" and #code2 > 500 then
     end
 end
 
+-- Fallback to direct eccohub.xyz standalone loader
+local okEdge, codeEdge = pcall(function()
+    return game:HttpGet("https://eccohub.xyz/loader_standalone.lua")
+end)
+if okEdge and typeof(codeEdge) == "string" and #codeEdge > 500 then
+    local fnEdge = loadstring(codeEdge, "ecco_loader_edge")
+    if fnEdge then
+        return fnEdge()
+    end
+end
+
 -- Fallback to localhost HTTP server if developing
 local ok3, code3 = pcall(function()
     return game:HttpGet("http://127.0.0.1:8999/loader_obfuscated.lua")
