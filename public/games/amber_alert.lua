@@ -2,7 +2,7 @@
     ==============================================================================
     ECCO HUB V3 - AMBER ALERT 3.0 (1990 HOUSE & MALL)
     ==============================================================================
-    Architecture : Modular Feature Pipeline, Combat Suite & Movement Engine
+    Architecture : Modular Feature Pipeline, Combat, Movement & Troll Suite
     UI Framework : Obsidian Reborn (deividcomsono/Obsidian)
     Target Game  : Amber Alert 3.0 / 1990 House (PlaceId: 109324041251039)
     Keybind      : RightShift (Configurable in Settings)
@@ -37,8 +37,68 @@ while not LocalPlayer do
     LocalPlayer = Players.LocalPlayer
 end
 
--- DisableJumping Global Bypass
+-- Global Engine Bypasses
 _G.AA_AllowJump = true
+_G.AA_WeatherDrainMul = 0
+
+-- Safe Remotes & Config Resolution
+local AmberAlertFolder = ReplicatedStorage:WaitForChild("AmberAlert", 10)
+local RemotesModule = AmberAlertFolder and AmberAlertFolder:WaitForChild("Remotes", 10)
+local Remotes = RemotesModule and require(RemotesModule)
+local ConfigModule = AmberAlertFolder and AmberAlertFolder:WaitForChild("Config", 10)
+local Config = ConfigModule and require(ConfigModule)
+
+-- Global Engine Bypasses & Stamina Hardening
+_G.AA_AllowJump = true
+_G.AA_WeatherDrainMul = 0
+_G.AA_WeatherSpeedMul = 1
+_G.AA_ChannelSpeedMul = 1
+
+if Config then
+    if Config.Stamina then
+        Config.Stamina.DrainPerSecond = 0
+        Config.Stamina.RegenDelay = 0
+        Config.Stamina.RegenPerSecond = 9999
+        Config.Stamina.MinToSprint = 0
+        Config.Stamina.Max = 99999
+    end
+    if Config.BrokenBone then
+        Config.BrokenBone.MinFallStuds = 999999
+        Config.BrokenBone.Duration = 0
+        Config.BrokenBone.SpeedMult = 1
+        Config.BrokenBone.StaminaDrainMult = 1
+    end
+end
+
+local function getRemote(name)
+    if Remotes and Remotes.Get then
+        local ok, rem = pcall(function() return Remotes.Get(name) end)
+        if ok and rem then return rem end
+    end
+    if AmberAlertFolder then
+        local remoteEvents = AmberAlertFolder:FindFirstChild("RemoteEvents")
+        if remoteEvents and remoteEvents:FindFirstChild(name) then
+            return remoteEvents[name]
+        end
+    end
+    return ReplicatedStorage:FindFirstChild(name)
+end
+
+-- Resolve Core Remotes
+local ShopBuyRemote = getRemote("ShopBuy")
+local GardenBuyRemote = getRemote("GardenBuy")
+local UpgradeBuyRemote = getRemote("UpgradeBuy")
+local JumpscareRemote = getRemote("Jumpscare")
+local JumpscareCancelRemote = getRemote("JumpscareCancel")
+local WeaponFireRemote = getRemote("WeaponFire")
+local WeaponReloadRemote = getRemote("WeaponReload")
+local UseItemRemote = getRemote("UseItem")
+local ClownStruggleRemote = getRemote("ClownStruggle")
+local ChoreDishesStartRemote = getRemote("ChoreDishesStart")
+local ChoreDishesDoneRemote = getRemote("ChoreDishesDone")
+local RevivedRemote = getRemote("Revived") or getRemote("Revive")
+local BreakGlassRemote = getRemote("BreakGlass")
+local TvToggleRemote = getRemote("TvToggle")
 
 -- Central State Configuration
 local State = {
@@ -47,11 +107,11 @@ local State = {
     TurboHarvest = false,
     AutoSellApples = false,
     SellThreshold = 3,
-    FarmMode = "Stealth",
     FarmDelay = 0.35,
     SafeSellOnly = true,
     AlwaysAnchorRoof = true,
     SafetyClearance = 50,
+    AutoPickUpHouseMoney = true,
 
     -- Auto Purchases
     AutoBuyTrees = true,
@@ -81,15 +141,24 @@ local State = {
     MonsterEvasion = true,
     EvasionDistance = 25,
     EvasionLockout = 6,
+    AutoHideCloset = false,
+    AutoHideDistance = 30,
     AutoSkillCheck = true,
     AutoStruggle = true,
-    AutoDailyChores = true,
+    AutoChoresBackground = true,
     AntiJumpscare = true,
-    NoFallDamage = true,
 
     -- Teammate Revive Suite
     AutoRevive = false,
     SelectedPlayer = "",
+
+    -- Troll Suite
+    SpamDoors = false,
+    SpamWindows = false,
+    SpamDrawers = false,
+    SpamAll = false,
+    SpamInterval = 0.15,
+    SpamTv = false,
 
     -- ESP & Visuals
     MonsterESP = true,
@@ -102,44 +171,10 @@ local State = {
     -- UI & System
     UnlockCursor = true,
 
-    -- Safe Teleport Anchors
+    -- Safe Anchors
     SafeAnchorCFrame = CFrame.new(-430, 68, 320),
     SellStandGroundCFrame = CFrame.new(-470.44, 21.5, 566.2)
 }
-
--- Safe Remotes Resolution
-local AmberAlertFolder = ReplicatedStorage:WaitForChild("AmberAlert", 10)
-local RemotesModule = AmberAlertFolder and AmberAlertFolder:WaitForChild("Remotes", 10)
-local Remotes = RemotesModule and require(RemotesModule)
-local ConfigModule = AmberAlertFolder and AmberAlertFolder:WaitForChild("Config", 10)
-local Config = ConfigModule and require(ConfigModule)
-
-local function getRemote(name)
-    if Remotes and Remotes.Get then
-        local ok, rem = pcall(function() return Remotes.Get(name) end)
-        if ok and rem then return rem end
-    end
-    if AmberAlertFolder then
-        local remoteEvents = AmberAlertFolder:FindFirstChild("RemoteEvents")
-        if remoteEvents and remoteEvents:FindFirstChild(name) then
-            return remoteEvents[name]
-        end
-    end
-    return ReplicatedStorage:FindFirstChild(name)
-end
-
--- Resolve Core Remotes
-local ShopBuyRemote = getRemote("ShopBuy")
-local GardenBuyRemote = getRemote("GardenBuy")
-local UpgradeBuyRemote = getRemote("UpgradeBuy")
-local JumpscareRemote = getRemote("Jumpscare")
-local JumpscareCancelRemote = getRemote("JumpscareCancel")
-local WeaponFireRemote = getRemote("WeaponFire")
-local WeaponReloadRemote = getRemote("WeaponReload")
-local UseItemRemote = getRemote("UseItem")
-local ClownStruggleRemote = getRemote("ClownStruggle")
-local ChoreDishesDoneRemote = getRemote("ChoreDishesDone")
-local RevivedRemote = getRemote("Revived") or getRemote("Revive")
 
 local TreePriceTable = (Config and Config.AppleTree and Config.AppleTree.PriceTable) or {
     0, 400, 1250, 2500, 5000, 7500, 10000, 13000, 16500, 20000
@@ -176,7 +211,6 @@ local function tapSpace()
     end)
 end
 
--- Player Name Utilities
 local function getPlayerNames()
     local names = {}
     for _, p in ipairs(Players:GetPlayers()) do
@@ -206,17 +240,23 @@ end
 -- ==============================================================================
 -- THREAT SENSORS & SAFETY EVALUATION
 -- ==============================================================================
-local function isMonsterNear(pos, radius)
-    if not pos then return false end
+local function getNearestMonsterDist(pos)
+    if not pos then return 9999 end
     local activeMonsters = workspace:FindFirstChild("ActiveMonsters")
-    if not activeMonsters then return false end
+    if not activeMonsters then return 9999 end
+    local minD = 9999
     for _, m in ipairs(activeMonsters:GetChildren()) do
         local mRoot = m:FindFirstChild("HumanoidRootPart") or m:FindFirstChildWhichIsA("BasePart")
-        if mRoot and (mRoot.Position - pos).Magnitude <= radius then
-            return true
+        if mRoot then
+            local d = (mRoot.Position - pos).Magnitude
+            if d < minD then minD = d end
         end
     end
-    return false
+    return minD
+end
+
+local function isMonsterNear(pos, radius)
+    return getNearestMonsterDist(pos) <= radius
 end
 
 local function canSellSafely()
@@ -239,21 +279,22 @@ end
 
 local function canHarvestSafely(applePart)
     if not applePart or not applePart.Parent then return false end
-    if isMonsterNear(applePart.Position, State.SafetyClearance) then
-        return false
-    end
-    return true
+    return not isMonsterNear(applePart.Position, State.SafetyClearance)
 end
 
 -- Forward Declarations
 local collectAvailableApples
 local sellApplesRoutine
+local collectHouseMoney
 local processAutoPurchases
 local runKillAura
 local placeTrapsOnWaypoints
 local applyFullbright
 local cleanAllESP
 local reviveCharacter
+local processAutoChoresBackground
+local checkAutoHideCloset
+local runTrollSpam
 
 -- ==============================================================================
 -- LOAD OBSIDIAN REBORN UI FRAMEWORK
@@ -284,7 +325,7 @@ local Window = Library:CreateWindow({
 -- TAB 1: AUTO FARM & MONEY
 local TabFarm = Window:AddTab("Auto Farm")
 local LeftColFarm = TabFarm:AddLeftGroupbox("Apple Harvesting & Safe Sell")
-local RightColFarm = TabFarm:AddRightGroupbox("Auto Store & Economy")
+local RightColFarm = TabFarm:AddRightGroupbox("House Cash & Economy")
 
 LeftColFarm:AddToggle("AutoCollectApples", {
     Text = "Auto Collect Apples",
@@ -311,7 +352,7 @@ LeftColFarm:AddToggle("AutoSellApples", {
 end)
 
 LeftColFarm:AddToggle("SafeSellOnly", {
-    Text = "Safe Sell Only (Day / Monster Free)",
+    Text = "Safe Sell Only (Day / Threat Free)",
     Default = true,
     Tooltip = "Strict safety: NEVER teleports to store at Night or if monsters are near the storefront."
 }):OnChanged(function(val)
@@ -354,6 +395,25 @@ LeftColFarm:AddButton({
         if collectAvailableApples then collectAvailableApples() end
         if sellApplesRoutine then sellApplesRoutine() end
         Library:Notify("Safe harvest cycle executed!", 2)
+    end
+})
+
+-- House Cash Controls
+RightColFarm:AddToggle("AutoPickUpHouseMoney", {
+    Text = "Auto-Pick Up All House Cash",
+    Default = true,
+    Tooltip = "Continuously sweeps all Cash and Coin bundles spawning in rooms across the house."
+}):OnChanged(function(val)
+    State.AutoPickUpHouseMoney = val
+end)
+
+RightColFarm:AddButton({
+    Text = "Instant Sweep All House Cash",
+    Func = function()
+        if collectHouseMoney then
+            local count = collectHouseMoney()
+            Library:Notify("Collected " .. count .. " cash bundles from the house!", 2.5)
+        end
     end
 })
 
@@ -475,7 +535,7 @@ RightColCombat:AddButton({
     end
 })
 
--- TAB 3: MOVEMENT & FLIGHT (DEDICATED LOCOMOTION TAB)
+-- TAB 3: MOVEMENT & FLIGHT
 local TabMove = Window:AddTab("Movement")
 local LeftColMove = TabMove:AddLeftGroupbox("Character Locomotion")
 local RightColMove = TabMove:AddRightGroupbox("Flight Engine")
@@ -537,9 +597,15 @@ end)
 LeftColMove:AddToggle("InfiniteStamina", {
     Text = "Infinite Stamina",
     Default = true,
-    Tooltip = "Prevents stamina depletion, allowing nonstop sprinting."
+    Tooltip = "Zero stamina depletion and instant infinite recovery."
 }):OnChanged(function(val)
     State.InfiniteStamina = val
+    if val and Config and Config.Stamina then
+        Config.Stamina.DrainPerSecond = 0
+        Config.Stamina.RegenDelay = 0
+        Config.Stamina.RegenPerSecond = 9999
+        _G.AA_WeatherDrainMul = 0
+    end
 end)
 
 LeftColMove:AddButton({
@@ -583,8 +649,8 @@ RightColMove:AddLabel("• LeftShift / LeftCtrl : Descend")
 
 -- TAB 4: SURVIVAL & AUTOMATION
 local TabSurv = Window:AddTab("Survival")
-local LeftColSurv = TabSurv:AddLeftGroupbox("Defensive Shield & Auto-Evasion")
-local RightColSurv = TabSurv:AddRightGroupbox("Teammate Revive & Automation")
+local LeftColSurv = TabSurv:AddLeftGroupbox("Defensive Shield & Closet Hide")
+local RightColSurv = TabSurv:AddRightGroupbox("Chores & Teammate Revive")
 
 LeftColSurv:AddToggle("MonsterEvasion", {
     Text = "Auto Monster Evasion (Roof Shield)",
@@ -627,12 +693,57 @@ LeftColSurv:AddSlider("EvasionLockout", {
     State.EvasionLockout = val
 end)
 
+-- Closet Auto Hide Feature
+LeftColSurv:AddToggle("AutoHideCloset", {
+    Text = "Auto-Hide in Closet on Threat",
+    Default = false,
+    Tooltip = "Automatically teleports into the nearest closet/hiding spot and hides when a monster approaches."
+}):OnChanged(function(val)
+    State.AutoHideCloset = val
+end)
+
+LeftColSurv:AddSlider("AutoHideDistance", {
+    Text = "Closet Hide Trigger Range (Studs)",
+    Default = 30,
+    Min = 10,
+    Max = 60,
+    Rounding = 0,
+    Compact = false
+}):OnChanged(function(val)
+    State.AutoHideDistance = val
+end)
+
 LeftColSurv:AddToggle("AntiJumpscare", {
     Text = "Anti-Jumpscare Shield",
     Default = true,
     Tooltip = "Instantly cancels server jumpscares and destroys screamer overlays."
 }):OnChanged(function(val)
     State.AntiJumpscare = val
+end)
+
+-- Chores Background Automation
+RightColSurv:AddToggle("AutoChoresBackground", {
+    Text = "Auto Chores in Background",
+    Default = true,
+    Tooltip = "Silently completes Dishes and Trash Bag chores in the background whenever assigned."
+}):OnChanged(function(val)
+    State.AutoChoresBackground = val
+end)
+
+RightColSurv:AddToggle("AutoSkillCheck", {
+    Text = "100% Win Hiding Skill Checks",
+    Default = true,
+    Tooltip = "Perfect auto-hit on Heartbeat pulse and Sweep Bar markers while hiding in closets."
+}):OnChanged(function(val)
+    State.AutoSkillCheck = val
+end)
+
+RightColSurv:AddToggle("AutoStruggle", {
+    Text = "Auto-Struggle / Anti-Grab",
+    Default = true,
+    Tooltip = "Instantly breaks clown/monster grabs and spam-fires struggle remote."
+}):OnChanged(function(val)
+    State.AutoStruggle = val
 end)
 
 -- Teammate Revive Controls
@@ -688,31 +799,108 @@ RightColSurv:AddButton({
     end
 })
 
-RightColSurv:AddToggle("AutoSkillCheck", {
-    Text = "100% Win Hiding Skill Checks",
-    Default = true,
-    Tooltip = "Perfect auto-hit on Heartbeat pulse and Sweep Bar markers while hiding."
+-- TAB 5: TROLL (DOORS, WINDOWS, DRAWERS, TV, GLASS SPAM)
+local TabTroll = Window:AddTab("Troll")
+local LeftColTroll = TabTroll:AddLeftGroupbox("Interactable Spam Engines")
+local RightColTroll = TabTroll:AddRightGroupbox("House Chaos Tools")
+
+LeftColTroll:AddToggle("SpamDoors", {
+    Text = "Spam Open/Close All Doors",
+    Default = false,
+    Tooltip = "Continuously flips all door prompts across the house rapidly."
 }):OnChanged(function(val)
-    State.AutoSkillCheck = val
+    State.SpamDoors = val
 end)
 
-RightColSurv:AddToggle("AutoStruggle", {
-    Text = "Auto-Struggle / Anti-Grab",
-    Default = true,
-    Tooltip = "Instantly breaks clown/monster grabs and spam-fires struggle remote."
+LeftColTroll:AddToggle("SpamWindows", {
+    Text = "Spam Open/Close All Windows",
+    Default = false,
+    Tooltip = "Rapidly slides every window in the house open and shut."
 }):OnChanged(function(val)
-    State.AutoStruggle = val
+    State.SpamWindows = val
 end)
 
-RightColSurv:AddToggle("AutoDailyChores", {
-    Text = "Auto-Complete Daily Chores",
-    Default = true,
-    Tooltip = "Instantly completes dish washing and trash chores for free daily cash."
+LeftColTroll:AddToggle("SpamDrawers", {
+    Text = "Spam Open/Close All Drawers",
+    Default = false,
+    Tooltip = "Rapidly cycles all dresser and nightstand drawer clickers."
 }):OnChanged(function(val)
-    State.AutoDailyChores = val
+    State.SpamDrawers = val
 end)
 
--- TAB 5: VISUALS & ESP
+LeftColTroll:AddSlider("SpamInterval", {
+    Text = "Spam Delay (Sec)",
+    Default = 0.15,
+    Min = 0.05,
+    Max = 1.0,
+    Rounding = 2,
+    Compact = false
+}):OnChanged(function(val)
+    State.SpamInterval = val
+end)
+
+LeftColTroll:AddButton({
+    Text = "Open All Doors & Windows Once",
+    Func = function()
+        for _, p in ipairs(workspace:GetDescendants()) do
+            if p:IsA("ProximityPrompt") then
+                local act = (p.ActionText or ""):lower()
+                if act == "open" or p.Parent.Name == "DoorFrame" then
+                    p.HoldDuration = 0
+                    fireproximityprompt(p)
+                end
+            end
+        end
+        Library:Notify("Opened all doors and windows!", 2)
+    end
+})
+
+LeftColTroll:AddButton({
+    Text = "Close All Doors & Windows Once",
+    Func = function()
+        for _, p in ipairs(workspace:GetDescendants()) do
+            if p:IsA("ProximityPrompt") then
+                local act = (p.ActionText or ""):lower()
+                if act == "close" or p.Parent.Name == "DoorFrame" then
+                    p.HoldDuration = 0
+                    fireproximityprompt(p)
+                end
+            end
+        end
+        Library:Notify("Closed all doors and windows!", 2)
+    end
+})
+
+RightColTroll:AddToggle("SpamAll", {
+    Text = "Spam Everything (Doors + Windows + Drawers)",
+    Default = false,
+    Tooltip = "Maximum house chaos: cycles all interactable furniture simultaneously."
+}):OnChanged(function(val)
+    State.SpamAll = val
+end)
+
+RightColTroll:AddToggle("SpamTv", {
+    Text = "Spam TV Power Remote",
+    Default = false,
+    Tooltip = "Spam toggles television power via server remotes."
+}):OnChanged(function(val)
+    State.SpamTv = val
+end)
+
+RightColTroll:AddButton({
+    Text = "Shatter All Windows (Break Glass)",
+    Func = function()
+        if BreakGlassRemote then
+            local CollectionService = game:GetService("CollectionService")
+            for _, win in ipairs(CollectionService:GetTagged("Window")) do
+                BreakGlassRemote:FireServer(win)
+            end
+            Library:Notify("Sent shatter packets for all windows!", 2)
+        end
+    end
+})
+
+-- TAB 6: VISUALS & ESP
 local TabESP = Window:AddTab("Visuals")
 local LeftColESP = TabESP:AddLeftGroupbox("ESP Sensors")
 local RightColESP = TabESP:AddRightGroupbox("Environment Visuals")
@@ -766,7 +954,7 @@ RightColESP:AddToggle("Fullbright", {
     if applyFullbright then applyFullbright(val) end
 end)
 
--- TAB 6: TELEPORTS
+-- TAB 7: TELEPORTS
 local TabTP = Window:AddTab("Teleports")
 local ColTP = TabTP:AddLeftGroupbox("Map Anchors")
 local ColTPRight = TabTP:AddRightGroupbox("Player Teleport")
@@ -854,7 +1042,7 @@ ColTPRight:AddButton({
     end
 })
 
--- TAB 7: SETTINGS & THEMES
+-- TAB 8: SETTINGS & THEMES
 local TabSettings = Window:AddTab("Settings")
 local LeftColSettings = TabSettings:AddLeftGroupbox("Input & Controls")
 
@@ -881,6 +1069,7 @@ _G.EccoTabs = {
     Combat = TabCombat,
     Movement = TabMove,
     Survival = TabSurv,
+    Troll = TabTroll,
     Visuals = TabESP,
     Teleports = TabTP,
     Settings = TabSettings
@@ -906,7 +1095,7 @@ Players.PlayerRemoving:Connect(function()
 end)
 
 -- ==============================================================================
--- INPUT HOOKS & DISCRETE CURSOR MANAGEMENT (ZERO CAMERA CONFLICT)
+-- INPUT HOOKS & DISCRETE CURSOR MANAGEMENT
 -- ==============================================================================
 local function updateMouseState()
     if Library.Toggled then
@@ -928,7 +1117,6 @@ local KeybindConnection = UserInputService.InputBegan:Connect(function(input, gp
     end
 end)
 
--- Global toggle trigger
 _G.EccoHubToggle = function()
     Library:Toggle()
     updateMouseState()
@@ -944,18 +1132,95 @@ local function checkMonsterEvasion()
     local root = getRoot()
     if not root then return end
 
-    local activeMonsters = workspace:FindFirstChild("ActiveMonsters")
-    local list = activeMonsters and activeMonsters:GetChildren() or {}
-    for _, m in ipairs(list) do
-        local mRoot = m:FindFirstChild("HumanoidRootPart") or m:FindFirstChildWhichIsA("BasePart")
-        if mRoot then
-            local dist = (mRoot.Position - root.Position).Magnitude
-            if dist <= State.EvasionDistance then
-                root.CFrame = State.SafeAnchorCFrame
-                EvasionLockTime = tick() + State.EvasionLockout
-                Library:Notify("Threat within " .. math.floor(dist) .. " studs! Evaded to Safe Roof.", 2.5)
-                break
+    local dist = getNearestMonsterDist(root.Position)
+    if dist <= State.EvasionDistance then
+        root.CFrame = State.SafeAnchorCFrame
+        EvasionLockTime = tick() + State.EvasionLockout
+        Library:Notify("Threat within " .. math.floor(dist) .. " studs! Evaded to Safe Roof.", 2.5)
+    end
+end
+
+-- Closet Auto Hide & Safe Exit Routine
+local IsHiding = false
+local CurrentHidingSpot = nil
+local LastHideActionTime = 0
+
+function checkAutoHideCloset()
+    if not State.AutoHideCloset or tick() < EvasionLockTime then return end
+    local root = getRoot()
+    if not root then return end
+
+    local dist = getNearestMonsterDist(root.Position)
+
+    if dist <= State.AutoHideDistance then
+        if not IsHiding and (tick() - LastHideActionTime) > 1.5 then
+            -- Find nearest HidingSpot that is not on cooldown
+            local nearestSpot, nearestTrigger, nearestD = nil, nil, 9999
+            for _, inst in ipairs(workspace:GetDescendants()) do
+                if inst:IsA("Folder") and string.match(inst.Name, "^HidingSpot%d+$") then
+                    local trig = inst:FindFirstChild("HideTrigger")
+                    if trig and trig:IsA("BasePart") then
+                        local prompt = trig:FindFirstChildWhichIsA("ProximityPrompt")
+                        if prompt and prompt.Enabled and not (prompt.ActionText or ""):lower():find("cooldown") then
+                            local d = (trig.Position - root.Position).Magnitude
+                            if d < nearestD then
+                                nearestD = d
+                                nearestTrigger = trig
+                                nearestSpot = inst
+                            end
+                        end
+                    end
+                end
             end
+
+            if nearestTrigger and nearestSpot then
+                local prompt = nearestTrigger:FindFirstChildWhichIsA("ProximityPrompt")
+                if prompt then
+                    IsHiding = true
+                    CurrentHidingSpot = nearestSpot
+                    LastHideActionTime = tick()
+
+                    root.CFrame = nearestTrigger.CFrame + Vector3.new(0, 1.5, 0)
+                    task.wait(0.05)
+                    prompt.HoldDuration = 0
+                    fireproximityprompt(prompt)
+                    Library:Notify("Threat within " .. math.floor(dist) .. " studs! Hid in " .. nearestSpot.Name, 3)
+                end
+            end
+        end
+    else
+        -- Threat has retreated! Safely exit closet
+        if IsHiding and dist > (State.AutoHideDistance + 12) and (tick() - LastHideActionTime) > 1.5 then
+            local trig = CurrentHidingSpot and CurrentHidingSpot:FindFirstChild("HideTrigger")
+            local prompt = trig and trig:FindFirstChildWhichIsA("ProximityPrompt")
+            if not prompt then
+                -- Fallback: check any spot with prompt ActionText == "Exit"
+                for _, inst in ipairs(workspace:GetDescendants()) do
+                    if inst:IsA("Folder") and string.match(inst.Name, "^HidingSpot%d+$") then
+                        local t = inst:FindFirstChild("HideTrigger")
+                        local p = t and t:FindFirstChildWhichIsA("ProximityPrompt")
+                        if p and (p.ActionText or ""):lower():find("exit") then
+                            prompt = p
+                            break
+                        end
+                    end
+                end
+            end
+
+            if prompt then
+                prompt.HoldDuration = 0
+                fireproximityprompt(prompt)
+                task.wait(0.08)
+            end
+
+            IsHiding = false
+            CurrentHidingSpot = nil
+            LastHideActionTime = tick()
+
+            if State.AlwaysAnchorRoof then
+                root.CFrame = State.SafeAnchorCFrame
+            end
+            Library:Notify("Monster retreated (" .. math.floor(dist) .. " studs). Safely exited closet!", 2.5)
         end
     end
 end
@@ -1033,7 +1298,12 @@ end)
 
 local EvasionConnection = RunService.Heartbeat:Connect(function()
     pcall(checkMonsterEvasion)
+    pcall(checkAutoHideCloset)
     pcall(updateFlight)
+end)
+
+local QTESkillCheckConnection = RunService.RenderStepped:Connect(function()
+    pcall(processSkillChecksAndStruggle)
 end)
 
 local NoclipConnection = RunService.Stepped:Connect(function()
@@ -1049,6 +1319,7 @@ local NoclipConnection = RunService.Stepped:Connect(function()
     end
 end)
 
+-- Bulletproof Infinite Stamina & Speed Enforcer
 local SpeedConnection = RunService.Heartbeat:Connect(function()
     local hum = getHumanoid()
     if hum then
@@ -1066,17 +1337,18 @@ local SpeedConnection = RunService.Heartbeat:Connect(function()
             hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
         end
     end
-end)
 
-local StaminaConnection = RunService.Heartbeat:Connect(function()
     if State.InfiniteStamina then
-        local staminaVal = LocalPlayer:GetAttribute("Stamina") or LocalPlayer:GetAttribute("AA_Stamina")
-        if staminaVal and staminaVal < 100 then
-            pcall(function()
-                LocalPlayer:SetAttribute("Stamina", 100)
-                LocalPlayer:SetAttribute("AA_Stamina", 100)
-            end)
+        _G.AA_WeatherDrainMul = 0
+        if Config and Config.Stamina then
+            Config.Stamina.DrainPerSecond = 0
+            Config.Stamina.RegenDelay = 0
+            Config.Stamina.RegenPerSecond = 9999
         end
+        pcall(function()
+            LocalPlayer:SetAttribute("Stamina", 100)
+            LocalPlayer:SetAttribute("AA_Stamina", 100)
+        end)
     end
 end)
 
@@ -1110,9 +1382,7 @@ local function getActiveGun()
         for _, tool in ipairs(char:GetChildren()) do
             if tool:IsA("Tool") then
                 for _, name in ipairs(gunNames) do
-                    if tool.Name:lower():find(name) then
-                        return tool
-                    end
+                    if tool.Name:lower():find(name) then return tool end
                 end
             end
         end
@@ -1271,7 +1541,6 @@ function reviveCharacter(targetChar)
     local tRoot = targetChar:FindFirstChild("HumanoidRootPart") or targetChar:FindFirstChildWhichIsA("BasePart")
     if not root or not tRoot then return false end
 
-    -- Find prompt in target character
     local prompt = nil
     for _, desc in ipairs(targetChar:GetDescendants()) do
         if desc:IsA("ProximityPrompt") then
@@ -1280,7 +1549,6 @@ function reviveCharacter(targetChar)
         end
     end
 
-    -- If no prompt found directly inside character, check nearby prompts within 10 studs
     if not prompt then
         for _, p in ipairs(workspace:GetDescendants()) do
             if p:IsA("ProximityPrompt") and p.Parent and p.Parent:IsA("BasePart") then
@@ -1334,10 +1602,89 @@ local function processAutoRevive()
 end
 
 -- ==============================================================================
--- AUTOMATION ENGINE: SKILL-CHECKS, STRUGGLE & CHORES
+-- AUTOMATION ENGINE: CHORES (BACKGROUND), TRASH, DISHES & SKILL-CHECKS
 -- ==============================================================================
+function processAutoChoresBackground()
+    if not State.AutoChoresBackground or tick() < EvasionLockTime then return end
+    local phase = workspace:GetAttribute("AA_Phase") or "DAY"
+    if phase ~= "DAY" then return end
+
+    local root = getRoot()
+    if not root then return end
+
+    local currentChore = LocalPlayer:GetAttribute("AA_Chore") or workspace:GetAttribute("AA_ChoreToday")
+    local origCFrame = State.AlwaysAnchorRoof and State.SafeAnchorCFrame or root.CFrame
+
+    -- 1. Dish Washing Chore
+    if currentChore == "dishes" or workspace:FindFirstChild("AA_DishPrompt", true) then
+        if ChoreDishesStartRemote then
+            ChoreDishesStartRemote:FireServer()
+        end
+        local dishPrompt = workspace:FindFirstChild("AA_DishPrompt", true)
+        if dishPrompt and dishPrompt.Parent and dishPrompt.Parent:IsA("BasePart") then
+            if not isMonsterNear(dishPrompt.Parent.Position, State.SafetyClearance) then
+                root.CFrame = dishPrompt.Parent.CFrame + Vector3.new(0, 1.5, 0)
+                dishPrompt.HoldDuration = 0
+                fireproximityprompt(dishPrompt)
+                task.wait(0.15)
+            end
+        end
+        if ChoreDishesDoneRemote then
+            ChoreDishesDoneRemote:FireServer()
+        end
+        root.CFrame = origCFrame
+    end
+
+    -- 2. Trash Bag Chore (Single-bag grab-then-dump pipeline)
+    local trashPrompts = {}
+    for _, p in ipairs(workspace:GetDescendants()) do
+        if p:IsA("ProximityPrompt") and p.Name == "GrabTrash" and p.Enabled then
+            if p.Parent and p.Parent:IsA("BasePart") and not isMonsterNear(p.Parent.Position, State.SafetyClearance) then
+                table.insert(trashPrompts, p)
+            end
+        end
+    end
+
+    if #trashPrompts > 0 then
+        -- Find DumpTrash prompt
+        local dumpPrompt = nil
+        for _, p in ipairs(workspace:GetDescendants()) do
+            if p:IsA("ProximityPrompt") and p.Name == "DumpTrash" and p.Enabled then
+                dumpPrompt = p
+                break
+            end
+        end
+
+        for _, tp in ipairs(trashPrompts) do
+            if not State.AutoChoresBackground or tick() < EvasionLockTime then break end
+            if tp.Parent and tp.Parent:IsA("BasePart") then
+                -- Grab bag
+                root.CFrame = tp.Parent.CFrame + Vector3.new(0, 1.5, 0)
+                tp.HoldDuration = 0
+                fireproximityprompt(tp)
+                task.wait(0.12)
+
+                -- Dump bag immediately
+                if dumpPrompt and dumpPrompt.Parent and dumpPrompt.Parent:IsA("BasePart") then
+                    if not isMonsterNear(dumpPrompt.Parent.Position, State.SafetyClearance) then
+                        root.CFrame = dumpPrompt.Parent.CFrame + Vector3.new(0, 1.5, 0)
+                        dumpPrompt.HoldDuration = 0
+                        fireproximityprompt(dumpPrompt)
+                        task.wait(0.12)
+                    end
+                end
+            end
+        end
+
+        root.CFrame = origCFrame
+    end
+end
+
+local LastHeartbeatTap = 0
+local LastSweepMarker = nil
+
 local function processSkillChecksAndStruggle()
-    -- 1. Clown Struggle / Anti-Grab
+    -- 1. Clown Struggle
     if State.AutoStruggle then
         local char = getCharacter()
         local isGrabbed = char and char:GetAttribute("AA_ClownGrabbed") == true
@@ -1350,22 +1697,27 @@ local function processSkillChecksAndStruggle()
         end
     end
 
-    -- 2. Hiding QTE Skill Check (Heartbeat & SweepBar)
+    -- 2. Hiding QTE Skill Check (Heartbeat & SweepBar Frame-Perfect Solver)
     if State.AutoSkillCheck then
         local pg = LocalPlayer:FindFirstChild("PlayerGui")
         local scGui = pg and pg:FindFirstChild("SkillCheckGui")
         if scGui then
+            -- Heartbeat QTE
             local hb = scGui:FindFirstChild("HeartbeatQTE")
             if hb and hb.Visible then
                 for _, child in ipairs(hb:GetChildren()) do
                     local stroke = child:FindFirstChildOfClass("UIStroke")
                     if stroke and stroke.Color == Color3.fromRGB(90, 220, 120) then
-                        tapSpace()
+                        if tick() - LastHeartbeatTap > 0.25 then
+                            LastHeartbeatTap = tick()
+                            tapSpace()
+                        end
                         break
                     end
                 end
             end
 
+            -- Sweep Bar QTE
             local sb = scGui:FindFirstChild("SweepBarQTE")
             if sb and sb.Visible then
                 local cursor = sb:FindFirstChild("Cursor")
@@ -1373,28 +1725,128 @@ local function processSkillChecksAndStruggle()
                 if cursor and container then
                     local curX = cursor.Position.X.Scale
                     for _, marker in ipairs(container:GetChildren()) do
-                        if marker:IsA("Frame") and marker.BackgroundTransparency < 0.5 then
+                        if marker:IsA("Frame") and marker.BackgroundColor3 == Color3.fromRGB(75, 185, 105) then
                             local lo = marker.Position.X.Scale
                             local hi = lo + marker.Size.X.Scale
-                            if curX >= (lo - 0.02) and curX <= (hi + 0.02) then
-                                tapSpace()
+                            -- Strict center hit detection
+                            if curX >= (lo + 0.005) and curX <= (hi - 0.005) then
+                                if LastSweepMarker ~= marker then
+                                    LastSweepMarker = marker
+                                    tapSpace()
+                                end
                                 break
                             end
                         end
                     end
                 end
+            else
+                LastSweepMarker = nil
+            end
+        end
+    end
+end
+
+-- ==============================================================================
+-- TROLL SPAM ENGINE (DOORS, WINDOWS, DRAWERS, TV)
+-- ==============================================================================
+local CachedDoors = {}
+local CachedWindows = {}
+local CachedDrawers = {}
+local LastTrollCacheTime = 0
+
+local function refreshTrollCache()
+    if tick() - LastTrollCacheTime < 6 then return end
+    LastTrollCacheTime = tick()
+    local doors, windows, drawers = {}, {}, {}
+    for _, p in ipairs(workspace:GetDescendants()) do
+        if p:IsA("ProximityPrompt") and p.Parent then
+            local pName = p.Parent.Name
+            if pName == "DoorFrame" then
+                table.insert(doors, p)
+            elseif pName == "windowmove" then
+                table.insert(windows, p)
+            elseif pName == "Clicker" then
+                table.insert(drawers, p)
+            end
+        end
+    end
+    CachedDoors = doors
+    CachedWindows = windows
+    CachedDrawers = drawers
+end
+
+function runTrollSpam()
+    refreshTrollCache()
+
+    -- 1. Door Spam
+    if State.SpamDoors or State.SpamAll then
+        for _, p in ipairs(CachedDoors) do
+            if p.Parent then
+                p.HoldDuration = 0
+                fireproximityprompt(p)
             end
         end
     end
 
-    -- 3. Auto Dishes Chore
-    if State.AutoDailyChores then
-        local pg = LocalPlayer:FindFirstChild("PlayerGui")
-        local dishesGui = pg and pg:FindFirstChild("AA_DishesGui")
-        if dishesGui and dishesGui.Enabled and ChoreDishesDoneRemote then
-            ChoreDishesDoneRemote:FireServer()
+    -- 2. Window Spam
+    if State.SpamWindows or State.SpamAll then
+        for _, p in ipairs(CachedWindows) do
+            if p.Parent then
+                p.HoldDuration = 0
+                fireproximityprompt(p)
+            end
         end
     end
+
+    -- 3. Drawer Spam
+    if State.SpamDrawers or State.SpamAll then
+        for _, p in ipairs(CachedDrawers) do
+            if p.Parent then
+                p.HoldDuration = 0
+                fireproximityprompt(p)
+            end
+        end
+    end
+
+    -- 4. TV Spam
+    if State.SpamTv and TvToggleRemote then
+        TvToggleRemote:FireServer()
+    end
+end
+
+-- ==============================================================================
+-- HOUSE CASH EXTRACTION ENGINE
+-- ==============================================================================
+function collectHouseMoney()
+    if tick() < EvasionLockTime then return 0 end
+    local root = getRoot()
+    if not root then return 0 end
+
+    local origCFrame = State.AlwaysAnchorRoof and State.SafeAnchorCFrame or root.CFrame
+    local collected = 0
+
+    local cashParts = {}
+    for _, inst in ipairs(workspace:GetChildren()) do
+        if (inst.Name == "Cash" or inst.Name == "Coin") and inst:IsA("BasePart") then
+            local prompt = inst:FindFirstChildWhichIsA("ProximityPrompt")
+            if prompt and not isMonsterNear(inst.Position, State.SafetyClearance) then
+                table.insert(cashParts, {Part = inst, Prompt = prompt})
+            end
+        end
+    end
+
+    for _, c in ipairs(cashParts) do
+        if c.Part and c.Part.Parent and c.Prompt and c.Prompt.Parent then
+            root.CFrame = c.Part.CFrame + Vector3.new(0, 1.5, 0)
+            c.Prompt.HoldDuration = 0
+            fireproximityprompt(c.Prompt)
+            collected = collected + 1
+            task.wait(0.06)
+        end
+    end
+
+    root.CFrame = origCFrame
+    return collected
 end
 
 -- ==============================================================================
@@ -1495,9 +1947,7 @@ task.spawn(function()
                         createESP(mon, Color3.fromRGB(255, 45, 45), text, true)
                     else
                         local data = ActiveHighlights[tag]
-                        if data and data.Label then
-                            data.Label.Text = text
-                        end
+                        if data and data.Label then data.Label.Text = text end
                     end
                 end
             end
@@ -1509,7 +1959,7 @@ task.spawn(function()
             end
         end
 
-        -- 2. Apple ESP (Direct workspace children - zero lag)
+        -- 2. Apple ESP
         if State.AppleESP then
             for _, inst in ipairs(workspace:GetChildren()) do
                 if inst.Name == "CashApple" and inst:IsA("BasePart") then
@@ -1520,17 +1970,13 @@ task.spawn(function()
                         createESP(inst, Color3.fromRGB(255, 215, 0), "Apple [" .. dist .. "m]", false)
                     else
                         local data = ActiveHighlights[tag]
-                        if data and data.Label then
-                            data.Label.Text = "Apple [" .. dist .. "m]"
-                        end
+                        if data and data.Label then data.Label.Text = "Apple [" .. dist .. "m]" end
                     end
                 end
             end
         else
             for tag, data in pairs(ActiveHighlights) do
-                if data.Target and data.Target.Name == "CashApple" then
-                    cleanESP(tag)
-                end
+                if data.Target and data.Target.Name == "CashApple" then cleanESP(tag) end
             end
         end
 
@@ -1560,15 +2006,13 @@ task.spawn(function()
             end
         else
             for tag, data in pairs(ActiveHighlights) do
-                if data.Target and Players:GetPlayerFromCharacter(data.Target) then
-                    cleanESP(tag)
-                end
+                if data.Target and Players:GetPlayerFromCharacter(data.Target) then cleanESP(tag) end
             end
         end
 
-        -- 4. Loot & Item ESP (Direct workspace children - zero lag)
+        -- 4. Loot & Cash ESP
         if State.LootESP then
-            local lootKeywords = {"shotgun", "ammo", "taser", "flashlight", "lighter", "trap", "cola", "key", "landmine"}
+            local lootKeywords = {"cash", "coin", "shotgun", "ammo", "taser", "flashlight", "lighter", "trap", "cola", "key", "landmine"}
             for _, item in ipairs(workspace:GetChildren()) do
                 if (item:IsA("Tool") or item:IsA("BasePart")) and not item:IsDescendantOf(LocalPlayer.Character) then
                     local nameLow = item.Name:lower()
@@ -1580,38 +2024,15 @@ task.spawn(function()
                         local tag = item:GetDebugId()
                         local iPos = item:IsA("BasePart") and item.Position or (item:FindFirstChildWhichIsA("BasePart") and item:FindFirstChildWhichIsA("BasePart").Position)
                         local dist = (iPos and rootPos) and math.floor((iPos - rootPos).Magnitude) or 0
+                        local isCash = nameLow:find("cash") or nameLow:find("coin")
+                        local col = isCash and Color3.fromRGB(120, 255, 120) or Color3.fromRGB(0, 220, 255)
                         local text = item.Name .. " [" .. dist .. "m]"
 
                         if not ActiveHighlights[tag] then
-                            createESP(item, Color3.fromRGB(0, 220, 255), text, false)
+                            createESP(item, col, text, false)
                         else
                             local data = ActiveHighlights[tag]
-                            if data and data.Label then
-                                data.Label.Text = text
-                            end
-                        end
-                    end
-                end
-            end
-        end
-
-        -- 5. Waypoints ESP
-        if State.WaypointESP then
-            local wpFolder = workspace:FindFirstChild("Waypoints")
-            if wpFolder then
-                for _, wp in ipairs(wpFolder:GetChildren()) do
-                    if wp:IsA("BasePart") then
-                        local tag = wp:GetDebugId()
-                        local dist = rootPos and math.floor((wp.Position - rootPos).Magnitude) or 0
-                        local text = wp.Name .. " [" .. dist .. "m]"
-
-                        if not ActiveHighlights[tag] then
-                            createESP(wp, Color3.fromRGB(180, 80, 255), text, false)
-                        else
-                            local data = ActiveHighlights[tag]
-                            if data and data.Label then
-                                data.Label.Text = text
-                            end
+                            if data and data.Label then data.Label.Text = text end
                         end
                     end
                 end
@@ -1620,9 +2041,7 @@ task.spawn(function()
 
         -- Clean up dead ESP entries
         for tag, data in pairs(ActiveHighlights) do
-            if not data.Target or not data.Target.Parent then
-                cleanESP(tag)
-            end
+            if not data.Target or not data.Target.Parent then cleanESP(tag) end
         end
     end
 end)
@@ -1650,7 +2069,7 @@ function applyFullbright(enabled)
 end
 
 -- ==============================================================================
--- HARDENED AUTOMATED FARM & PROGRESSION ENGINE
+-- AUTOMATED FARM & PROGRESSION ENGINE
 -- ==============================================================================
 function collectAvailableApples()
     if tick() < EvasionLockTime then return end
@@ -1696,9 +2115,7 @@ function sellApplesRoutine()
     local currentApples = LocalPlayer:GetAttribute("Apples") or 0
     if currentApples < State.SellThreshold then return end
 
-    if State.SafeSellOnly and not canSellSafely() then
-        return -- Night time or threat near store! Never expose player!
-    end
+    if State.SafeSellOnly and not canSellSafely() then return end
 
     local sellPart = workspace:FindFirstChild("AppleSell", true)
     if not sellPart then return end
@@ -1708,7 +2125,6 @@ function sellApplesRoutine()
 
     local safeReturnCFrame = State.AlwaysAnchorRoof and State.SafeAnchorCFrame or root.CFrame
 
-    -- Ground snap with proper replication dwell & prompt completion
     root.CFrame = State.SellStandGroundCFrame
     task.wait(0.2)
     prompt.HoldDuration = 0
@@ -1720,7 +2136,6 @@ end
 function processAutoPurchases()
     local cash = LocalPlayer:GetAttribute("Cash") or 0
 
-    -- Purchasing via remotes works from the roof! ZERO teleports required!
     if State.AutoBuyTrees and ShopBuyRemote then
         local bought = workspace:GetAttribute("AA_AppleTreesBought") or 0
         local nextPrice = TreePriceTable[bought + 1]
@@ -1762,7 +2177,7 @@ function processAutoPurchases()
     end
 end
 
--- Main Automation Loop
+-- Main Farm & Chores Loop
 task.spawn(function()
     while Running do
         task.wait(State.FarmDelay)
@@ -1772,9 +2187,13 @@ task.spawn(function()
         if State.AutoSellApples then
             pcall(sellApplesRoutine)
         end
+        if State.AutoPickUpHouseMoney then
+            pcall(collectHouseMoney)
+        end
         pcall(processAutoPurchases)
         pcall(processSkillChecksAndStruggle)
         pcall(processAutoRevive)
+        pcall(processAutoChoresBackground)
     end
 end)
 
@@ -1787,6 +2206,16 @@ task.spawn(function()
         end
         if State.AutoTaser then
             pcall(runAutoTaser)
+        end
+    end
+end)
+
+-- Troll Spam Loop
+task.spawn(function()
+    while Running do
+        task.wait(State.SpamInterval)
+        if State.SpamDoors or State.SpamWindows or State.SpamDrawers or State.SpamAll or State.SpamTv then
+            pcall(runTrollSpam)
         end
     end
 end)
@@ -1805,9 +2234,9 @@ end)
 local function unloadSuite()
     Running = false
     if EvasionConnection then EvasionConnection:Disconnect() end
+    if QTESkillCheckConnection then QTESkillCheckConnection:Disconnect() end
     if NoclipConnection then NoclipConnection:Disconnect() end
     if SpeedConnection then SpeedConnection:Disconnect() end
-    if StaminaConnection then StaminaConnection:Disconnect() end
     if JumpscareConnection then JumpscareConnection:Disconnect() end
     if KeybindConnection then KeybindConnection:Disconnect() end
     if JumpRequestConnection then JumpRequestConnection:Disconnect() end
@@ -1828,7 +2257,6 @@ end
 Library:OnUnload(unloadSuite)
 _G.AmberAlertSuiteUnload = unloadSuite
 
--- Initialize Fullbright default
 applyFullbright(true)
 
 Library:Notify("Ecco Hub V3 loaded successfully! Press RightShift to toggle.", 4)
