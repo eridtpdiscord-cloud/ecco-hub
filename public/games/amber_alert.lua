@@ -2,7 +2,7 @@
     ==============================================================================
     ECCO HUB V3 - AMBER ALERT 3.0 (1990 HOUSE & MALL)
     ==============================================================================
-    Architecture : Modular Feature Pipeline & Combat/ESP Suite
+    Architecture : Modular Feature Pipeline, Combat Suite & Movement Engine
     UI Framework : Obsidian Reborn (deividcomsono/Obsidian)
     Target Game  : Amber Alert 3.0 / 1990 House (PlaceId: 109324041251039)
     Keybind      : RightShift (Configurable in Settings)
@@ -37,10 +37,14 @@ while not LocalPlayer do
     LocalPlayer = Players.LocalPlayer
 end
 
+-- DisableJumping Global Bypass
+_G.AA_AllowJump = true
+
 -- Central State Configuration
 local State = {
     -- Auto-Farm Settings
     AutoFarmApples = false,
+    TurboHarvest = false,
     AutoSellApples = false,
     SellThreshold = 3,
     FarmMode = "Stealth",
@@ -64,6 +68,15 @@ local State = {
     AutoTrapPatrols = false,
     AutoReload = true,
 
+    -- Locomotion & Flight
+    WalkSpeed = 16,
+    JumpPower = 50,
+    InfiniteJump = false,
+    Fly = false,
+    FlySpeed = 50,
+    Noclip = false,
+    InfiniteStamina = true,
+
     -- Survival & Automation
     MonsterEvasion = true,
     EvasionDistance = 25,
@@ -72,8 +85,11 @@ local State = {
     AutoStruggle = true,
     AutoDailyChores = true,
     AntiJumpscare = true,
-    InfiniteStamina = true,
     NoFallDamage = true,
+
+    -- Teammate Revive Suite
+    AutoRevive = false,
+    SelectedPlayer = "",
 
     -- ESP & Visuals
     MonsterESP = true,
@@ -83,9 +99,7 @@ local State = {
     WaypointESP = false,
     Fullbright = true,
 
-    -- Movement & Physics
-    WalkSpeedMult = 1,
-    Noclip = false,
+    -- UI & System
     UnlockCursor = true,
 
     -- Safe Teleport Anchors
@@ -125,6 +139,7 @@ local WeaponReloadRemote = getRemote("WeaponReload")
 local UseItemRemote = getRemote("UseItem")
 local ClownStruggleRemote = getRemote("ClownStruggle")
 local ChoreDishesDoneRemote = getRemote("ChoreDishesDone")
+local RevivedRemote = getRemote("Revived") or getRemote("Revive")
 
 local TreePriceTable = (Config and Config.AppleTree and Config.AppleTree.PriceTable) or {
     0, 400, 1250, 2500, 5000, 7500, 10000, 13000, 16500, 20000
@@ -159,6 +174,33 @@ local function tapSpace()
         task.wait(0.025)
         VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Space, false, game)
     end)
+end
+
+-- Player Name Utilities
+local function getPlayerNames()
+    local names = {}
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer then
+            table.insert(names, p.DisplayName .. " (@" .. p.Name .. ")")
+        end
+    end
+    if #names == 0 then
+        table.insert(names, "No Teammates Present")
+    end
+    return names
+end
+
+local function findPlayerBySelection(str)
+    if not str or str == "" or str == "No Teammates Present" then return nil end
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer then
+            local tag = p.DisplayName .. " (@" .. p.Name .. ")"
+            if tag == str or p.Name == str or p.DisplayName == str then
+                return p
+            end
+        end
+    end
+    return nil
 end
 
 -- ==============================================================================
@@ -211,6 +253,7 @@ local runKillAura
 local placeTrapsOnWaypoints
 local applyFullbright
 local cleanAllESP
+local reviveCharacter
 
 -- ==============================================================================
 -- LOAD OBSIDIAN REBORN UI FRAMEWORK
@@ -241,7 +284,7 @@ local Window = Library:CreateWindow({
 -- TAB 1: AUTO FARM & MONEY
 local TabFarm = Window:AddTab("Auto Farm")
 local LeftColFarm = TabFarm:AddLeftGroupbox("Apple Harvesting & Safe Sell")
-local RightColFarm = TabFarm:AddRightGroupbox("Auto Store & Upgrades")
+local RightColFarm = TabFarm:AddRightGroupbox("Auto Store & Economy")
 
 LeftColFarm:AddToggle("AutoCollectApples", {
     Text = "Auto Collect Apples",
@@ -249,6 +292,14 @@ LeftColFarm:AddToggle("AutoCollectApples", {
     Tooltip = "Gathers spawned apples across trees. Skips any apple with monsters nearby."
 }):OnChanged(function(val)
     State.AutoFarmApples = val
+end)
+
+LeftColFarm:AddToggle("TurboHarvest", {
+    Text = "Turbo Apple Farm (Zero Delay)",
+    Default = false,
+    Tooltip = "Instantly collects all apples across the map with zero delay cycles."
+}):OnChanged(function(val)
+    State.TurboHarvest = val
 end)
 
 LeftColFarm:AddToggle("AutoSellApples", {
@@ -346,6 +397,16 @@ RightColFarm:AddToggle("AutoBuyAmmo", {
     State.AutoBuyAmmo = val
 end)
 
+RightColFarm:AddButton({
+    Text = "Trigger All Auto-Purchases Now",
+    Func = function()
+        if processAutoPurchases then
+            processAutoPurchases()
+            Library:Notify("Auto-purchase pass completed!", 2)
+        end
+    end
+})
+
 -- TAB 2: COMBAT
 local TabCombat = Window:AddTab("Combat")
 local LeftColCombat = TabCombat:AddLeftGroupbox("Kill Aura & Gun Suite")
@@ -414,10 +475,116 @@ RightColCombat:AddButton({
     end
 })
 
--- TAB 3: SURVIVAL & AUTOMATION
+-- TAB 3: MOVEMENT & FLIGHT (DEDICATED LOCOMOTION TAB)
+local TabMove = Window:AddTab("Movement")
+local LeftColMove = TabMove:AddLeftGroupbox("Character Locomotion")
+local RightColMove = TabMove:AddRightGroupbox("Flight Engine")
+
+LeftColMove:AddSlider("WalkSpeed", {
+    Text = "WalkSpeed",
+    Default = 16,
+    Min = 16,
+    Max = 120,
+    Rounding = 0,
+    Compact = false
+}):OnChanged(function(val)
+    State.WalkSpeed = val
+    local hum = getHumanoid()
+    if hum then hum.WalkSpeed = val end
+end)
+
+LeftColMove:AddSlider("JumpPower", {
+    Text = "JumpPower",
+    Default = 50,
+    Min = 30,
+    Max = 200,
+    Rounding = 0,
+    Compact = false
+}):OnChanged(function(val)
+    State.JumpPower = val
+    _G.AA_AllowJump = true
+    local hum = getHumanoid()
+    if hum then
+        hum.UseJumpPower = true
+        hum.JumpPower = val
+        hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+    end
+end)
+
+LeftColMove:AddToggle("InfiniteJump", {
+    Text = "Infinite Jump",
+    Default = false,
+    Tooltip = "Enables jump capability in mid-air and bypasses game jumping restrictions."
+}):OnChanged(function(val)
+    State.InfiniteJump = val
+    _G.AA_AllowJump = true
+    local hum = getHumanoid()
+    if hum then
+        hum.UseJumpPower = true
+        hum.JumpPower = State.JumpPower
+        hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+    end
+end)
+
+LeftColMove:AddToggle("Noclip", {
+    Text = "Noclip (Walk Through Walls)",
+    Default = false,
+    Tooltip = "Disables collision on your character to pass through locked doors and walls."
+}):OnChanged(function(val)
+    State.Noclip = val
+end)
+
+LeftColMove:AddToggle("InfiniteStamina", {
+    Text = "Infinite Stamina",
+    Default = true,
+    Tooltip = "Prevents stamina depletion, allowing nonstop sprinting."
+}):OnChanged(function(val)
+    State.InfiniteStamina = val
+end)
+
+LeftColMove:AddButton({
+    Text = "Reset Movement Defaults",
+    Func = function()
+        State.WalkSpeed = 16
+        State.JumpPower = 50
+        State.InfiniteJump = false
+        local hum = getHumanoid()
+        if hum then
+            hum.WalkSpeed = 16
+            hum.JumpPower = 50
+        end
+        Library:Notify("Movement reset to standard values.", 2)
+    end
+})
+
+RightColMove:AddToggle("Fly", {
+    Text = "Flight Mode",
+    Default = false,
+    Tooltip = "Smooth 3D flight with camera-oriented directional controls."
+}):OnChanged(function(val)
+    State.Fly = val
+end)
+
+RightColMove:AddSlider("FlySpeed", {
+    Text = "Flight Speed",
+    Default = 50,
+    Min = 10,
+    Max = 200,
+    Rounding = 0,
+    Compact = false
+}):OnChanged(function(val)
+    State.FlySpeed = val
+end)
+
+RightColMove:AddLabel("Controls:")
+RightColMove:AddLabel("• W / A / S / D : Move In Camera View")
+RightColMove:AddLabel("• Space : Ascend Vertically")
+RightColMove:AddLabel("• LeftShift / LeftCtrl : Descend")
+
+-- TAB 4: SURVIVAL & AUTOMATION
 local TabSurv = Window:AddTab("Survival")
-local LeftColSurv = TabSurv:AddLeftGroupbox("Defensive Suite & Auto-Evasion")
-local RightColSurv = TabSurv:AddRightGroupbox("QTE & Chore Automation")
+local LeftColSurv = TabSurv:AddLeftGroupbox("Defensive Shield & Auto-Evasion")
+local RightColSurv = TabSurv:AddRightGroupbox("Teammate Revive & Automation")
 
 LeftColSurv:AddToggle("MonsterEvasion", {
     Text = "Auto Monster Evasion (Roof Shield)",
@@ -468,13 +635,58 @@ LeftColSurv:AddToggle("AntiJumpscare", {
     State.AntiJumpscare = val
 end)
 
-LeftColSurv:AddToggle("InfiniteStamina", {
-    Text = "Infinite Stamina",
-    Default = true,
-    Tooltip = "Prevents stamina exhaustion, allowing permanent sprinting."
+-- Teammate Revive Controls
+RightColSurv:AddToggle("AutoRevive", {
+    Text = "Auto-Revive Downed Teammates",
+    Default = false,
+    Tooltip = "Continuously scans and teleports to revive downed teammates when safe from monsters."
 }):OnChanged(function(val)
-    State.InfiniteStamina = val
+    State.AutoRevive = val
 end)
+
+local initialPlayers = getPlayerNames()
+State.SelectedPlayer = initialPlayers[1] or ""
+
+local RevivePlayerDropdown = RightColSurv:AddDropdown("RevivePlayerSelect", {
+    Values = initialPlayers,
+    Default = 1,
+    Multi = false,
+    Text = "Select Teammate to Revive",
+    Tooltip = "Choose a downed teammate to instantly revive."
+})
+RevivePlayerDropdown:OnChanged(function(val)
+    State.SelectedPlayer = val
+end)
+
+RightColSurv:AddButton({
+    Text = "Revive Selected Player",
+    Func = function()
+        local target = findPlayerBySelection(State.SelectedPlayer)
+        if target and target.Character then
+            local success = reviveCharacter(target.Character)
+            if success then
+                Library:Notify("Revive executed on " .. target.DisplayName .. "!", 3)
+            else
+                Library:Notify("Could not reach " .. target.DisplayName, 3)
+            end
+        else
+            Library:Notify("No character found for " .. tostring(State.SelectedPlayer), 2.5)
+        end
+    end
+})
+
+RightColSurv:AddButton({
+    Text = "Refresh Player List",
+    Func = function()
+        local list = getPlayerNames()
+        RevivePlayerDropdown:SetValues(list)
+        if #list > 0 then
+            RevivePlayerDropdown:SetValue(list[1])
+            State.SelectedPlayer = list[1]
+        end
+        Library:Notify("Teammate list updated!", 2)
+    end
+})
 
 RightColSurv:AddToggle("AutoSkillCheck", {
     Text = "100% Win Hiding Skill Checks",
@@ -485,7 +697,7 @@ RightColSurv:AddToggle("AutoSkillCheck", {
 end)
 
 RightColSurv:AddToggle("AutoStruggle", {
-    Text = "Auto-Struggle / Instant Anti-Grab",
+    Text = "Auto-Struggle / Anti-Grab",
     Default = true,
     Tooltip = "Instantly breaks clown/monster grabs and spam-fires struggle remote."
 }):OnChanged(function(val)
@@ -500,26 +712,7 @@ RightColSurv:AddToggle("AutoDailyChores", {
     State.AutoDailyChores = val
 end)
 
-RightColSurv:AddToggle("Noclip", {
-    Text = "Noclip (Walk Through Walls)",
-    Default = false,
-    Tooltip = "Disables collision on your character to walk through locked doors."
-}):OnChanged(function(val)
-    State.Noclip = val
-end)
-
-RightColSurv:AddSlider("WalkSpeedMult", {
-    Text = "WalkSpeed Multiplier",
-    Default = 1,
-    Min = 1,
-    Max = 3,
-    Rounding = 1,
-    Compact = false
-}):OnChanged(function(val)
-    State.WalkSpeedMult = val
-end)
-
--- TAB 4: VISUALS & ESP
+-- TAB 5: VISUALS & ESP
 local TabESP = Window:AddTab("Visuals")
 local LeftColESP = TabESP:AddLeftGroupbox("ESP Sensors")
 local RightColESP = TabESP:AddRightGroupbox("Environment Visuals")
@@ -573,9 +766,10 @@ RightColESP:AddToggle("Fullbright", {
     if applyFullbright then applyFullbright(val) end
 end)
 
--- TAB 5: TELEPORTS
+-- TAB 6: TELEPORTS
 local TabTP = Window:AddTab("Teleports")
 local ColTP = TabTP:AddLeftGroupbox("Map Anchors")
+local ColTPRight = TabTP:AddRightGroupbox("Player Teleport")
 
 ColTP:AddButton({
     Text = "Teleport to Safe Roof (Anti-Monster)",
@@ -643,7 +837,24 @@ ColTP:AddButton({
     end
 })
 
--- TAB 6: SETTINGS & THEMES
+ColTPRight:AddButton({
+    Text = "Teleport to Selected Teammate",
+    Func = function()
+        local target = findPlayerBySelection(State.SelectedPlayer)
+        if target and target.Character then
+            local tRoot = target.Character:FindFirstChild("HumanoidRootPart") or target.Character:FindFirstChildWhichIsA("BasePart")
+            local root = getRoot()
+            if root and tRoot then
+                root.CFrame = tRoot.CFrame + Vector3.new(0, 3, 0)
+                Library:Notify("Teleported to " .. target.DisplayName .. "!", 2)
+            end
+        else
+            Library:Notify("Player not found!", 2)
+        end
+    end
+})
+
+-- TAB 7: SETTINGS & THEMES
 local TabSettings = Window:AddTab("Settings")
 local LeftColSettings = TabSettings:AddLeftGroupbox("Input & Controls")
 
@@ -665,7 +876,34 @@ SaveManager:SetFolder("EccoHubV3/AmberAlert")
 SaveManager:BuildConfigSection(TabSettings)
 ThemeManager:ApplyToTab(TabSettings)
 
+_G.EccoTabs = {
+    Farm = TabFarm,
+    Combat = TabCombat,
+    Movement = TabMove,
+    Survival = TabSurv,
+    Visuals = TabESP,
+    Teleports = TabTP,
+    Settings = TabSettings
+}
+
 getgenv().gethui = oldGethui
+
+-- Auto-refresh players when they join/leave
+Players.PlayerAdded:Connect(function()
+    task.wait(1)
+    pcall(function()
+        local list = getPlayerNames()
+        RevivePlayerDropdown:SetValues(list)
+    end)
+end)
+
+Players.PlayerRemoving:Connect(function()
+    task.wait(0.5)
+    pcall(function()
+        local list = getPlayerNames()
+        RevivePlayerDropdown:SetValues(list)
+    end)
+end)
 
 -- ==============================================================================
 -- INPUT HOOKS & DISCRETE CURSOR MANAGEMENT (ZERO CAMERA CONFLICT)
@@ -689,6 +927,12 @@ local KeybindConnection = UserInputService.InputBegan:Connect(function(input, gp
         updateMouseState()
     end
 end)
+
+-- Global toggle trigger
+_G.EccoHubToggle = function()
+    Library:Toggle()
+    updateMouseState()
+end
 
 -- ==============================================================================
 -- CORE LOGIC HOOKS & CONNECTIONS
@@ -716,8 +960,80 @@ local function checkMonsterEvasion()
     end
 end
 
+-- Flight Engine Implementation
+local FlyVelocity = nil
+
+local function updateFlight()
+    if not State.Fly then
+        if FlyVelocity then
+            pcall(function() FlyVelocity:Destroy() end)
+            FlyVelocity = nil
+        end
+        return
+    end
+
+    local root = getRoot()
+    local hum = getHumanoid()
+    local cam = workspace.CurrentCamera
+    if not root or not hum or not cam then return end
+
+    if not FlyVelocity or FlyVelocity.Parent ~= root then
+        if FlyVelocity then pcall(function() FlyVelocity:Destroy() end) end
+        FlyVelocity = Instance.new("BodyVelocity")
+        FlyVelocity.Name = "EccoFlyVelocity"
+        FlyVelocity.MaxForce = Vector3.new(1e6, 1e6, 1e6)
+        FlyVelocity.Velocity = Vector3.zero
+        FlyVelocity.Parent = root
+    end
+
+    local moveDir = Vector3.zero
+    if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+        moveDir = moveDir + cam.CFrame.LookVector
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+        moveDir = moveDir - cam.CFrame.LookVector
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+        moveDir = moveDir - cam.CFrame.RightVector
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+        moveDir = moveDir + cam.CFrame.RightVector
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+        moveDir = moveDir + Vector3.new(0, 1, 0)
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        moveDir = moveDir - Vector3.new(0, 1, 0)
+    end
+
+    if moveDir.Magnitude > 0 then
+        FlyVelocity.Velocity = moveDir.Unit * State.FlySpeed
+    else
+        FlyVelocity.Velocity = Vector3.zero
+    end
+end
+
+-- Infinite Jump Hook
+local JumpRequestConnection = UserInputService.JumpRequest:Connect(function()
+    if State.InfiniteJump then
+        _G.AA_AllowJump = true
+        local hum = getHumanoid()
+        local root = getRoot()
+        if hum and root then
+            hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+            hum:ChangeState(Enum.HumanoidStateType.Jumping)
+            root.AssemblyLinearVelocity = Vector3.new(
+                root.AssemblyLinearVelocity.X,
+                State.JumpPower > 0 and State.JumpPower or 50,
+                root.AssemblyLinearVelocity.Z
+            )
+        end
+    end
+end)
+
 local EvasionConnection = RunService.Heartbeat:Connect(function()
     pcall(checkMonsterEvasion)
+    pcall(updateFlight)
 end)
 
 local NoclipConnection = RunService.Stepped:Connect(function()
@@ -734,10 +1050,20 @@ local NoclipConnection = RunService.Stepped:Connect(function()
 end)
 
 local SpeedConnection = RunService.Heartbeat:Connect(function()
-    if State.WalkSpeedMult > 1 then
-        local hum = getHumanoid()
-        if hum and hum.WalkSpeed < (16 * State.WalkSpeedMult) then
-            hum.WalkSpeed = 16 * State.WalkSpeedMult
+    local hum = getHumanoid()
+    if hum then
+        if State.WalkSpeed > 16 then
+            if hum.WalkSpeed ~= State.WalkSpeed then
+                hum.WalkSpeed = State.WalkSpeed
+            end
+        end
+        if State.JumpPower ~= 50 or State.InfiniteJump then
+            _G.AA_AllowJump = true
+            hum.UseJumpPower = true
+            if hum.JumpPower ~= State.JumpPower then
+                hum.JumpPower = State.JumpPower
+            end
+            hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
         end
     end
 end)
@@ -934,6 +1260,77 @@ function placeTrapsOnWaypoints()
         end
     end
     Library:Notify("Placed traps at " .. count .. " killer patrol routes!", 3)
+end
+
+-- ==============================================================================
+-- TEAMMATE REVIVE ENGINE
+-- ==============================================================================
+function reviveCharacter(targetChar)
+    if not targetChar or not targetChar.Parent then return false end
+    local root = getRoot()
+    local tRoot = targetChar:FindFirstChild("HumanoidRootPart") or targetChar:FindFirstChildWhichIsA("BasePart")
+    if not root or not tRoot then return false end
+
+    -- Find prompt in target character
+    local prompt = nil
+    for _, desc in ipairs(targetChar:GetDescendants()) do
+        if desc:IsA("ProximityPrompt") then
+            prompt = desc
+            break
+        end
+    end
+
+    -- If no prompt found directly inside character, check nearby prompts within 10 studs
+    if not prompt then
+        for _, p in ipairs(workspace:GetDescendants()) do
+            if p:IsA("ProximityPrompt") and p.Parent and p.Parent:IsA("BasePart") then
+                if (p.Parent.Position - tRoot.Position).Magnitude <= 10 then
+                    prompt = p
+                    break
+                end
+            end
+        end
+    end
+
+    local originalCFrame = root.CFrame
+    root.CFrame = tRoot.CFrame + Vector3.new(0, 1.5, 0)
+    task.wait(0.12)
+
+    if prompt then
+        prompt.HoldDuration = 0
+        fireproximityprompt(prompt)
+    end
+
+    if RevivedRemote then
+        local targetPlr = Players:GetPlayerFromCharacter(targetChar)
+        pcall(function() RevivedRemote:FireServer(targetPlr or targetChar) end)
+    end
+
+    task.wait(0.25)
+    root.CFrame = State.AlwaysAnchorRoof and State.SafeAnchorCFrame or originalCFrame
+    return true
+end
+
+local function processAutoRevive()
+    if not State.AutoRevive or tick() < EvasionLockTime then return end
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer and plr.Character and plr.Character.Parent then
+            local c = plr.Character
+            local isDowned = c:GetAttribute("AA_Downed") == true or c:GetAttribute("Downed") == true
+            local hasPrompt = false
+            for _, d in ipairs(c:GetDescendants()) do
+                if d:IsA("ProximityPrompt") then hasPrompt = true break end
+            end
+            if isDowned or hasPrompt then
+                local cRoot = c:FindFirstChild("HumanoidRootPart") or c:FindFirstChildWhichIsA("BasePart")
+                if cRoot and not isMonsterNear(cRoot.Position, State.SafetyClearance) then
+                    reviveCharacter(c)
+                    task.wait(0.5)
+                    break
+                end
+            end
+        end
+    end
 end
 
 -- ==============================================================================
@@ -1266,7 +1663,7 @@ function collectAvailableApples()
     for _, inst in ipairs(workspace:GetChildren()) do
         if inst.Name == "CashApple" and inst:IsA("BasePart") then
             local prompt = inst:FindFirstChildWhichIsA("ProximityPrompt")
-            if prompt and canHarvestSafely(inst) then
+            if prompt and (State.TurboHarvest or canHarvestSafely(inst)) then
                 table.insert(apples, {Part = inst, Prompt = prompt})
             end
         end
@@ -1277,11 +1674,13 @@ function collectAvailableApples()
     for _, apple in ipairs(apples) do
         if not State.AutoFarmApples or tick() < EvasionLockTime then break end
         if apple.Part and apple.Part.Parent and apple.Prompt and apple.Prompt.Parent then
-            if canHarvestSafely(apple.Part) then
+            if State.TurboHarvest or canHarvestSafely(apple.Part) then
                 root.CFrame = apple.Part.CFrame + Vector3.new(0, 1.5, 0)
                 apple.Prompt.HoldDuration = 0
                 fireproximityprompt(apple.Prompt)
-                task.wait(0.08)
+                if not State.TurboHarvest then
+                    task.wait(0.08)
+                end
             end
         end
     end
@@ -1375,6 +1774,7 @@ task.spawn(function()
         end
         pcall(processAutoPurchases)
         pcall(processSkillChecksAndStruggle)
+        pcall(processAutoRevive)
     end
 end)
 
@@ -1410,6 +1810,11 @@ local function unloadSuite()
     if StaminaConnection then StaminaConnection:Disconnect() end
     if JumpscareConnection then JumpscareConnection:Disconnect() end
     if KeybindConnection then KeybindConnection:Disconnect() end
+    if JumpRequestConnection then JumpRequestConnection:Disconnect() end
+    if FlyVelocity then
+        pcall(function() FlyVelocity:Destroy() end)
+        FlyVelocity = nil
+    end
     cleanAllESP()
     applyFullbright(false)
     pcall(function() LocalPlayer:SetAttribute("AA_MouseFree", false) end)
