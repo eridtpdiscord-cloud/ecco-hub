@@ -567,11 +567,18 @@ local pgui = LocalPlayer:WaitForChild("PlayerGui")
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "EccoBuildSuiteV5"
 screenGui.ResetOnSpawn = false
+screenGui.IgnoreGuiInset = true
+screenGui.DisplayOrder = 9999
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 pcall(function()
-    if gethui then screenGui.Parent = gethui() else screenGui.Parent = pgui end
+    screenGui.Parent = pgui
 end)
+if not screenGui.Parent then
+    pcall(function()
+        if gethui then screenGui.Parent = gethui() else screenGui.Parent = game:GetService("CoreGui") end
+    end)
+end
 
 -- Translucent Anti-Glare Backdrop (Only visible when modals open)
 local backdrop = Instance.new("TextButton")
@@ -589,7 +596,7 @@ backdrop.Parent = screenGui
 local toggleTab = Instance.new("TextButton")
 toggleTab.Name = "SidebarToggleTab"
 toggleTab.Size = UDim2.new(0, 36, 0, 36)
-toggleTab.Position = UDim2.new(1, -44, 0.45, 0)
+toggleTab.Position = UDim2.new(0, 18, 0.5, -294)
 toggleTab.BackgroundColor3 = Color3.fromRGB(14, 18, 26)
 toggleTab.Text = "📐"
 toggleTab.TextColor3 = Color3.fromRGB(0, 230, 150)
@@ -608,10 +615,10 @@ ttStroke.Parent = toggleTab
 -- Main Sidebar Panel
 local sidebar = Instance.new("Frame")
 sidebar.Name = "MainSidebar"
-sidebar.Size = UDim2.new(0, 240, 0, 520)
-sidebar.Position = UDim2.new(1, -252, 0.5, -260)
+sidebar.Size = UDim2.new(0, 244, 0, 500)
+sidebar.Position = UDim2.new(0, 18, 0.5, -250)
 sidebar.BackgroundColor3 = Color3.fromRGB(13, 16, 23)
-sidebar.BackgroundTransparency = 0.12
+sidebar.BackgroundTransparency = 0.10
 sidebar.BorderSizePixel = 0
 sidebar.ZIndex = 50
 sidebar.Parent = screenGui
@@ -680,7 +687,14 @@ scrollBody.Parent = sidebar
 local scrollLayout = Instance.new("UIListLayout")
 scrollLayout.Padding = UDim.new(0, 6)
 scrollLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+scrollLayout.SortOrder = Enum.SortOrder.LayoutOrder
 scrollLayout.Parent = scrollBody
+
+local layoutOrderIdx = 0
+local function nextOrder()
+    layoutOrderIdx = layoutOrderIdx + 1
+    return layoutOrderIdx
+end
 
 local function createSectionTitle(text)
     local lbl = Instance.new("TextLabel")
@@ -691,6 +705,7 @@ local function createSectionTitle(text)
     lbl.Font = Enum.Font.GothamBlack
     lbl.TextSize = 9
     lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.LayoutOrder = nextOrder()
     lbl.ZIndex = 52
     lbl.Parent = scrollBody
     return lbl
@@ -706,6 +721,7 @@ local function createSidebarPill(name, text, onClick, isAccent)
     btn.Font = Enum.Font.GothamBold
     btn.TextSize = 10
     btn.AutoButtonColor = false
+    btn.LayoutOrder = nextOrder()
     btn.ZIndex = 52
     btn.Parent = scrollBody
 
@@ -784,6 +800,7 @@ createSectionTitle("HEIGHT OFFSET (TOGGLEABLE)")
 local heightRow = Instance.new("Frame")
 heightRow.Size = UDim2.new(1, -8, 0, 30)
 heightRow.BackgroundColor3 = Color3.fromRGB(20, 25, 36)
+heightRow.LayoutOrder = nextOrder()
 heightRow.ZIndex = 52
 heightRow.Parent = scrollBody
 local hrCorner = Instance.new("UICorner")
@@ -903,6 +920,7 @@ local function createDimensionStepper(label, currentVal, minV, maxV, onUpdate)
     local row = Instance.new("Frame")
     row.Size = UDim2.new(1, -8, 0, 26)
     row.BackgroundColor3 = Color3.fromRGB(20, 25, 36)
+    row.LayoutOrder = nextOrder()
     row.ZIndex = 52
     row.Parent = scrollBody
     local rc = Instance.new("UICorner")
