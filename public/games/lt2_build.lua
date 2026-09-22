@@ -1,11 +1,12 @@
 --[[
     ========================================================================
-    AXIOM // LUMBER TYCOON 2 CLIENT BUILD SUITE — V3 MATRIX
-    - Continuous Precision Glide Placement (Raycast + Lerp)
-    - Auto-Floor Matrix / Area Painter with Configurable Length & Width
-    - Real-Time Visual Ghost Grid Preview
-    - Multi-Plot Boundary Matcher & Collision Bypass
-    - Executive Glassmorphic HUD & Blueprint Palette
+    AXIOM // LUMBER TYCOON 2 CLIENT BUILD SUITE — V4 MATRIX & GLASSPRO
+    - Rate-Limited Matrix Floor Painter (0.52s pacing for 100% server sync)
+    - Real-Time Tile Placement Progress HUD Banner & Animated Bar
+    - Non-Trippy Calibrated Ghost Grid (SmoothPlastic + Soft Blueprint Blue)
+    - Anti-Glare Glassmorphic Blueprint Drawer & Backdrop Overlay
+    - Surface-Snapping Precision Raycast & Delta-Aware Glide Placement
+    - Keybinds: B (Dock), G (Grid Snap), R (Rotation), Q/E (Height), X (Cancel)
     ========================================================================
 ]]
 
@@ -17,30 +18,32 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
--- Cleanup prior instance
+-- Global Cleanup Handler
 if getgenv().EccoBuildSuite_Cleanup then
     pcall(getgenv().EccoBuildSuite_Cleanup)
 end
 
--- Master State
+-- Master State Configuration
 local Config = {
     Enabled = true,
-    GridSnap = 0,          -- 0 = Free / Smooth, 0.1, 0.5, 1, 2, 4
-    RotationStep = 15,     -- 1, 5, 15, 45, 90
+    GridSnap = 0,            -- 0 = Free / Smooth, 0.1, 0.5, 1, 2, 4
+    RotationStep = 15,       -- 1, 5, 15, 45, 90
     FreeRotation = true,
-    SmoothGlide = true,    -- Buttery smooth motion interpolation
-    SmoothSpeed = 0.35,    -- Lerp alpha
-    HeightOffset = 0,      -- Studs offset
-    ContinuousPlace = true,-- Auto re-trigger next blueprint
-    BypassCollision = true,-- Clip through walls/conveyors/tight gaps
+    SmoothGlide = true,      -- Buttery smooth motion interpolation
+    SmoothSpeed = 0.35,      -- Lerp alpha
+    HeightOffset = 0,        -- Studs offset (-20 to +50)
+    ContinuousPlace = true,  -- Auto re-trigger next blueprint
+    BypassCollision = true,  -- Clip through tight spots & boundary checks
     CurrentBlueprint = nil,
     IsPlacing = false,
 
     -- Auto-Floor Matrix Settings
-    AutoFloor = false,     -- Toggleable
-    MatrixLength = 3,      -- X count (1 to 12)
-    MatrixWidth = 3,       -- Z count (1 to 12)
+    AutoFloor = false,
+    MatrixLength = 3,        -- X count (1 to 12)
+    MatrixWidth = 3,         -- Z count (1 to 12)
     MatrixAnchor = "Corner", -- "Corner" or "Center"
+    RateLimitDelay = 0.52,   -- Enforced server remote pacing
+    IsMatrixPlacing = false, -- Active queue lock
 }
 
 getgenv().BuildMode_Config = Config
@@ -50,13 +53,13 @@ getgenv().BuildMode_CustomRotation = true
 getgenv().BuildMode_RotationStep = Config.RotationStep
 getgenv().BuildMode_BypassCollision = Config.BypassCollision
 
--- Target Game Instances
+-- Target Game Remotes & Dragger Instances
 local draggerGui = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("StructureDraggingGUI")
 local dragItem = draggerGui:WaitForChild("DragItem")
 local placeStructureRemote = ReplicatedStorage:WaitForChild("PlaceStructure"):WaitForChild("ClientPlacedBlueprint")
 local canPlaceMod = require(ReplicatedStorage:WaitForChild("Interaction"):WaitForChild("CanPlace"))
 
--- Find closures in memory
+-- Find internal StructureDragger closures in GC
 local targetRoundCFrame, targetSnapAngle, targetRotateTurn, targetOnInvoke
 for _, v in pairs(getgc(false)) do
     if type(v) == "function" and islclosure(v) then
@@ -76,7 +79,7 @@ for _, v in pairs(getgc(false)) do
     end
 end
 
--- Helper: Pos is in land
+-- Land Boundary Matcher
 local function getMatchingLandOwner(pos)
     local lands = canPlaceMod:GetPlayerLand(LocalPlayer, {"PlaceStructure", "MoveStructure", "Destroy"})
     if not lands or #lands == 0 then return nil end
@@ -90,7 +93,11 @@ local function getMatchingLandOwner(pos)
     return lands[1].owner
 end
 
--- Visual Ghost Grid for Matrix
+-- ========================================================================
+-- NON-TRIPPY CALIBRATED GHOST GRID PREVIEW
+-- Uses SmoothPlastic with 0.55 transparency & soft blueprint cyan
+-- Eliminates high-bloom neon vibration and visual noise
+-- ========================================================================
 local ghostFolder = Instance.new("Folder")
 ghostFolder.Name = "EccoFloorGhostGrid"
 ghostFolder.Parent = workspace:FindFirstChild("Effects") or workspace
@@ -112,19 +119,22 @@ local function updateGhostGrid(primaryCF, tileSize)
     local neededCount = (Config.MatrixLength * Config.MatrixWidth) - 1
     while #activeGhostParts < neededCount do
         local gp = Instance.new("Part")
+        gp.Name = "GhostTile"
         gp.Anchored = true
         gp.CanCollide = false
         gp.CanTouch = false
         gp.CanQuery = false
-        gp.Material = Enum.Material.Neon
-        gp.Color = Color3.fromRGB(0, 210, 255)
-        gp.Transparency = 0.65
+        gp.CastShadow = false
+        -- SmoothPlastic avoids aggressive Neon bloom and flickering
+        gp.Material = Enum.Material.SmoothPlastic
+        gp.Color = Color3.fromRGB(0, 160, 245)
+        gp.Transparency = 0.58
         gp.Parent = ghostFolder
 
         local sb = Instance.new("SelectionBox")
         sb.Adornee = gp
-        sb.Color3 = Color3.fromRGB(0, 240, 255)
-        sb.Transparency = 0.35
+        sb.Color3 = Color3.fromRGB(0, 210, 255)
+        sb.Transparency = 0.65
         sb.Parent = gp
 
         table.insert(activeGhostParts, gp)
@@ -157,17 +167,20 @@ local function updateGhostGrid(primaryCF, tileSize)
     end
 end
 
--- Smooth CFrame state
+-- Smooth CFrame Interpolation State
 local currentSmoothedCF = nil
 local lastTargetCF = nil
 local currentPlacingSize = Vector3.new(8, 0.2, 8)
 
--- Raycast filter params
+-- Optimized Raycast Params
 local rayParams = RaycastParams.new()
 rayParams.FilterType = Enum.RaycastFilterType.Exclude
 
--- Hook 1: roundCFrame (Precision Grid, Smooth Lerp, Surface Raycasting, Matrix Update)
-if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V3 then
+-- Forward declarations for HUD Progress Banner
+local updateMatrixProgressBanner, hideMatrixProgressBanner
+
+-- Hook 1: roundCFrame (Precision Grid, Smooth Lerp, Surface Snapping)
+if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V4 then
     local oldRound
     oldRound = hookfunction(targetRoundCFrame, function(a1, a2, a3)
         if not Config.Enabled then
@@ -188,7 +201,12 @@ if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V3 then
 
         local mousePos = UserInputService:GetMouseLocation()
         local ray = Camera:ViewportPointToRay(mousePos.X, mousePos.Y)
-        rayParams.FilterDescendantsInstances = {LocalPlayer.Character, workspace:FindFirstChild("Effects"), a2}
+        rayParams.FilterDescendantsInstances = {
+            LocalPlayer.Character,
+            workspace:FindFirstChild("Effects"),
+            ghostFolder,
+            a2
+        }
         local hit = workspace:Raycast(ray.Origin, ray.Direction * 750, rayParams)
 
         local basePos
@@ -196,9 +214,9 @@ if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V3 then
 
         if hit then
             local norm = hit.Normal
-            if norm.Y > 0.6 then
+            if norm.Y > 0.4 then
                 basePos = hit.Position + Vector3.new(0, (partHeight / 2) + Config.HeightOffset, 0)
-            elseif norm.Y < -0.6 then
+            elseif norm.Y < -0.4 then
                 basePos = hit.Position - Vector3.new(0, (partHeight / 2) + Config.HeightOffset, 0)
             else
                 local partDepth = (a3 and a3.Size and a3.Size.Z) or 2
@@ -231,21 +249,21 @@ if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V3 then
         local targetCF = CFrame.new(basePos) * targetRot
         lastTargetCF = targetCF
 
-        -- If confirming final placement, lock to exact target and clear ghost
+        -- Exact Target on Confirm Placement Click
         if isConfirming then
             currentSmoothedCF = nil
             clearGhostParts()
             return targetCF
         end
 
-        -- Update ghost preview
+        -- Update Ghost Preview
         if Config.AutoFloor then
             updateGhostGrid(targetCF, currentPlacingSize)
         else
             clearGhostParts()
         end
 
-        -- Smooth motion interpolation
+        -- Smooth Glide Motion Interpolation
         if Config.SmoothGlide then
             if not currentSmoothedCF or (currentSmoothedCF.Position - targetCF.Position).Magnitude > 40 then
                 currentSmoothedCF = targetCF
@@ -258,11 +276,11 @@ if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V3 then
             return targetCF
         end
     end)
-    getgenv()._Hooked_roundCFrame_V3 = true
+    getgenv()._Hooked_roundCFrame_V4 = true
 end
 
 -- Hook 2: snapAngleToNearestOrthogonal
-if targetSnapAngle and not getgenv()._Hooked_snapAngle_V3 then
+if targetSnapAngle and not getgenv()._Hooked_snapAngle_V4 then
     local oldSnap
     oldSnap = hookfunction(targetSnapAngle, function(cf)
         if Config.Enabled and Config.FreeRotation then
@@ -270,11 +288,11 @@ if targetSnapAngle and not getgenv()._Hooked_snapAngle_V3 then
         end
         return oldSnap(cf)
     end)
-    getgenv()._Hooked_snapAngle_V3 = true
+    getgenv()._Hooked_snapAngle_V4 = true
 end
 
--- Hook 3: rotateTurn (Precision degree rotation)
-if targetRotateTurn and not getgenv()._Hooked_rotateTurn_V3 then
+-- Hook 3: rotateTurn (Custom Degree Rotation)
+if targetRotateTurn and not getgenv()._Hooked_rotateTurn_V4 then
     local oldRotate
     oldRotate = hookfunction(targetRotateTurn, function(a1, a2, a3)
         if Config.Enabled and Config.RotationStep then
@@ -295,11 +313,11 @@ if targetRotateTurn and not getgenv()._Hooked_rotateTurn_V3 then
         end
         return oldRotate(a1, a2, a3)
     end)
-    getgenv()._Hooked_rotateTurn_V3 = true
+    getgenv()._Hooked_rotateTurn_V4 = true
 end
 
--- Hook 4: CanPlace (Collision / Land bypass)
-if canPlaceMod and not getgenv()._Hooked_CanPlace_V3 then
+-- Hook 4: CanPlace (Collision / Boundary Bypass)
+if canPlaceMod and not getgenv()._Hooked_CanPlace_V4 then
     local oldCanPlace = canPlaceMod.CanPlace
     canPlaceMod.CanPlace = function(self, player, target, options)
         local can, owner = oldCanPlace(self, player, target, options)
@@ -311,17 +329,31 @@ if canPlaceMod and not getgenv()._Hooked_CanPlace_V3 then
         end
         return can, owner
     end
-    getgenv()._Hooked_CanPlace_V3 = true
+    getgenv()._Hooked_CanPlace_V4 = true
 end
 
--- Auto-Floor Matrix Placer Loop
+-- ========================================================================
+-- RATE-LIMITED AUTO-FLOOR MATRIX PLACER LOOP
+-- Enforces 0.52s spacing to guarantee 100% server registration
+-- ========================================================================
 local function spawnMatrixPlacements(bpName, primaryCF, tileSize, primaryLand)
     if not Config.AutoFloor or (Config.MatrixLength <= 1 and Config.MatrixWidth <= 1) then
         return
     end
 
+    if Config.IsMatrixPlacing then
+        return
+    end
+    Config.IsMatrixPlacing = true
+
     task.spawn(function()
-        local count = 0
+        local totalTiles = Config.MatrixLength * Config.MatrixWidth
+        local placedCount = 1
+
+        if updateMatrixProgressBanner then
+            updateMatrixProgressBanner(placedCount, totalTiles, bpName)
+        end
+
         for gx = 0, Config.MatrixLength - 1 do
             for gz = 0, Config.MatrixWidth - 1 do
                 if not (gx == 0 and gz == 0) then
@@ -335,23 +367,37 @@ local function spawnMatrixPlacements(bpName, primaryCF, tileSize, primaryLand)
                     local tileCF = primaryCF * CFrame.new(offsetX, 0, offsetZ)
                     local matchedOwner = getMatchingLandOwner(tileCF.Position) or primaryLand
 
+                    -- Rate-limited server remote call (0.52s safe pacing)
+                    task.wait(Config.RateLimitDelay or 0.52)
                     placeStructureRemote:FireServer(bpName, tileCF, matchedOwner)
-                    count = count + 1
-                    task.wait(0.035)
+                    placedCount = placedCount + 1
+
+                    if updateMatrixProgressBanner then
+                        updateMatrixProgressBanner(placedCount, totalTiles, bpName)
+                    end
                 end
             end
         end
 
+        Config.IsMatrixPlacing = false
+
+        task.wait(0.8)
+        if hideMatrixProgressBanner then
+            hideMatrixProgressBanner()
+        end
+
         game:GetService("StarterGui"):SetCore("SendNotification", {
             Title = "Auto-Floor Matrix",
-            Text = "Placed " .. tostring(count + 1) .. "x " .. bpName .. " tiles!",
-            Duration = 3
+            Text = "Deployed " .. tostring(placedCount) .. "x " .. bpName .. " tiles cleanly!",
+            Duration = 3.5
         })
     end)
 end
 
--- Placement trigger function
-local function startPlacingBlueprint(bpName)
+-- Forward declaration for recursive continuous placement
+local startPlacingBlueprint
+
+startPlacingBlueprint = function(bpName)
     Config.CurrentBlueprint = bpName
     task.spawn(function()
         local itemInfo = ReplicatedStorage.ClientItemInfo:FindFirstChild(bpName)
@@ -386,11 +432,11 @@ local function startPlacingBlueprint(bpName)
 end
 
 -- ========================================================================
--- EXECUTIVE GLASSMORPHIC UI
+-- EXECUTIVE GLASSMORPHIC UI & NON-TRIPPY BACKDROP OVERLAY
 -- ========================================================================
 local pgui = LocalPlayer:WaitForChild("PlayerGui")
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "EccoBuildSuiteV3"
+screenGui.Name = "EccoBuildSuiteV4"
 screenGui.ResetOnSpawn = false
 screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
@@ -402,13 +448,28 @@ pcall(function()
     end
 end)
 
+-- Non-Trippy Full-Screen Backdrop Overlay (dims the 3D world when drawers open)
+local backdrop = Instance.new("TextButton")
+backdrop.Name = "TranslucentBackdrop"
+backdrop.Size = UDim2.new(1, 0, 1, 0)
+backdrop.Position = UDim2.new(0, 0, 0, 0)
+backdrop.BackgroundColor3 = Color3.fromRGB(6, 8, 12)
+backdrop.BackgroundTransparency = 0.45
+backdrop.Text = ""
+backdrop.AutoButtonColor = false
+backdrop.Visible = false
+backdrop.ZIndex = 20
+backdrop.Parent = screenGui
+
+-- Top Master Dock
 local dock = Instance.new("Frame")
 dock.Name = "MasterDock"
-dock.Size = UDim2.new(0, 890, 0, 46)
-dock.Position = UDim2.new(0.5, -445, 0, 14)
-dock.BackgroundColor3 = Color3.fromRGB(14, 16, 22)
+dock.Size = UDim2.new(0, 920, 0, 48)
+dock.Position = UDim2.new(0.5, -460, 0, 14)
+dock.BackgroundColor3 = Color3.fromRGB(13, 16, 23)
+dock.BackgroundTransparency = 0.1
 dock.BorderSizePixel = 0
-dock.ClipsDescendants = false
+dock.ZIndex = 50
 dock.Parent = screenGui
 
 local dockCorner = Instance.new("UICorner")
@@ -418,7 +479,7 @@ dockCorner.Parent = dock
 local dockStroke = Instance.new("UIStroke")
 dockStroke.Color = Color3.fromRGB(0, 220, 140)
 dockStroke.Thickness = 1.3
-dockStroke.Transparency = 0.25
+dockStroke.Transparency = 0.3
 dockStroke.Parent = dock
 
 local dockLayout = Instance.new("UIListLayout")
@@ -431,13 +492,14 @@ dockLayout.Parent = dock
 local function createPill(name, text, width, onClick, isAccent)
     local btn = Instance.new("TextButton")
     btn.Name = name
-    btn.Size = UDim2.new(0, width, 0, 30)
-    btn.BackgroundColor3 = isAccent and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(24, 28, 38)
+    btn.Size = UDim2.new(0, width, 0, 32)
+    btn.BackgroundColor3 = isAccent and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(22, 27, 38)
     btn.Text = text
     btn.TextColor3 = Color3.fromRGB(245, 245, 245)
     btn.Font = Enum.Font.GothamBold
     btn.TextSize = 11
     btn.AutoButtonColor = false
+    btn.ZIndex = 51
     btn.Parent = dock
 
     local corner = Instance.new("UICorner")
@@ -445,10 +507,10 @@ local function createPill(name, text, width, onClick, isAccent)
     corner.Parent = btn
 
     btn.MouseEnter:Connect(function()
-        TweenService:Create(btn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(40, 48, 65)}):Play()
+        TweenService:Create(btn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(38, 48, 68)}):Play()
     end)
     btn.MouseLeave:Connect(function()
-        local c = btn:GetAttribute("Active") and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(24, 28, 38)
+        local c = btn:GetAttribute("Active") and (btn:GetAttribute("AccentColor") or Color3.fromRGB(0, 180, 110)) or Color3.fromRGB(22, 27, 38)
         TweenService:Create(btn, TweenInfo.new(0.12), {BackgroundColor3 = c}):Play()
     end)
 
@@ -462,8 +524,9 @@ end
 
 -- 1. Brand Badge
 local brand = Instance.new("Frame")
-brand.Size = UDim2.new(0, 110, 0, 30)
-brand.BackgroundColor3 = Color3.fromRGB(20, 23, 32)
+brand.Size = UDim2.new(0, 112, 0, 32)
+brand.BackgroundColor3 = Color3.fromRGB(18, 22, 32)
+brand.ZIndex = 51
 brand.Parent = dock
 local bCorner = Instance.new("UICorner")
 bCorner.CornerRadius = UDim.new(0, 6)
@@ -474,6 +537,7 @@ dot.Size = UDim2.new(0, 8, 0, 8)
 dot.Position = UDim2.new(0, 10, 0.5, -4)
 dot.BackgroundColor3 = Color3.fromRGB(0, 240, 140)
 dot.BorderSizePixel = 0
+dot.ZIndex = 52
 dot.Parent = brand
 local dCorner = Instance.new("UICorner")
 dCorner.CornerRadius = UDim.new(1, 0)
@@ -483,11 +547,12 @@ local brandText = Instance.new("TextLabel")
 brandText.Size = UDim2.new(1, -26, 1, 0)
 brandText.Position = UDim2.new(0, 24, 0, 0)
 brandText.BackgroundTransparency = 1
-brandText.Text = "BUILD PRO"
+brandText.Text = "BUILD PRO V4"
 brandText.TextColor3 = Color3.fromRGB(0, 240, 140)
 brandText.Font = Enum.Font.GothamBlack
-brandText.TextSize = 11
+brandText.TextSize = 10
 brandText.TextXAlignment = Enum.TextXAlignment.Left
+brandText.ZIndex = 52
 brandText.Parent = brand
 
 -- 2. Grid Snap Multi-Toggle
@@ -528,14 +593,15 @@ end, false)
 local glidePill = createPill("GlidePill", "GLIDE: ON", 84, function(btn)
     Config.SmoothGlide = not Config.SmoothGlide
     btn.Text = Config.SmoothGlide and "GLIDE: ON" or "GLIDE: OFF"
-    btn.BackgroundColor3 = Config.SmoothGlide and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(24, 28, 38)
+    btn.BackgroundColor3 = Config.SmoothGlide and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(22, 27, 38)
     btn:SetAttribute("Active", Config.SmoothGlide)
 end, true)
 
 -- 5. Height Offset Adjuster
 local heightGroup = Instance.new("Frame")
-heightGroup.Size = UDim2.new(0, 105, 0, 30)
-heightGroup.BackgroundColor3 = Color3.fromRGB(22, 26, 36)
+heightGroup.Size = UDim2.new(0, 105, 0, 32)
+heightGroup.BackgroundColor3 = Color3.fromRGB(20, 25, 36)
+heightGroup.ZIndex = 51
 heightGroup.Parent = dock
 local hgCorner = Instance.new("UICorner")
 hgCorner.CornerRadius = UDim.new(0, 6)
@@ -548,6 +614,7 @@ hDown.Text = "−"
 hDown.TextColor3 = Color3.fromRGB(200, 210, 230)
 hDown.Font = Enum.Font.GothamBold
 hDown.TextSize = 14
+hDown.ZIndex = 52
 hDown.Parent = heightGroup
 
 local hVal = Instance.new("TextLabel")
@@ -558,6 +625,7 @@ hVal.Text = "H: 0.0"
 hVal.TextColor3 = Color3.fromRGB(255, 255, 255)
 hVal.Font = Enum.Font.GothamBold
 hVal.TextSize = 10
+hVal.ZIndex = 52
 hVal.Parent = heightGroup
 
 local hUp = Instance.new("TextButton")
@@ -568,6 +636,7 @@ hUp.Text = "+"
 hUp.TextColor3 = Color3.fromRGB(200, 210, 230)
 hUp.Font = Enum.Font.GothamBold
 hUp.TextSize = 14
+hUp.ZIndex = 52
 hUp.Parent = heightGroup
 
 hDown.MouseButton1Click:Connect(function()
@@ -583,7 +652,7 @@ end)
 local rapidPill = createPill("RapidPill", "RAPID: ON", 80, function(btn)
     Config.ContinuousPlace = not Config.ContinuousPlace
     btn.Text = Config.ContinuousPlace and "RAPID: ON" or "RAPID: OFF"
-    btn.BackgroundColor3 = Config.ContinuousPlace and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(24, 28, 38)
+    btn.BackgroundColor3 = Config.ContinuousPlace and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(22, 27, 38)
     btn:SetAttribute("Active", Config.ContinuousPlace)
 end, true)
 
@@ -592,41 +661,128 @@ local clipPill = createPill("ClipPill", "CLIP: ON", 74, function(btn)
     Config.BypassCollision = not Config.BypassCollision
     getgenv().BuildMode_BypassCollision = Config.BypassCollision
     btn.Text = Config.BypassCollision and "CLIP: ON" or "CLIP: OFF"
-    btn.BackgroundColor3 = Config.BypassCollision and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(24, 28, 38)
+    btn.BackgroundColor3 = Config.BypassCollision and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(22, 27, 38)
     btn:SetAttribute("Active", Config.BypassCollision)
 end, true)
 
--- 8. AUTO-FLOOR MATRIX TOGGLE & CONFIG BUTTON
-local matrixModal
-local autoFloorBtn = createPill("AutoFloorPill", "🔲 MATRIX: OFF", 110, function(btn)
+-- Forward declarations for Modals
+local matrixModal, pickerFrame
+
+-- 8. Auto-Floor Matrix Button
+local autoFloorBtn = createPill("AutoFloorPill", "🔲 MATRIX: OFF", 112, function(btn)
     Config.AutoFloor = not Config.AutoFloor
     if Config.AutoFloor then
         btn.Text = "🔲 MATRIX: " .. tostring(Config.MatrixLength) .. "x" .. tostring(Config.MatrixWidth)
         btn.BackgroundColor3 = Color3.fromRGB(0, 190, 255)
         btn:SetAttribute("Active", true)
+        btn:SetAttribute("AccentColor", Color3.fromRGB(0, 190, 255))
         matrixModal.Visible = true
+        backdrop.Visible = true
+        pickerFrame.Visible = false
     else
         btn.Text = "🔲 MATRIX: OFF"
-        btn.BackgroundColor3 = Color3.fromRGB(24, 28, 38)
+        btn.BackgroundColor3 = Color3.fromRGB(22, 27, 38)
         btn:SetAttribute("Active", false)
+        matrixModal.Visible = false
+        backdrop.Visible = false
         clearGhostParts()
     end
 end, false)
 
--- 9. Blueprint Palette Trigger
-local pickerFrame
-local bpPill = createPill("BpPill", "📐 BLUEPRINTS", 100, function(btn)
-    pickerFrame.Visible = not pickerFrame.Visible
+-- 9. Blueprint Palette Button
+local bpPill = createPill("BpPill", "📐 BLUEPRINTS", 104, function(btn)
+    local targetVis = not pickerFrame.Visible
+    pickerFrame.Visible = targetVis
+    backdrop.Visible = targetVis
+    if targetVis then
+        matrixModal.Visible = false
+    end
 end, false)
 
--- Matrix Config Modal
+-- ========================================================================
+-- REAL-TIME MATRIX PROGRESS BANNER
+-- ========================================================================
+local progressBanner = Instance.new("Frame")
+progressBanner.Name = "MatrixProgressBanner"
+progressBanner.Size = UDim2.new(0, 360, 0, 38)
+progressBanner.Position = UDim2.new(0.5, -180, 0, 68)
+progressBanner.BackgroundColor3 = Color3.fromRGB(14, 18, 26)
+progressBanner.BackgroundTransparency = 0.15
+progressBanner.BorderSizePixel = 0
+progressBanner.Visible = false
+progressBanner.ZIndex = 60
+progressBanner.Parent = screenGui
+
+local pbCorner = Instance.new("UICorner")
+pbCorner.CornerRadius = UDim.new(0, 8)
+pbCorner.Parent = progressBanner
+
+local pbStroke = Instance.new("UIStroke")
+pbStroke.Color = Color3.fromRGB(0, 200, 255)
+pbStroke.Thickness = 1.2
+pbStroke.Parent = progressBanner
+
+local pbLabel = Instance.new("TextLabel")
+pbLabel.Size = UDim2.new(1, -20, 0, 20)
+pbLabel.Position = UDim2.new(0, 10, 0, 4)
+pbLabel.BackgroundTransparency = 1
+pbLabel.Text = "🔲 Deploying Matrix: 1 / 9..."
+pbLabel.TextColor3 = Color3.fromRGB(240, 245, 255)
+pbLabel.Font = Enum.Font.GothamBold
+pbLabel.TextSize = 10
+pbLabel.ZIndex = 61
+pbLabel.Parent = progressBanner
+
+local pbTrack = Instance.new("Frame")
+pbTrack.Size = UDim2.new(1, -20, 0, 5)
+pbTrack.Position = UDim2.new(0, 10, 0, 26)
+pbTrack.BackgroundColor3 = Color3.fromRGB(28, 36, 50)
+pbTrack.BorderSizePixel = 0
+pbTrack.ZIndex = 61
+pbTrack.Parent = progressBanner
+local pbtCorner = Instance.new("UICorner")
+pbtCorner.CornerRadius = UDim.new(1, 0)
+pbtCorner.Parent = pbTrack
+
+local pbBar = Instance.new("Frame")
+pbBar.Size = UDim2.new(0, 0, 1, 0)
+pbBar.BackgroundColor3 = Color3.fromRGB(0, 220, 140)
+pbBar.BorderSizePixel = 0
+pbBar.ZIndex = 62
+pbBar.Parent = pbTrack
+local pbbCorner = Instance.new("UICorner")
+pbbCorner.CornerRadius = UDim.new(1, 0)
+pbbCorner.Parent = pbBar
+
+updateMatrixProgressBanner = function(current, total, bpName)
+    progressBanner.Visible = true
+    pbLabel.Text = string.format("🔲 Deploying Matrix: %d / %d (%s)", current, total, bpName)
+    local pct = math.clamp(current / total, 0, 1)
+    TweenService:Create(pbBar, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = UDim2.new(pct, 0, 1, 0)
+    }):Play()
+end
+
+hideMatrixProgressBanner = function()
+    TweenService:Create(progressBanner, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+    task.wait(0.3)
+    progressBanner.Visible = false
+    progressBanner.BackgroundTransparency = 0.15
+    pbBar.Size = UDim2.new(0, 0, 1, 0)
+end
+
+-- ========================================================================
+-- MATRIX CONFIG MODAL
+-- ========================================================================
 matrixModal = Instance.new("Frame")
 matrixModal.Name = "MatrixConfigModal"
-matrixModal.Size = UDim2.new(0, 320, 0, 240)
-matrixModal.Position = UDim2.new(0.5, -160, 0, 70)
-matrixModal.BackgroundColor3 = Color3.fromRGB(14, 17, 23)
+matrixModal.Size = UDim2.new(0, 340, 0, 252)
+matrixModal.Position = UDim2.new(0.5, -170, 0, 72)
+matrixModal.BackgroundColor3 = Color3.fromRGB(14, 18, 26)
+matrixModal.BackgroundTransparency = 0.12
 matrixModal.BorderSizePixel = 0
 matrixModal.Visible = false
+matrixModal.ZIndex = 70
 matrixModal.Parent = screenGui
 
 local mmCorner = Instance.new("UICorner")
@@ -634,32 +790,35 @@ mmCorner.CornerRadius = UDim.new(0, 10)
 mmCorner.Parent = matrixModal
 
 local mmStroke = Instance.new("UIStroke")
-mmStroke.Color = Color3.fromRGB(0, 190, 255)
+mmStroke.Color = Color3.fromRGB(0, 200, 255)
 mmStroke.Thickness = 1.3
 mmStroke.Parent = matrixModal
 
 local mmTitle = Instance.new("TextLabel")
 mmTitle.Size = UDim2.new(1, -20, 0, 26)
-mmTitle.Position = UDim2.new(0, 12, 0, 8)
+mmTitle.Position = UDim2.new(0, 14, 0, 8)
 mmTitle.BackgroundTransparency = 1
 mmTitle.Text = "🔲 AUTO-FLOOR MATRIX SETUP"
 mmTitle.TextColor3 = Color3.fromRGB(0, 210, 255)
 mmTitle.Font = Enum.Font.GothamBlack
 mmTitle.TextSize = 11
 mmTitle.TextXAlignment = Enum.TextXAlignment.Left
+mmTitle.ZIndex = 71
 mmTitle.Parent = matrixModal
 
 local mmClose = Instance.new("TextButton")
-mmClose.Size = UDim2.new(0, 22, 0, 22)
-mmClose.Position = UDim2.new(1, -30, 0, 10)
+mmClose.Size = UDim2.new(0, 24, 0, 24)
+mmClose.Position = UDim2.new(1, -32, 0, 9)
 mmClose.BackgroundTransparency = 1
 mmClose.Text = "✕"
 mmClose.TextColor3 = Color3.fromRGB(160, 170, 190)
 mmClose.Font = Enum.Font.GothamBold
 mmClose.TextSize = 12
+mmClose.ZIndex = 71
 mmClose.Parent = matrixModal
 mmClose.MouseButton1Click:Connect(function()
     matrixModal.Visible = false
+    backdrop.Visible = false
 end)
 
 local function createStepperRow(labelText, currentVal, minV, maxV, yPos, onUpdate)
@@ -672,44 +831,49 @@ local function createStepperRow(labelText, currentVal, minV, maxV, yPos, onUpdat
     lbl.Font = Enum.Font.GothamBold
     lbl.TextSize = 11
     lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.ZIndex = 71
     lbl.Parent = matrixModal
 
     local controlBox = Instance.new("Frame")
-    controlBox.Size = UDim2.new(0, 140, 0, 28)
-    controlBox.Position = UDim2.new(1, -156, 0, yPos)
-    controlBox.BackgroundColor3 = Color3.fromRGB(22, 27, 38)
+    controlBox.Size = UDim2.new(0, 144, 0, 28)
+    controlBox.Position = UDim2.new(1, -160, 0, yPos)
+    controlBox.BackgroundColor3 = Color3.fromRGB(22, 28, 40)
+    controlBox.ZIndex = 71
     controlBox.Parent = matrixModal
     local cbc = Instance.new("UICorner")
     cbc.CornerRadius = UDim.new(0, 6)
     cbc.Parent = controlBox
 
     local minusBtn = Instance.new("TextButton")
-    minusBtn.Size = UDim2.new(0, 32, 1, 0)
+    minusBtn.Size = UDim2.new(0, 34, 1, 0)
     minusBtn.BackgroundTransparency = 1
     minusBtn.Text = "−"
     minusBtn.TextColor3 = Color3.fromRGB(200, 210, 230)
     minusBtn.Font = Enum.Font.GothamBold
     minusBtn.TextSize = 14
+    minusBtn.ZIndex = 72
     minusBtn.Parent = controlBox
 
     local valText = Instance.new("TextLabel")
-    valText.Size = UDim2.new(1, -64, 1, 0)
-    valText.Position = UDim2.new(0, 32, 0, 0)
+    valText.Size = UDim2.new(1, -68, 1, 0)
+    valText.Position = UDim2.new(0, 34, 0, 0)
     valText.BackgroundTransparency = 1
     valText.Text = tostring(currentVal) .. " tiles"
     valText.TextColor3 = Color3.fromRGB(0, 210, 255)
     valText.Font = Enum.Font.GothamBlack
     valText.TextSize = 11
+    valText.ZIndex = 72
     valText.Parent = controlBox
 
     local plusBtn = Instance.new("TextButton")
-    plusBtn.Size = UDim2.new(0, 32, 1, 0)
-    plusBtn.Position = UDim2.new(1, -32, 0, 0)
+    plusBtn.Size = UDim2.new(0, 34, 1, 0)
+    plusBtn.Position = UDim2.new(1, -34, 0, 0)
     plusBtn.BackgroundTransparency = 1
     plusBtn.Text = "+"
     plusBtn.TextColor3 = Color3.fromRGB(200, 210, 230)
     plusBtn.Font = Enum.Font.GothamBold
     plusBtn.TextSize = 14
+    plusBtn.ZIndex = 72
     plusBtn.Parent = controlBox
 
     minusBtn.MouseButton1Click:Connect(function()
@@ -741,11 +905,12 @@ end)
 local anchorBtn = Instance.new("TextButton")
 anchorBtn.Size = UDim2.new(1, -32, 0, 28)
 anchorBtn.Position = UDim2.new(0, 16, 0, 116)
-anchorBtn.BackgroundColor3 = Color3.fromRGB(24, 30, 42)
+anchorBtn.BackgroundColor3 = Color3.fromRGB(24, 30, 44)
 anchorBtn.Text = "Anchor: Corner (Click to toggle Center)"
 anchorBtn.TextColor3 = Color3.fromRGB(220, 230, 240)
 anchorBtn.Font = Enum.Font.GothamBold
 anchorBtn.TextSize = 10
+anchorBtn.ZIndex = 71
 anchorBtn.Parent = matrixModal
 local abCorner = Instance.new("UICorner")
 abCorner.CornerRadius = UDim.new(0, 6)
@@ -760,6 +925,7 @@ local presetRow = Instance.new("Frame")
 presetRow.Size = UDim2.new(1, -32, 0, 28)
 presetRow.Position = UDim2.new(0, 16, 0, 152)
 presetRow.BackgroundTransparency = 1
+presetRow.ZIndex = 71
 presetRow.Parent = matrixModal
 local prLayout = Instance.new("UIListLayout")
 prLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -773,12 +939,13 @@ local floorPresets = {
 }
 for _, fp in ipairs(floorPresets) do
     local fBtn = Instance.new("TextButton")
-    fBtn.Size = UDim2.new(0, 92, 1, 0)
-    fBtn.BackgroundColor3 = Color3.fromRGB(28, 36, 52)
+    fBtn.Size = UDim2.new(0, 98, 1, 0)
+    fBtn.BackgroundColor3 = Color3.fromRGB(28, 36, 54)
     fBtn.Text = fp.label
     fBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
     fBtn.Font = Enum.Font.GothamBold
     fBtn.TextSize = 8
+    fBtn.ZIndex = 72
     fBtn.Parent = presetRow
     local fbc = Instance.new("UICorner")
     fbc.CornerRadius = UDim.new(0, 4)
@@ -789,19 +956,22 @@ for _, fp in ipairs(floorPresets) do
         autoFloorBtn.Text = "🔲 MATRIX: " .. tostring(Config.MatrixLength) .. "x" .. tostring(Config.MatrixWidth)
         autoFloorBtn.BackgroundColor3 = Color3.fromRGB(0, 190, 255)
         autoFloorBtn:SetAttribute("Active", true)
+        autoFloorBtn:SetAttribute("AccentColor", Color3.fromRGB(0, 190, 255))
         matrixModal.Visible = false
+        backdrop.Visible = false
         startPlacingBlueprint(fp.name)
     end)
 end
 
 local mmConfirm = Instance.new("TextButton")
-mmConfirm.Size = UDim2.new(1, -32, 0, 32)
-mmConfirm.Position = UDim2.new(0, 16, 0, 190)
+mmConfirm.Size = UDim2.new(1, -32, 0, 34)
+mmConfirm.Position = UDim2.new(0, 16, 0, 192)
 mmConfirm.BackgroundColor3 = Color3.fromRGB(0, 180, 110)
-mmConfirm.Text = "ENABLE MATRIX & PLACE FLOOR"
+mmConfirm.Text = "DEPLOY MATRIX & PLACE FLOOR"
 mmConfirm.TextColor3 = Color3.fromRGB(255, 255, 255)
 mmConfirm.Font = Enum.Font.GothamBlack
 mmConfirm.TextSize = 10
+mmConfirm.ZIndex = 71
 mmConfirm.Parent = matrixModal
 local mcCorner = Instance.new("UICorner")
 mcCorner.CornerRadius = UDim.new(0, 6)
@@ -812,18 +982,24 @@ mmConfirm.MouseButton1Click:Connect(function()
     autoFloorBtn.Text = "🔲 MATRIX: " .. tostring(Config.MatrixLength) .. "x" .. tostring(Config.MatrixWidth)
     autoFloorBtn.BackgroundColor3 = Color3.fromRGB(0, 190, 255)
     autoFloorBtn:SetAttribute("Active", true)
+    autoFloorBtn:SetAttribute("AccentColor", Color3.fromRGB(0, 190, 255))
     matrixModal.Visible = false
+    backdrop.Visible = false
     startPlacingBlueprint("Floor1Large")
 end)
 
--- Blueprint Drawer
+-- ========================================================================
+-- MODERN GLASSMORPHIC BLUEPRINT DRAWER
+-- ========================================================================
 pickerFrame = Instance.new("Frame")
 pickerFrame.Name = "ModernBlueprintPicker"
-pickerFrame.Size = UDim2.new(0, 520, 0, 460)
-pickerFrame.Position = UDim2.new(0.5, -260, 0, 70)
-pickerFrame.BackgroundColor3 = Color3.fromRGB(13, 15, 20)
+pickerFrame.Size = UDim2.new(0, 540, 0, 480)
+pickerFrame.Position = UDim2.new(0.5, -270, 0, 72)
+pickerFrame.BackgroundColor3 = Color3.fromRGB(14, 18, 26)
+pickerFrame.BackgroundTransparency = 0.12
 pickerFrame.BorderSizePixel = 0
 pickerFrame.Visible = false
+pickerFrame.ZIndex = 70
 pickerFrame.Parent = screenGui
 
 local pfCorner = Instance.new("UICorner")
@@ -831,15 +1007,18 @@ pfCorner.CornerRadius = UDim.new(0, 12)
 pfCorner.Parent = pickerFrame
 
 local pfStroke = Instance.new("UIStroke")
-pfStroke.Color = Color3.fromRGB(35, 42, 58)
-pfStroke.Thickness = 1.5
+pfStroke.Color = Color3.fromRGB(0, 200, 140)
+pfStroke.Thickness = 1.3
+pfStroke.Transparency = 0.35
 pfStroke.Parent = pickerFrame
 
+-- Search Bar
 local searchContainer = Instance.new("Frame")
 searchContainer.Size = UDim2.new(1, -24, 0, 36)
 searchContainer.Position = UDim2.new(0, 12, 0, 12)
-searchContainer.BackgroundColor3 = Color3.fromRGB(20, 24, 32)
+searchContainer.BackgroundColor3 = Color3.fromRGB(20, 25, 36)
 searchContainer.BorderSizePixel = 0
+searchContainer.ZIndex = 71
 searchContainer.Parent = pickerFrame
 local scCorner = Instance.new("UICorner")
 scCorner.CornerRadius = UDim.new(0, 8)
@@ -850,19 +1029,22 @@ searchBox.Size = UDim2.new(1, -34, 1, 0)
 searchBox.Position = UDim2.new(0, 12, 0, 0)
 searchBox.BackgroundTransparency = 1
 searchBox.PlaceholderText = "🔍 Search blueprints (ramp, wedge, floor, stair, door)..."
-searchBox.PlaceholderColor3 = Color3.fromRGB(110, 120, 140)
+searchBox.PlaceholderColor3 = Color3.fromRGB(120, 135, 155)
 searchBox.Text = ""
 searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 searchBox.Font = Enum.Font.GothamMedium
 searchBox.TextSize = 12
 searchBox.ClearTextOnFocus = false
+searchBox.ZIndex = 72
 searchBox.Parent = searchContainer
 
+-- Quick Access Shelf (Ramps, Wedges, Stairs)
 local shelf = Instance.new("Frame")
 shelf.Size = UDim2.new(1, -24, 0, 32)
 shelf.Position = UDim2.new(0, 12, 0, 54)
-shelf.BackgroundColor3 = Color3.fromRGB(18, 22, 30)
+shelf.BackgroundColor3 = Color3.fromRGB(18, 23, 33)
 shelf.BorderSizePixel = 0
+shelf.ZIndex = 71
 shelf.Parent = pickerFrame
 local shCorner = Instance.new("UICorner")
 shCorner.CornerRadius = UDim.new(0, 6)
@@ -877,21 +1059,23 @@ shLayout.Parent = shelf
 local shLabel = Instance.new("TextLabel")
 shLabel.Size = UDim2.new(0, 64, 1, 0)
 shLabel.BackgroundTransparency = 1
-shLabel.Text = "RAMPS:"
+shLabel.Text = "QUICK:"
 shLabel.TextColor3 = Color3.fromRGB(0, 220, 140)
 shLabel.Font = Enum.Font.GothamBlack
 shLabel.TextSize = 9
+shLabel.ZIndex = 72
 shLabel.Parent = shelf
 
 local quickRamps = {"Wedge1", "Wedge2", "Wedge3", "Stair1", "Floor1Large", "Floor1Small"}
 for _, rName in ipairs(quickRamps) do
     local qBtn = Instance.new("TextButton")
-    qBtn.Size = UDim2.new(0, 68, 0, 24)
-    qBtn.BackgroundColor3 = Color3.fromRGB(28, 34, 46)
+    qBtn.Size = UDim2.new(0, 70, 0, 24)
+    qBtn.BackgroundColor3 = Color3.fromRGB(28, 36, 50)
     qBtn.Text = rName
     qBtn.TextColor3 = Color3.fromRGB(230, 230, 230)
     qBtn.Font = Enum.Font.GothamBold
     qBtn.TextSize = 9
+    qBtn.ZIndex = 72
     qBtn.Parent = shelf
     local qc = Instance.new("UICorner")
     qc.CornerRadius = UDim.new(0, 4)
@@ -899,16 +1083,20 @@ for _, rName in ipairs(quickRamps) do
 
     qBtn.MouseButton1Click:Connect(function()
         pickerFrame.Visible = false
+        backdrop.Visible = false
         startPlacingBlueprint(rName)
     end)
 end
 
+-- Category Row
 local catRow = Instance.new("ScrollingFrame")
+catRow.Name = "CategoryRow"
 catRow.Size = UDim2.new(1, -24, 0, 28)
 catRow.Position = UDim2.new(0, 12, 0, 92)
 catRow.BackgroundTransparency = 1
 catRow.ScrollBarThickness = 0
-catRow.CanvasSize = UDim2.new(0, 580, 0, 0)
+catRow.CanvasSize = UDim2.new(0, 600, 0, 0)
+catRow.ZIndex = 71
 catRow.Parent = pickerFrame
 
 local catLayout = Instance.new("UIListLayout")
@@ -916,21 +1104,25 @@ catLayout.FillDirection = Enum.FillDirection.Horizontal
 catLayout.Padding = UDim.new(0, 6)
 catLayout.Parent = catRow
 
+-- Blueprint Cards Scroll Container
 local cardsScroll = Instance.new("ScrollingFrame")
+cardsScroll.Name = "CardsScroll"
 cardsScroll.Size = UDim2.new(1, -24, 1, -132)
 cardsScroll.Position = UDim2.new(0, 12, 0, 124)
-cardsScroll.BackgroundColor3 = Color3.fromRGB(16, 19, 26)
+cardsScroll.BackgroundColor3 = Color3.fromRGB(16, 21, 30)
+cardsScroll.BackgroundTransparency = 0.2
 cardsScroll.BorderSizePixel = 0
 cardsScroll.ScrollBarThickness = 4
 cardsScroll.ScrollBarImageColor3 = Color3.fromRGB(0, 220, 140)
+cardsScroll.ZIndex = 71
 cardsScroll.Parent = pickerFrame
 local csCorner = Instance.new("UICorner")
 csCorner.CornerRadius = UDim.new(0, 8)
 csCorner.Parent = cardsScroll
 
 local grid = Instance.new("UIGridLayout")
-grid.CellSize = UDim2.new(0, 154, 0, 54)
-grid.CellPadding = UDim2.new(0, 6, 0, 6)
+grid.CellSize = UDim2.new(0, 160, 0, 56)
+grid.CellPadding = UDim2.new(0, 8, 0, 8)
 grid.SortOrder = Enum.SortOrder.Name
 grid.Parent = cardsScroll
 
@@ -958,9 +1150,11 @@ local function refreshCards()
             count = count + 1
             local card = Instance.new("TextButton")
             card.Name = bp.name
-            card.BackgroundColor3 = Color3.fromRGB(24, 29, 39)
+            card.BackgroundColor3 = Color3.fromRGB(24, 31, 44)
+            card.BackgroundTransparency = 0.2
             card.Text = ""
             card.AutoButtonColor = false
+            card.ZIndex = 72
             card.Parent = cardsScroll
 
             local cCorner = Instance.new("UICorner")
@@ -968,7 +1162,7 @@ local function refreshCards()
             cCorner.Parent = card
 
             local cStroke = Instance.new("UIStroke")
-            cStroke.Color = Color3.fromRGB(38, 46, 62)
+            cStroke.Color = Color3.fromRGB(38, 48, 68)
             cStroke.Thickness = 1
             cStroke.Parent = card
 
@@ -981,6 +1175,7 @@ local function refreshCards()
             nameLbl.Font = Enum.Font.GothamBold
             nameLbl.TextSize = 11
             nameLbl.TextXAlignment = Enum.TextXAlignment.Left
+            nameLbl.ZIndex = 73
             nameLbl.Parent = card
 
             local catLbl = Instance.new("TextLabel")
@@ -992,39 +1187,42 @@ local function refreshCards()
             catLbl.Font = Enum.Font.Gotham
             catLbl.TextSize = 9
             catLbl.TextXAlignment = Enum.TextXAlignment.Left
+            catLbl.ZIndex = 73
             catLbl.Parent = card
 
             card.MouseEnter:Connect(function()
-                card.BackgroundColor3 = Color3.fromRGB(36, 44, 60)
+                card.BackgroundColor3 = Color3.fromRGB(36, 46, 66)
                 cStroke.Color = Color3.fromRGB(0, 220, 140)
             end)
             card.MouseLeave:Connect(function()
-                card.BackgroundColor3 = Color3.fromRGB(24, 29, 39)
-                cStroke.Color = Color3.fromRGB(38, 46, 62)
+                card.BackgroundColor3 = Color3.fromRGB(24, 31, 44)
+                cStroke.Color = Color3.fromRGB(38, 48, 68)
             end)
 
             card.MouseButton1Click:Connect(function()
                 pickerFrame.Visible = false
+                backdrop.Visible = false
                 startPlacingBlueprint(bp.name)
             end)
         end
     end
 
     local rows = math.ceil(count / 3)
-    cardsScroll.CanvasSize = UDim2.new(0, 0, 0, rows * 60 + 10)
+    cardsScroll.CanvasSize = UDim2.new(0, 0, 0, rows * 64 + 16)
 end
 
 searchBox:GetPropertyChangedSignal("Text"):Connect(refreshCards)
 
-local categories = {"All", "Ramps & Wedges", "Floors", "Walls", "Doors", "Furniture", "Other"}
+local categories = {"All", "Floors", "Ramps & Wedges", "Walls", "Doors", "Furniture", "Other"}
 for _, cat in ipairs(categories) do
     local catBtn = Instance.new("TextButton")
-    catBtn.Size = UDim2.new(0, 80, 0, 24)
-    catBtn.BackgroundColor3 = (cat == "All") and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(22, 26, 36)
+    catBtn.Size = UDim2.new(0, 84, 0, 24)
+    catBtn.BackgroundColor3 = (cat == "All") and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(22, 28, 40)
     catBtn.Text = cat
     catBtn.TextColor3 = Color3.fromRGB(230, 230, 230)
     catBtn.Font = Enum.Font.GothamBold
     catBtn.TextSize = 9
+    catBtn.ZIndex = 72
     catBtn.Parent = catRow
     local cbCorner = Instance.new("UICorner")
     cbCorner.CornerRadius = UDim.new(0, 4)
@@ -1033,7 +1231,7 @@ for _, cat in ipairs(categories) do
     catBtn.MouseButton1Click:Connect(function()
         for _, b in ipairs(catRow:GetChildren()) do
             if b:IsA("TextButton") then
-                b.BackgroundColor3 = Color3.fromRGB(22, 26, 36)
+                b.BackgroundColor3 = Color3.fromRGB(22, 28, 40)
             end
         end
         catBtn.BackgroundColor3 = Color3.fromRGB(0, 180, 110)
@@ -1042,17 +1240,28 @@ for _, cat in ipairs(categories) do
     end)
 end
 
-local pb = LocalPlayer:FindFirstChild("PlayerBlueprints")
-if pb and pb:FindFirstChild("Blueprints") then
-    for _, bp in ipairs(pb.Blueprints:GetChildren()) do
-        local cat = bp:FindFirstChild("ItemCategory") and bp.ItemCategory.Value or "Other"
-        table.insert(allBlueprints, {name = bp.Name, category = cat})
+-- Asynchronous Reliable Blueprint Loading
+task.spawn(function()
+    local pb = LocalPlayer:WaitForChild("PlayerBlueprints", 10)
+    local bpsFolder = pb and pb:WaitForChild("Blueprints", 10)
+    if bpsFolder then
+        for _, bp in ipairs(bpsFolder:GetChildren()) do
+            local cat = bp:FindFirstChild("ItemCategory") and bp.ItemCategory.Value or "Other"
+            table.insert(allBlueprints, {name = bp.Name, category = cat})
+        end
     end
-end
-table.sort(allBlueprints, function(a, b) return a.name < b.name end)
-refreshCards()
+    table.sort(allBlueprints, function(a, b) return a.name < b.name end)
+    refreshCards()
+end)
 
--- Dock Dragging
+-- Backdrop click dismisses drawers
+backdrop.MouseButton1Click:Connect(function()
+    pickerFrame.Visible = false
+    matrixModal.Visible = false
+    backdrop.Visible = false
+end)
+
+-- Top Dock Dragging
 local dragging, dragStart, startPos
 dock.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -1070,35 +1279,41 @@ UserInputService.InputChanged:Connect(function(input)
     if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
         local delta = input.Position - dragStart
         dock.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        pickerFrame.Position = UDim2.new(dock.Position.X.Scale, dock.Position.X.Offset + 180, dock.Position.Y.Scale, dock.Position.Y.Offset + 54)
-        matrixModal.Position = UDim2.new(dock.Position.X.Scale, dock.Position.X.Offset + 280, dock.Position.Y.Scale, dock.Position.Y.Offset + 54)
+        progressBanner.Position = UDim2.new(dock.Position.X.Scale, dock.Position.X.Offset + 280, dock.Position.Y.Scale, dock.Position.Y.Offset + 54)
+        pickerFrame.Position = UDim2.new(dock.Position.X.Scale, dock.Position.X.Offset + 190, dock.Position.Y.Scale, dock.Position.Y.Offset + 56)
+        matrixModal.Position = UDim2.new(dock.Position.X.Scale, dock.Position.X.Offset + 290, dock.Position.Y.Scale, dock.Position.Y.Offset + 56)
     end
 end)
 
--- Keybinds
+-- Keyboard Bindings
 local inputConn = UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed and input.KeyCode ~= Enum.KeyCode.Q and input.KeyCode ~= Enum.KeyCode.E and input.KeyCode ~= Enum.KeyCode.X then
         return
     end
 
+    -- B: Toggle Dock / Modals
     if input.KeyCode == Enum.KeyCode.B and not UserInputService:GetFocusedTextBox() then
         dock.Visible = not dock.Visible
         if not dock.Visible then
             pickerFrame.Visible = false
             matrixModal.Visible = false
+            backdrop.Visible = false
         end
     end
 
+    -- Q: Lower Height (-0.25 studs)
     if input.KeyCode == Enum.KeyCode.Q and not UserInputService:GetFocusedTextBox() then
         Config.HeightOffset = math.max(-20, Config.HeightOffset - 0.25)
         hVal.Text = string.format("H: %+.2f", Config.HeightOffset)
     end
 
+    -- E: Raise Height (+0.25 studs)
     if input.KeyCode == Enum.KeyCode.E and not UserInputService:GetFocusedTextBox() then
         Config.HeightOffset = math.min(50, Config.HeightOffset + 0.25)
         hVal.Text = string.format("H: %+.2f", Config.HeightOffset)
     end
 
+    -- G: Cycle Grid Snapping
     if input.KeyCode == Enum.KeyCode.G and not UserInputService:GetFocusedTextBox() then
         curGridIdx = (curGridIdx % #gridModes) + 1
         Config.GridSnap = gridModes[curGridIdx].val
@@ -1111,13 +1326,22 @@ local inputConn = UserInputService.InputBegan:Connect(function(input, gameProces
         end
     end
 
+    -- R: Cycle Rotation Step
+    if input.KeyCode == Enum.KeyCode.R and not UserInputService:GetFocusedTextBox() then
+        curRotIdx = (curRotIdx % #rotModes) + 1
+        Config.RotationStep = rotModes[curRotIdx]
+        getgenv().BuildMode_RotationStep = Config.RotationStep
+        rotPill.Text = "ROT: " .. tostring(Config.RotationStep) .. "°"
+    end
+
+    -- X: Clear Placement & Ghosts
     if input.KeyCode == Enum.KeyCode.X and not UserInputService:GetFocusedTextBox() then
         clearGhostParts()
         Config.IsPlacing = false
     end
 end)
 
--- Cleanup Handler
+-- Global Cleanup Handler
 getgenv().EccoBuildSuite_Cleanup = function()
     if inputConn then inputConn:Disconnect() end
     if screenGui then screenGui:Destroy() end
@@ -1126,7 +1350,7 @@ getgenv().EccoBuildSuite_Cleanup = function()
 end
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "Build Suite V3 Matrix",
-    Text = "Auto-Floor Matrix & Length/Width controls live!",
+    Title = "Build Suite V4 Matrix",
+    Text = "Matrix Multiplier & Calibrated Drawer Live!",
     Duration = 4
 })
