@@ -1,15 +1,16 @@
 --[[
     ========================================================================
-    AXIOM // LUMBER TYCOON 2 MINIMALIST SIDEBAR BUILD & RESIZE SUITE — V6
+    AXIOM // LUMBER TYCOON 2 MINIMALIST SIDEBAR BUILD & RESIZE SUITE — V7
     - Minimalist Glassmorphic Sidebar Layout (Left Dock, Zero Clutter)
     - Zero Intrusive Keybinds (Full Player Movement & Chat Freedom)
-    - Regular Blueprint Resizing & Auto-Matrix Multiplier (Works on ANY Blueprint)
-    - True Height Lock (Absolute Horizontal Plane Lock, Zero Y Deviation)
-    - Instant Crisp Grid Snapping (Free, 0.5, 1.0, 2.0, 4.0 studs)
-    - Stabilized Raycast Pipeline (Zero Preview Strobing / Jitter)
-    - Real-Time Dynamic Ghost Preview for Any Regular Blueprint
+    - 🔒 Rotation Lock Toggle (Freezes Rotation Angle Completely)
+    - 🧲 Snap On Engine (Magnetic Edge & Level Height Snapping for Floors/Walls)
+    - Pixel-Perfect Placement Overlay Calibration (Zero Visualization Offset)
+    - Universal Regular Blueprint Resizing & Multi-Axis Matrix Placer
+    - True Height Lock (Absolute Mathematical Horizontal Plane Lock)
+    - Crisp Instant Grid Snapping (Free, 0.5, 1.0, 2.0, 4.0 studs)
     - Auto-Fill Blueprint Engine with Golden Spruce Default
-    - Quick Dimension Presets (1x1, 3x3, 5x5, 10x10) + Micro-Steppers
+    - Quick Dimension Presets (1x1, 3x3, 5x5, 10x10) + Steppers
     ========================================================================
 ]]
 
@@ -30,18 +31,24 @@ end
 local Config = {
     Enabled = true,
 
-    -- Grid & Rotation
+    -- Precision Snapping & Rotation
     GridSnap = 0,               -- 0 = Free / Smooth, 0.5, 1.0, 2.0, 4.0
     RotationStep = 90,          -- 90, 45, 15, 5, 1
-    FreeRotation = false,       -- Aligned to grid rotation by default
+    FreeRotation = false,       -- Aligned to grid rotation
+    LockRotation = false,       -- TOGGLE TO STOP ROTATIONS (Freeze angle)
+    LockedRotationCFrame = nil,
     SmoothGlide = true,         -- Interpolation for free mode
     SmoothSpeed = 0.35,         -- Lerp alpha
     BypassCollision = true,     -- Clip through tight spots & boundary checks
     ContinuousPlace = true,     -- Auto re-trigger next blueprint
 
+    -- 🧲 Snap On (Even Floors & Walls)
+    SnapOn = true,              -- AUTO SNAP ON FOR FLOORS & WALLS
+    SnapThreshold = 7.0,        -- Maximum distance in studs to trigger magnetic snap
+
     -- True Height Lock (Absolute Plane Lock)
     HeightLock = false,         -- True = blueprint is locked to horizontal plane
-    LockedHeight = 35.0,        -- Target Y coordinate for Height Lock
+    LockedHeight = 20.0,        -- Target Y coordinate for Height Lock
     HeightEnabled = false,      -- Relative height offset toggle (when HeightLock is OFF)
     HeightOffset = 0,           -- Relative offset in studs (-20 to +50)
 
@@ -142,14 +149,15 @@ local function updateGhostGrid(primaryCF, tileSize)
         gp.CanQuery = false
         gp.CastShadow = false
         gp.Material = Enum.Material.SmoothPlastic
-        gp.Color = Color3.fromRGB(0, 180, 255)
-        gp.Transparency = 0.55
+        gp.Color = Color3.fromRGB(0, 200, 255)
+        gp.Transparency = 0.65
         gp.Parent = ghostFolder
 
         local sb = Instance.new("SelectionBox")
         sb.Adornee = gp
-        sb.Color3 = Color3.fromRGB(0, 220, 255)
-        sb.Transparency = 0.60
+        sb.Color3 = Color3.fromRGB(0, 230, 160)
+        sb.Transparency = 0.50
+        sb.LineThickness = 0.05
         sb.Parent = gp
 
         table.insert(activeGhostParts, gp)
@@ -185,6 +193,108 @@ local function updateGhostGrid(primaryCF, tileSize)
     end
 end
 
+-- ========================================================================
+-- 🧲 SNAP ON ENGINE (EVEN FLOORS & WALL CONNECTIONS)
+-- ========================================================================
+local function getSnapOnCFrame(rawPos, currentSize, placingModel)
+    if not Config.SnapOn then return nil end
+    local pm = workspace:FindFirstChild("PlayerModels")
+    if not pm or not placingModel then return nil end
+
+    local bpLower = placingModel.Name:lower()
+    local isFloor = bpLower:find("floor") ~= nil
+    local isWall = bpLower:find("wall") ~= nil
+    if not isFloor and not isWall then return nil end
+
+    local bestDist = Config.SnapThreshold or 7.0
+    local bestCF = nil
+
+    for _, c in ipairs(pm:GetChildren()) do
+        if c:FindFirstChild("Owner") and c.Owner.Value == LocalPlayer and c ~= placingModel then
+            local cLower = c.Name:lower()
+            local cIsFloor = cLower:find("floor") ~= nil
+            local cIsWall = cLower:find("wall") ~= nil
+
+            local canSnap = false
+            if isFloor and cIsFloor then
+                canSnap = true
+            elseif isWall and (cIsWall or cIsFloor) then
+                canSnap = true
+            end
+
+            if canSnap then
+                local main = c:FindFirstChild("Main") or c.PrimaryPart or c:FindFirstChildWhichIsA("BasePart")
+                if main then
+                    local dist = (main.Position - rawPos).Magnitude
+                    if dist < (bestDist + 18) then
+                        local existCF = main.CFrame
+                        local existSize = main.Size
+                        local existPos = existCF.Position
+                        local rightVec = existCF.RightVector
+                        local lookVec = existCF.LookVector
+
+                        if isFloor and cIsFloor then
+                            -- Adjacent floor edge points (Ensure identical Y so floors are 100% even!)
+                            local stepX = (existSize.X / 2) + (currentSize.X / 2)
+                            local stepZ = (existSize.Z / 2) + (currentSize.Z / 2)
+                            local candidates = {
+                                existPos + (rightVec * stepX),
+                                existPos - (rightVec * stepX),
+                                existPos + (lookVec * stepZ),
+                                existPos - (lookVec * stepZ),
+                            }
+                            for _, candPos in ipairs(candidates) do
+                                local candPosEvenY = Vector3.new(candPos.X, existPos.Y, candPos.Z)
+                                local d = (Vector3.new(rawPos.X, existPos.Y, rawPos.Z) - candPosEvenY).Magnitude
+                                if d < bestDist then
+                                    bestDist = d
+                                    bestCF = CFrame.new(candPosEvenY) * (existCF - existPos)
+                                end
+                            end
+                        elseif isWall and cIsWall then
+                            -- Wall-to-wall connection
+                            local stepX = (existSize.X / 2) + (currentSize.X / 2)
+                            local candidates = {
+                                existPos + (rightVec * stepX),
+                                existPos - (rightVec * stepX),
+                            }
+                            for _, candPos in ipairs(candidates) do
+                                local candPosEvenY = Vector3.new(candPos.X, existPos.Y, candPos.Z)
+                                local d = (rawPos - candPosEvenY).Magnitude
+                                if d < bestDist then
+                                    bestDist = d
+                                    bestCF = CFrame.new(candPosEvenY) * (existCF - existPos)
+                                end
+                            end
+                        elseif isWall and cIsFloor then
+                            -- Wall placed on floor perimeter edge
+                            local halfFloorX = existSize.X / 2
+                            local halfFloorZ = existSize.Z / 2
+                            local wallY = existPos.Y + (existSize.Y / 2) + (currentSize.Y / 2)
+                            local wallCandidates = {
+                                {pos = existPos + (lookVec * halfFloorZ), rot = existCF - existPos},
+                                {pos = existPos - (lookVec * halfFloorZ), rot = existCF - existPos},
+                                {pos = existPos + (rightVec * halfFloorX), rot = (existCF * CFrame.Angles(0, math.rad(90), 0)) - existPos},
+                                {pos = existPos - (rightVec * halfFloorX), rot = (existCF * CFrame.Angles(0, math.rad(90), 0)) - existPos},
+                            }
+                            for _, cand in ipairs(wallCandidates) do
+                                local candPos = Vector3.new(cand.pos.X, wallY, cand.pos.Z)
+                                local d = (rawPos - candPos).Magnitude
+                                if d < bestDist then
+                                    bestDist = d
+                                    bestCF = CFrame.new(candPos) * cand.rot
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return bestCF
+end
+
 -- Placement State
 local currentSmoothedCF = nil
 local lastTargetCF = nil
@@ -196,8 +306,8 @@ rayParams.FilterType = Enum.RaycastFilterType.Exclude
 -- Forward declarations for HUD Banners
 local updateMatrixProgressBanner, hideMatrixProgressBanner
 
--- Hook 1: roundCFrame (Precision Snapping, Height Lock & Anti-Glitch Raycast)
-if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V6 then
+-- Hook 1: roundCFrame (Precision Snapping, Height Lock, Snap On & Calibrated Overlay)
+if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V7 then
     local oldRound
     oldRound = hookfunction(targetRoundCFrame, function(a1, a2, a3)
         if not Config.Enabled then
@@ -212,12 +322,11 @@ if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V6 then
             end
         end
 
-        -- Dynamically extract true bounding size of whatever regular blueprint is being placed
-        if a3 and a3.Size then
+        local mainPart = (a2 and a2:IsA("Model")) and (a2:FindFirstChild("Main") or a2.PrimaryPart or a2:FindFirstChildWhichIsA("BasePart"))
+        if mainPart then
+            currentPlacingSize = mainPart.Size
+        elseif a3 and a3.Size then
             currentPlacingSize = a3.Size
-        elseif a2 and a2:IsA("Model") then
-            local mainPart = a2:FindFirstChild("Main") or a2.PrimaryPart or a2:FindFirstChildWhichIsA("BasePart")
-            currentPlacingSize = (mainPart and mainPart.Size) or a2:GetExtentsSize()
         end
 
         -- Eliminate placing model self-collision & flicker
@@ -241,14 +350,13 @@ if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V6 then
         }
         local hit = workspace:Raycast(ray.Origin, ray.Direction * 850, rayParams)
 
-        local partHeight = (currentPlacingSize and currentPlacingSize.Y) or 0.2
+        local partHeight = (mainPart and mainPart.Size.Y) or (currentPlacingSize and currentPlacingSize.Y) or 0.2
         local basePos
 
         -- TRUE HEIGHT LOCK (Absolute Horizontal Plane Lock)
         if Config.HeightLock then
-            local lockedY = Config.LockedHeight or 35.0
+            local lockedY = Config.LockedHeight or 20.0
             local planeTargetY = lockedY + (partHeight / 2)
-            -- Intersect ray with horizontal plane at Y = planeTargetY
             if math.abs(ray.Direction.Y) > 0.0001 then
                 local t = (planeTargetY - ray.Origin.Y) / ray.Direction.Y
                 if t > 0 and t < 1500 then
@@ -270,7 +378,7 @@ if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V6 then
                 elseif norm.Y < -0.35 then
                     basePos = hit.Position - Vector3.new(0, (partHeight / 2) + effectiveHeightOffset, 0)
                 else
-                    local partDepth = (currentPlacingSize and currentPlacingSize.Z) or 2
+                    local partDepth = (mainPart and mainPart.Size.Z) or (currentPlacingSize and currentPlacingSize.Z) or 2
                     basePos = hit.Position + (norm * (partDepth / 2)) + Vector3.new(0, effectiveHeightOffset, 0)
                 end
             else
@@ -278,88 +386,118 @@ if targetRoundCFrame and not getgenv()._Hooked_roundCFrame_V6 then
             end
         end
 
-        -- Crisp Grid Snapping
-        if Config.GridSnap > 0 then
-            local s = Config.GridSnap
-            if Config.HeightLock then
-                -- Only quantize X and Z, keep plane height strictly locked
-                basePos = Vector3.new(
-                    math.floor(basePos.X / s + 0.5) * s,
-                    basePos.Y,
-                    math.floor(basePos.Z / s + 0.5) * s
-                )
-            else
-                basePos = Vector3.new(
-                    math.floor(basePos.X / s + 0.5) * s,
-                    math.floor(basePos.Y / 0.25 + 0.5) * 0.25,
-                    math.floor(basePos.Z / s + 0.5) * s
-                )
+        -- 🧲 Snap On Evaluation
+        local snapCF = nil
+        if Config.SnapOn and a2 and not Config.HeightLock then
+            snapCF = getSnapOnCFrame(basePos, currentPlacingSize, a2)
+        end
+
+        -- Rotation Handling (Supports Rotation Lock)
+        local targetRot
+        if Config.LockRotation and Config.LockedRotationCFrame then
+            targetRot = Config.LockedRotationCFrame
+        else
+            local rawRot = a1 - a1.Position
+            targetRot = rawRot
+            if not Config.FreeRotation and Config.RotationStep and Config.RotationStep > 0 then
+                local rx, ry, rz = rawRot:ToOrientation()
+                local stepRad = math.rad(Config.RotationStep)
+                ry = math.floor(ry / stepRad + 0.5) * stepRad
+                targetRot = CFrame.fromOrientation(rx, ry, rz)
             end
         end
 
-        -- Rotation Handling
-        local rawRot = a1 - a1.Position
-        local targetRot = rawRot
-        if not Config.FreeRotation and Config.RotationStep and Config.RotationStep > 0 then
-            local rx, ry, rz = rawRot:ToOrientation()
-            local stepRad = math.rad(Config.RotationStep)
-            ry = math.floor(ry / stepRad + 0.5) * stepRad
-            targetRot = CFrame.fromOrientation(rx, ry, rz)
+        local targetCF
+        if snapCF then
+            -- Snap On override
+            targetCF = snapCF
+        else
+            -- Crisp Grid Snapping
+            if Config.GridSnap > 0 then
+                local s = Config.GridSnap
+                if Config.HeightLock then
+                    basePos = Vector3.new(
+                        math.floor(basePos.X / s + 0.5) * s,
+                        basePos.Y,
+                        math.floor(basePos.Z / s + 0.5) * s
+                    )
+                else
+                    basePos = Vector3.new(
+                        math.floor(basePos.X / s + 0.5) * s,
+                        math.floor(basePos.Y / 0.25 + 0.5) * 0.25,
+                        math.floor(basePos.Z / s + 0.5) * s
+                    )
+                end
+            end
+            targetCF = CFrame.new(basePos) * targetRot
         end
 
-        local targetCF = CFrame.new(basePos) * targetRot
         lastTargetCF = targetCF
 
-        -- Exact lock on placement click
-        if isConfirming then
-            currentSmoothedCF = nil
-            clearGhostParts()
-            return targetCF
-        end
-
-        -- Real-Time Ghost Grid Preview
+        -- Real-Time Ghost Grid Preview (Matches exact placing model CFrame)
         if Config.AutoMatrix then
             updateGhostGrid(targetCF, currentPlacingSize)
         else
             clearGhostParts()
         end
 
+        -- Exact lock on placement click
+        local draggerPart = a3 or (mainPart or a1)
+        local draggerPartHeight = (draggerPart and draggerPart.Size and draggerPart.Size.Y) or partHeight
+        local mainPartHeight = (mainPart and mainPart.Size.Y) or partHeight
+        -- Mathematical cancellation of StructureDragger's post-multiplication
+        local draggerCompensation = CFrame.new(0, (draggerPartHeight / 2) - (mainPartHeight / 2), 0)
+        local roundReturnCF = targetCF * draggerCompensation
+
+        if isConfirming then
+            currentSmoothedCF = nil
+            clearGhostParts()
+            return roundReturnCF
+        end
+
         -- Snappy Grid vs Smooth Glide
-        if Config.GridSnap > 0 then
-            -- Crisp instant snap on grid (no floaty delay)
-            currentSmoothedCF = targetCF
-            return targetCF
+        if Config.GridSnap > 0 or snapCF or Config.HeightLock then
+            -- Instant crisp click with zero lag
+            currentSmoothedCF = roundReturnCF
+            return roundReturnCF
         elseif Config.SmoothGlide then
-            if not currentSmoothedCF or (currentSmoothedCF.Position - targetCF.Position).Magnitude > 35 then
-                currentSmoothedCF = targetCF
+            if not currentSmoothedCF or (currentSmoothedCF.Position - roundReturnCF.Position).Magnitude > 35 then
+                currentSmoothedCF = roundReturnCF
             else
-                currentSmoothedCF = currentSmoothedCF:Lerp(targetCF, Config.SmoothSpeed or 0.35)
+                currentSmoothedCF = currentSmoothedCF:Lerp(roundReturnCF, Config.SmoothSpeed or 0.35)
             end
             return currentSmoothedCF
         else
-            currentSmoothedCF = targetCF
-            return targetCF
+            currentSmoothedCF = roundReturnCF
+            return roundReturnCF
         end
     end)
-    getgenv()._Hooked_roundCFrame_V6 = true
+    getgenv()._Hooked_roundCFrame_V7 = true
 end
 
 -- Hook 2: snapAngleToNearestOrthogonal
-if targetSnapAngle and not getgenv()._Hooked_snapAngle_V6 then
+if targetSnapAngle and not getgenv()._Hooked_snapAngle_V7 then
     local oldSnap
     oldSnap = hookfunction(targetSnapAngle, function(cf)
+        if Config.Enabled and Config.LockRotation and Config.LockedRotationCFrame then
+            return Config.LockedRotationCFrame
+        end
         if Config.Enabled and Config.FreeRotation then
             return cf - cf.Position
         end
         return oldSnap(cf)
     end)
-    getgenv()._Hooked_snapAngle_V6 = true
+    getgenv()._Hooked_snapAngle_V7 = true
 end
 
--- Hook 3: rotateTurn
-if targetRotateTurn and not getgenv()._Hooked_rotateTurn_V6 then
+-- Hook 3: rotateTurn (Blocks rotation input when Rotation Lock is ON)
+if targetRotateTurn and not getgenv()._Hooked_rotateTurn_V7 then
     local oldRotate
     oldRotate = hookfunction(targetRotateTurn, function(a1, a2, a3)
+        if Config.Enabled and Config.LockRotation then
+            -- Block all rotation keystrokes / mobile turns
+            return
+        end
         if Config.Enabled and Config.RotationStep then
             local stepRad = math.rad(Config.RotationStep)
             local uvs = getupvalues(targetRotateTurn)
@@ -378,11 +516,11 @@ if targetRotateTurn and not getgenv()._Hooked_rotateTurn_V6 then
         end
         return oldRotate(a1, a2, a3)
     end)
-    getgenv()._Hooked_rotateTurn_V6 = true
+    getgenv()._Hooked_rotateTurn_V7 = true
 end
 
 -- Hook 4: CanPlace (No Collision Boundary Blocking)
-if canPlaceMod and not getgenv()._Hooked_CanPlace_V6 then
+if canPlaceMod and not getgenv()._Hooked_CanPlace_V7 then
     local oldCanPlace = canPlaceMod.CanPlace
     canPlaceMod.CanPlace = function(self, player, target, options)
         local can, owner = oldCanPlace(self, player, target, options)
@@ -394,7 +532,7 @@ if canPlaceMod and not getgenv()._Hooked_CanPlace_V6 then
         end
         return can, owner
     end
-    getgenv()._Hooked_CanPlace_V6 = true
+    getgenv()._Hooked_CanPlace_V7 = true
 end
 
 -- ========================================================================
@@ -458,7 +596,7 @@ local function spawnMatrixPlacements(bpName, primaryCF, tileSize, primaryLand)
 end
 
 -- Hook 5: Intercept Blueprint Placement for ALL Regular Blueprints
-if not getgenv()._Hooked_placeStructureRemote_V6 then
+if not getgenv()._Hooked_placeStructureRemote_V7 then
     local rawFire = placeStructureRemote.FireServer
     local oldFire
     oldFire = hookfunction(rawFire, function(self, bpName, placedCF, landRef, ...)
@@ -478,7 +616,7 @@ if not getgenv()._Hooked_placeStructureRemote_V6 then
         end
         return oldFire(self, bpName, placedCF, landRef, ...)
     end)
-    getgenv()._Hooked_placeStructureRemote_V6 = true
+    getgenv()._Hooked_placeStructureRemote_V7 = true
 end
 
 -- Palette Placement Launcher
@@ -622,11 +760,11 @@ local function fillAllBlueprints(woodTypeFilter)
 end
 
 -- ========================================================================
--- MINIMALIST SIDEBAR UI (SIDE OF SCREEN, CLEAN GLASSMORPHISM)
+-- MINIMALIST SIDEBAR UI (LEFT DOCKED, SLEEK OBSIDIAN GLASS)
 -- ========================================================================
 local pgui = LocalPlayer:WaitForChild("PlayerGui")
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "EccoBuildSuiteV6"
+screenGui.Name = "EccoBuildSuiteV7"
 screenGui.ResetOnSpawn = false
 screenGui.IgnoreGuiInset = true
 screenGui.DisplayOrder = 9999
@@ -712,7 +850,7 @@ local titleLbl = Instance.new("TextLabel")
 titleLbl.Size = UDim2.new(1, -60, 1, 0)
 titleLbl.Position = UDim2.new(0, 12, 0, 0)
 titleLbl.BackgroundTransparency = 1
-titleLbl.Text = "AXIOM BUILD V6"
+titleLbl.Text = "AXIOM BUILD V7"
 titleLbl.TextColor3 = Color3.fromRGB(0, 240, 150)
 titleLbl.Font = Enum.Font.GothamBlack
 titleLbl.TextSize = 12
@@ -741,7 +879,7 @@ scrollBody.Position = UDim2.new(0, 6, 0, 40)
 scrollBody.BackgroundTransparency = 1
 scrollBody.ScrollBarThickness = 3
 scrollBody.ScrollBarImageColor3 = Color3.fromRGB(0, 210, 140)
-scrollBody.CanvasSize = UDim2.new(0, 0, 0, 880)
+scrollBody.CanvasSize = UDim2.new(0, 0, 0, 940)
 scrollBody.ZIndex = 51
 scrollBody.Parent = sidebar
 
@@ -803,8 +941,8 @@ local function createSidebarPill(name, text, onClick, isAccent)
     return btn
 end
 
--- ==================== 1. PRECISION SNAPPING ====================
-createSectionTitle("PRECISION SNAPPING")
+-- ==================== 1. PRECISION SNAPPING & ORIENTATION ====================
+createSectionTitle("PRECISION SNAPPING & ORIENTATION")
 
 local gridModes = {
     {val = 0, label = "FREE (Smooth)"},
@@ -823,6 +961,24 @@ local gridBtn = createSidebarPill("GridBtn", "GRID: FREE (Smooth)", function(btn
     btn:SetAttribute("Active", Config.GridSnap == 0)
 end, true)
 
+-- 🔒 1. TOGGLE TO STOP ROTATIONS
+local lockRotBtn = createSidebarPill("LockRotBtn", "🔒 LOCK ROTATION: OFF", function(btn)
+    Config.LockRotation = not Config.LockRotation
+    btn.Text = Config.LockRotation and "🔒 LOCK ROTATION: ON" or "🔒 LOCK ROTATION: OFF"
+    btn.BackgroundColor3 = Config.LockRotation and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(22, 27, 38)
+    btn:SetAttribute("Active", Config.LockRotation)
+
+    if Config.LockRotation then
+        if lastTargetCF then
+            Config.LockedRotationCFrame = lastTargetCF - lastTargetCF.Position
+        else
+            Config.LockedRotationCFrame = CFrame.new()
+        end
+    else
+        Config.LockedRotationCFrame = nil
+    end
+end, false)
+
 local rotModes = {90, 45, 15, 5, 1}
 local curRotIdx = 1
 local rotBtn = createSidebarPill("RotBtn", "ROTATION: 90°", function(btn)
@@ -831,6 +987,14 @@ local rotBtn = createSidebarPill("RotBtn", "ROTATION: 90°", function(btn)
     getgenv().BuildMode_RotationStep = Config.RotationStep
     btn.Text = "ROTATION: " .. tostring(Config.RotationStep) .. "°"
 end, false)
+
+-- 🧲 2. SNAP ON (EVEN FLOORS & WALLS)
+local snapOnBtn = createSidebarPill("SnapOnBtn", "🧲 SNAP ON (EVEN FLOORS): ON", function(btn)
+    Config.SnapOn = not Config.SnapOn
+    btn.Text = Config.SnapOn and "🧲 SNAP ON (EVEN FLOORS): ON" or "🧲 SNAP ON: OFF"
+    btn.BackgroundColor3 = Config.SnapOn and Color3.fromRGB(0, 180, 110) or Color3.fromRGB(22, 27, 38)
+    btn:SetAttribute("Active", Config.SnapOn)
+end, true)
 
 local glideBtn = createSidebarPill("GlideBtn", "SMOOTH GLIDE: ON", function(btn)
     Config.SmoothGlide = not Config.SmoothGlide
@@ -875,7 +1039,7 @@ local heightLockBtn = createSidebarPill("HeightLockBtn", "HEIGHT LOCK: OFF", fun
     if Config.HeightLock then
         local char = LocalPlayer.Character
         local root = char and char:FindFirstChild("HumanoidRootPart")
-        if root and (not Config.LockedHeight or Config.LockedHeight == 35.0) then
+        if root and (not Config.LockedHeight or Config.LockedHeight == 20.0) then
             Config.LockedHeight = math.floor(root.Position.Y - 2.5 + 0.5)
         end
     end
@@ -1451,7 +1615,7 @@ local function refreshCards()
             nameLbl.Position = UDim2.new(0, 8, 0, 6)
             nameLbl.BackgroundTransparency = 1
             nameLbl.Text = bp.name
-            nameLbl.TextColor3 = Color3.fromRGB(245, 245, 245)
+            nameLbl.TextColor3 = Color3.fromRGB(245, 245, 255)
             nameLbl.Font = Enum.Font.GothamBold
             nameLbl.TextSize = 11
             nameLbl.TextXAlignment = Enum.TextXAlignment.Left
@@ -1544,7 +1708,7 @@ getgenv().EccoBuildSuite_Cleanup = function()
 end
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "Axiom Build V6",
-    Text = "Universal Blueprint Resizing & True Height Lock Live!",
+    Title = "Axiom Build V7",
+    Text = "Snap On & Rotation Lock Live!",
     Duration = 4
 })
