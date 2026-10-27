@@ -1,9 +1,9 @@
 --[[
     ================================================================================
-    ECCO HUB V3 — MINIMALIST SLEEK BOOTSTRAP LOADER
+    ECC00 — MINIMALIST SLEEK BOOTSTRAP LOADER
     ================================================================================
     Official Hub : https://eccohub.xyz
-    Community    : https://discord.gg/hN9QpA3HA
+    Community    : https://discord.gg/FTxJ9a4w7
     TikTok       : https://www.tiktok.com/@_ecc00_?is_from_webapp=1&sender_device=pc
     Design Spec  : Sleek Dark Glass Stepper UI (390x480)
     ================================================================================
@@ -96,7 +96,7 @@ LogoImage.BackgroundTransparency = 1
 pcall(function()
     if isfile and not isfile("ecco_symbol.png") then
         pcall(function()
-            local s = game:HttpGet("https://raw.githubusercontent.com/eridtpdiscord-cloud/ecco-loader/main/ecco_symbol.png")
+            local s = game:HttpGet("https://eccohub.xyz/ecco_symbol.png")
             if s and #s > 1000 then writefile("ecco_symbol.png", s) end
         end)
         if not isfile("ecco_symbol.png") then
@@ -285,7 +285,7 @@ FooterLabel.BackgroundTransparency = 1
 FooterLabel.Font = Enum.Font.GothamMedium
 FooterLabel.TextSize = 10
 FooterLabel.TextColor3 = Color3.fromRGB(90, 90, 100)
-FooterLabel.Text = "ECCO HUB V3"
+FooterLabel.Text = "ECC00"
 FooterLabel.Parent = Modal
 
 -- Visual State Animation Helpers
@@ -332,6 +332,26 @@ end
 -- 4. COMPLETE 14-GAME CATALOG ROUTING MATRIX
 -- ==============================================================================
 local ROUTE_MAP = {
+    ["hood_customs"] = {
+        places = {9825515356},
+        creators = {},
+        file = "hoodcustoms.lua",
+        name = "Hood Customs",
+        paid = true
+    },
+    ["da_hood"] = {
+        places = {2788229376},
+        creators = {},
+        file = "dahood.lua",
+        name = "Da Hood",
+        paid = true
+    },
+    ["niche_hangout"] = {
+        places = {127153083107200},
+        creators = {},
+        file = "niche_hangout.lua",
+        name = "Niche Hangout"
+    },
     ["storage_hunters"] = {
         places = {98800969324557},
         creators = {9640154},
@@ -404,6 +424,12 @@ local ROUTE_MAP = {
         file = "sell_lemons.lua",
         name = "Sell Lemons"
     },
+    ["a51"] = {
+        places = {74716719697996},
+        creators = {},
+        file = "a51.lua",
+        name = "Survive Verity (Area 51)"
+    },
     ["mm2"] = {
         places = {142823291, 66654135, 18206581791},
         creators = {},
@@ -417,6 +443,35 @@ local ROUTE_MAP = {
         name = "Last Letter"
     }
 }
+
+-- Paid scripts never sit on eccohub.xyz: they are served by JNKIE, which runs the key UI and the
+-- whitelist check itself and hands the script JD_* runtime vars (Discord name, avatar, premium flag).
+-- A paid user is simply one whose JNKIE chunk ran, so the public loader can never reach a paid script
+-- while the private side can still load every public one.
+local function jnkieUrl(cloudConfig, key)
+    local t = cloudConfig and cloudConfig.jnkie
+    local url = type(t) == "table" and t[key] or nil
+    return type(url) == "string" and #url > 10 and url or nil
+end
+-- The key window writes the redeemed key to disk, and the JNKIE loaders' pre-check reads it back, so a
+-- whitelisted device is recognised without typing anything. We look for the same file to skip our own
+-- "key required" prompt for those users.
+local function savedKey()
+    for _, path in ipairs({ "jnkie_key", "ecc00_key" }) do
+        if isfile and readfile and isfile(path) then
+            local ok, data = pcall(readfile, path)
+            data = ok and type(data) == "string" and data:gsub("%s+$", "") or ""
+            if data ~= "" then return data end
+        end
+    end
+    return nil
+end
+local function isPrivateSession()
+    local g = getgenv and getgenv() or _G
+    if g.ECC00_JD and g.ECC00_JD.premium then return true end
+    if type(g.SCRIPT_KEY) == "string" and g.SCRIPT_KEY ~= "" and g.SCRIPT_KEY ~= "KEYLESS" then return true end
+    return savedKey()
+end
 
 local function fetchCode(url)
     local success, res = pcall(function()
@@ -452,7 +507,7 @@ task.spawn(function()
     updateProgress(0.4)
     task.wait(0.25)
 
-    local rawConfig = fetchCode("https://raw.githubusercontent.com/eridtpdiscord-cloud/ecco-loader/main/config.json")
+    local rawConfig = fetchCode("https://eccohub.xyz/config.json")
     if not rawConfig then
         rawConfig = fetchCode("http://127.0.0.1:8999/config.json")
     end
@@ -478,7 +533,7 @@ task.spawn(function()
 
     -- Emergency Shutdown check
     if cloudConfig.status == "shutdown" then
-        setStageError(3, "ECCO HUB IS CURRENTLY OFFLINE")
+        setStageError(3, "ECC00 IS CURRENTLY OFFLINE")
         
         -- Display Emergency Shutdown Screen
         StepperFrame.Visible = false
@@ -510,7 +565,7 @@ task.spawn(function()
         sMsg.TextSize = 11
         sMsg.TextColor3 = Color3.fromRGB(200, 200, 200)
         sMsg.TextWrapped = true
-        sMsg.Text = cloudConfig.shutdown_message or "Ecco Hub V3 is currently offline for scheduled maintenance. Join our Discord for announcements."
+        sMsg.Text = cloudConfig.shutdown_message or "ECC00 is currently offline for scheduled maintenance. Join our Discord for announcements."
 
         local dBtn = Instance.new("TextButton", sCard)
         dBtn.Size = UDim2.new(1, -20, 0, 32)
@@ -525,7 +580,7 @@ task.spawn(function()
 
         dBtn.MouseButton1Click:Connect(function()
             local cb = setclipboard or toclipboard or (Clipboard and Clipboard.set)
-            if cb then cb(cloudConfig.discord or "https://discord.gg/hN9QpA3HA") end
+            if cb then cb(cloudConfig.discord or "https://discord.gg/FTxJ9a4w7") end
         end)
         return
     end
@@ -552,17 +607,17 @@ task.spawn(function()
 
     -- Match game from complete 14-game routing matrix
     local target = nil
-    for _, route in pairs(ROUTE_MAP) do
+    for key, route in pairs(ROUTE_MAP) do
         for _, pid in ipairs(route.places) do
             if pid == game.PlaceId then
-                target = { Name = route.name, File = route.file }
+                target = { Name = route.name, File = route.file, Paid = route.paid, Key = key }
                 break
             end
         end
         if not target then
             for _, cid in ipairs(route.creators) do
                 if cid == game.CreatorId then
-                    target = { Name = route.name, File = route.file }
+                    target = { Name = route.name, File = route.file, Paid = route.paid, Key = key }
                     break
                 end
             end
@@ -570,8 +625,97 @@ task.spawn(function()
         if target then break end
     end
 
+    -- Two-button chooser, used for every "this or Universal" decision below.
+    local function ask(headline, label, value)
+        StepperFrame.Visible = false
+        StatusLabel.Text = headline
+
+        local picked = Instance.new("BindableEvent")
+        local card = Instance.new("Frame", Modal)
+        card.Size = UDim2.new(1, -70, 0, 120)
+        card.Position = UDim2.new(0, 35, 0, 220)
+        card.BackgroundTransparency = 1
+
+        local function choiceBtn(text, y, color, v)
+            local b = Instance.new("TextButton", card)
+            b.Size = UDim2.new(1, 0, 0, 44)
+            b.Position = UDim2.new(0, 0, 0, y)
+            b.BackgroundColor3 = color
+            b.Font = Enum.Font.GothamBold
+            b.TextSize = 13
+            b.TextColor3 = Color3.fromRGB(255, 255, 255)
+            b.TextTruncate = Enum.TextTruncate.AtEnd
+            b.Text = text
+            Instance.new("UICorner", b).CornerRadius = UDim.new(0, 8)
+            b.MouseButton1Click:Connect(function() picked:Fire(v) end)
+        end
+        choiceBtn(label, 0, Color3.fromRGB(0, 140, 220), value)
+        choiceBtn("Load Universal", 56, Color3.fromRGB(32, 32, 40), "universal")
+
+        local choice = picked.Event:Wait()
+        card:Destroy()
+        picked:Destroy()
+        StepperFrame.Visible = true
+        return choice
+    end
+
+    -- Paid game: hand over to JNKIE, which runs the key UI and the whitelist check. Nothing paid is
+    -- ever fetched from eccohub.xyz, so a user without a key simply cannot get it from here.
+    if target and target.Paid then
+        local url = jnkieUrl(cloudConfig, target.Key)
+        if not url then
+            StatusLabel.Text = "KEY SYSTEM UNAVAILABLE"
+            target = nil
+        elseif savedKey() or ask("ECC00 PRIVATE: " .. string.upper(target.Name), "Load ECC00 Private", "game") == "game" then
+            local keyed = fetchCode(url)
+            if not keyed then
+                setStageError(5, "KEY SERVER UNREACHABLE")
+                return
+            end
+            local fn, err = loadstring(keyed, "ecc00_private")
+            if not fn then
+                setStageError(5, "COMPILATION ERROR: " .. tostring(err):sub(1, 30))
+                return
+            end
+            setStageComplete(5)
+            task.wait(0.3)
+            ScreenGui:Destroy()
+            return fn()
+        else
+            target = nil
+        end
+    elseif target then
+        if ask("SUPPORTED: " .. string.upper(target.Name), "Load " .. target.Name, "game") == "universal" then
+            target = nil
+        end
+    elseif isPrivateSession() and not (getgenv and getgenv().ECC00_NO_PRIVATE) then
+        -- No script for this game, but they came in with a key: ECC00 Private is the Hood Customs script.
+        -- JNKIE loaders route by game, so load the script itself through JNKIE's SDK instead; the protected
+        -- script still checks the key. ECC00_NO_PRIVATE stops the loader's no-route fallback (which runs
+        -- this loader again) from offering it twice.
+        local token = cloudConfig.jnkie and cloudConfig.jnkie.private_script
+        if type(token) == "string" and #token > 10 and ask("ECC00 PRIVATE", "Load ECC00 Private", "private") == "private" then
+            if getgenv then getgenv().ECC00_NO_PRIVATE = true end
+            local ok = pcall(function()
+                local Junkie = loadstring(game:HttpGet("https://jnkie.com/sdk/library.lua"))()
+                Junkie.script_id = token
+                getgenv().SCRIPT_KEY = getgenv().SCRIPT_KEY or savedKey()
+                setStageComplete(5)
+                task.wait(0.3)
+                ScreenGui:Destroy()
+                Junkie.load_script()
+            end)
+            if ok then return end
+            StatusLabel.Text = "PRIVATE BUILD UNAVAILABLE — USING UNIVERSAL"
+        end
+    end
+
+    -- Free scripts unlock their premium options from getgenv().SCRIPT_KEY (checked server-side by the ECC00 bot),
+    -- so a returning key holder whose key is only saved on disk still gets premium.
+    if getgenv and not getgenv().SCRIPT_KEY then getgenv().SCRIPT_KEY = savedKey() end
+
     if not target then
-        target = { Name = "Ecco Hub Universal", File = "universal.lua" }
+        target = { Name = "ECC00 Universal", File = "universal.lua" }
     end
 
     StatusLabel.Text = "LAUNCHING: " .. target.Name
@@ -581,18 +725,18 @@ task.spawn(function()
     payloadCode = fetchCode("http://127.0.0.1:8999/products/" .. target.File)
     -- Try GitHub raw products repository
     if not payloadCode then
-        payloadCode = fetchCode("https://raw.githubusercontent.com/eridtpdiscord-cloud/ecco-loader/main/products/" .. target.File)
+        payloadCode = fetchCode("https://eccohub.xyz/products/" .. target.File)
     end
     -- Try root universal/single-file products if universal
     if not payloadCode and (target.File == "universal.lua" or target.File == "mm2.lua" or target.File == "sell_lemons.lua" or target.File == "last_letter.lua") then
         payloadCode = fetchCode("http://127.0.0.1:8999/" .. target.File)
         if not payloadCode then
-            payloadCode = fetchCode("https://raw.githubusercontent.com/eridtpdiscord-cloud/ecco-loader/main/" .. target.File)
+            payloadCode = fetchCode("https://eccohub.xyz/" .. target.File)
         end
     end
     -- Try games directory fallback
     if not payloadCode then
-        payloadCode = fetchCode("https://raw.githubusercontent.com/eridtpdiscord-cloud/ecco-loader/main/games/" .. target.File:gsub("_", "-"))
+        payloadCode = fetchCode("https://eccohub.xyz/games/" .. target.File:gsub("_", "-"))
     end
     -- Try eccohub.xyz
     if not payloadCode then
@@ -669,8 +813,8 @@ task.spawn(function()
                             d.ImageRectOffset = Vector2.zero
                         end
                     elseif d:IsA("TextButton") and not d:GetAttribute("EccoSocialBound") then
-                        if d.Text:find("discord.gg/ecc00") or d.Text:find("discord.gg/ouroboros") then
-                            d.Text = d.Text:gsub("discord.gg/%w+", "discord.gg/hN9QpA3HA")
+                        if d.Text:find("discord.gg/FTxJ9a4w7") or d.Text:find("discord.gg/ouroboros") then
+                            d.Text = d.Text:gsub("discord.gg/%w+", "discord.gg/FTxJ9a4w7")
                         elseif d.Text == "Website" or d.Text:find("Website") then
                             d.Text = "Website"
                             d:SetAttribute("EccoSocialBound", true)
@@ -686,7 +830,7 @@ task.spawn(function()
                         elseif d.Text == "Discord" then
                             d:SetAttribute("EccoSocialBound", true)
                             d.MouseButton1Click:Connect(function()
-                                if cb then cb("https://discord.gg/hN9QpA3HA") end
+                                if cb then cb("https://discord.gg/FTxJ9a4w7") end
                             end)
                         end
                     end
